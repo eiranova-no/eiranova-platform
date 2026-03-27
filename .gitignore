@@ -1,0 +1,22 @@
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+
+# Vercel
+.vercel/
+
+# System
+.DS_Store
+*.log
+supabase/.temp/

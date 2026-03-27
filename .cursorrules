@@ -1,0 +1,39 @@
+# EiraNova Cursor Rules v5.0
+
+Prosjekt: EiraNova — hjemmehelsetjeneste-plattform
+Eier: EiraNova AS / X Group AS / CoreX-rammeverket
+GitHub: github.com/eiranova-no/eiranova-platform
+Supabase: eu-central-1 Frankfurt (OBLIGATORISK — GDPR helsedata)
+
+Auth:
+  Kunder: e-post + passord + Glemt passord. INGEN Magic Link. INGEN Google OAuth for kunder.
+  Sykepleiere: KUN Google Workspace @eiranova.no
+  B2B koordinator: e-post + passord (invitasjon påkrevd)
+  B2B bruker: e-post + passord (aktivert av koordinator)
+
+Regnskap: Tripletex (master — EHF/PEPPOL, lønn, A-melding). IKKE Fiken.
+
+MVA: 0% for helsetjenester (mval §3-2)
+     ⚠️ Besøksvenn + Trilleturer = mva_risiko 'høy'
+
+Design:
+  Fonter: Fraunces (display) + DM Sans (body) — IKKE Lato
+  Primær: #4A7C6F · Sidebar: #1E3A2F · Aktiv: #4ABC9E
+  Breakpoint: 700px
+
+Modul-toggles (innstillinger-tabellen):
+  b2b_aktiv:         false (default)
+  journal_aktiv:     false (default)
+  journal_modus:     'ekstern' (default)
+
+Regler:
+  1. Les kontraktfil FØR kode
+  2. En kontrakt om gangen
+  3. Norsk UI, engelsk kode
+  4. server-only for alle API-kall
+  5. RLS på alle Supabase-tabeller
+  6. Soft-delete på users
+  7. samtykker-tabellen: aldri slett
+  8. oppdrag_endringer: append-only
+  9. journal_tilganger: append-only
+ 10. K-JOURNAL-001 starter IKKE uten NHN-sertifisering
