@@ -1,0 +1,16 @@
+{
+  "projects": [
+    {
+      "name": "eiranova-web",
+      "rootDirectory": "apps/kunde-app"
+    },
+    {
+      "name": "eiranova-nurse",
+      "rootDirectory": "apps/nurse-app"
+    },
+    {
+      "name": "eiranova-admin",
+      "rootDirectory": "apps/admin-app"
+    }
+  ]
+}

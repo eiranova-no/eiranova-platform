@@ -20,3 +20,4 @@ build/
 .DS_Store
 *.log
 supabase/.temp/
+.pnpm-home/

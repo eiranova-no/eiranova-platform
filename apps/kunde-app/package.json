@@ -1,0 +1,14 @@
+{
+  "name": "kunde-app",
+  "private": true,
+  "scripts": {
+    "dev": "WATCHPACK_POLLING=true next dev -H 127.0.0.1 -p 3001",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 3001"
+  },
+  "dependencies": {
+    "next": "^15.3.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

@@ -1,4 +1,9 @@
-import { useState } from "react";
+import { useCallback,useEffect,useState } from "react";
+import { createPortal } from "react-dom";
+
+function klikkRegistrert(){
+  if(process.env.NODE_ENV==="development")console.log("klikk registrert");
+}
 
 const C = {
   green:"#4A7C6F",greenDark:"#2C5C52",greenLight:"#7FAE96",
@@ -17,7 +22,8 @@ const C = {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..140,100..900;1,9..140,100..900&family=DM+Sans:opsz,wght@9..40,300..700&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35;font-size:14px;line-height:1.5;overflow-x:clip;max-width:100vw}
 .fr{font-family:'Fraunces',serif}
 .g1{display:grid;grid-template-columns:1fr;gap:12px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -25,72 +31,85 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 @media(max-width:900px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.g4,.g3{grid-template-columns:1fr 1fr}.g2m1{grid-template-columns:1fr!important}.hm{display:none!important}.ac{padding:12px!important}.ah{padding:0 14px!important}}
+@media(max-width:480px){.g2{grid-template-columns:1fr!important}}
 @media(min-width:601px){.hd{display:none!important}}
+.login-stack{position:relative;z-index:1;width:100%;max-width:420px;margin:0 auto;box-sizing:border-box}
 .sidebar{width:220px;flex-shrink:0;background:#1E3A2F;display:flex;flex-direction:column;min-height:100vh;transition:transform .22s cubic-bezier(.4,0,.2,1)}
 .sidebar.closed{transform:translateX(-100%)}
 @media(min-width:769px){.sidebar{transform:none!important;position:sticky;height:100vh;top:0}.overlay{display:none!important}.hbg{display:none!important}}
-@media(max-width:768px){.sidebar{position:fixed;top:0;left:0;z-index:50;height:100vh}}
+@media(max-width:768px){.sidebar{position:fixed;top:0;left:0;z-index:50;height:100vh;max-height:100dvh}}
 .overlay{position:fixed;inset:0;z-index:45;background:rgba(0,0,0,.38);display:none}
 .overlay.open{display:block}
-/* ── PHONE: mobile-first, full-width ── */
-.phone{width:100%;max-width:420px;margin:0 auto;min-height:100svh;background:#FAF6F1;display:flex;flex-direction:column;position:relative}
-
-/* Wrapper: sentrert phone-mockup på desktop */
-.pw{display:flex;justify-content:center;align-items:flex-start;padding:20px;min-height:calc(100vh - 42px);background:#CBD4D9}
-
-/* ── TABLET/DESKTOP: full webapp ── */
-@media(min-width:700px){
-  /* Wrapper fyller hele bredden */
+.phone{width:100%;max-width:100%;margin:0 auto;min-height:100svh;background:#FAF6F1;display:flex;flex-direction:column;position:relative;overflow-x:clip}
+.pw{display:flex;justify-content:center;align-items:flex-start;padding:20px;min-height:calc(100vh - 42px);background:#CBD4D9;overflow-x:clip;max-width:100vw}
+/* Next.js-innebygging: full høyde uten prototyp-verktøylinje (42px) */
+.pw-app{position:relative;isolation:isolate;min-height:100svh!important}
+.pw-app .phone{position:relative;z-index:0;min-height:100svh!important}
+@media(min-width:768px){
+  .pw-app{min-height:100vh!important}
+  .pw-app .phone{min-height:100vh!important}
+  .pw-app .land-desktop{height:100vh!important;min-height:0!important}
+}
+@media(min-width:768px){
   .pw{padding:0;background:#F0F5F2;align-items:stretch;min-height:calc(100vh - 42px)}
-  /* Phone = full-page flex-column app container */
   .phone{max-width:100%;width:100%;min-height:calc(100vh - 42px);border-radius:0;box-shadow:none;border:none;flex-direction:column;background:#F0F5F2}
-  /* Hero/header sections: max width for readability */
   .phone > div:first-child{flex-shrink:0}
-  /* Scroll area: fills remaining space */
   .sa{flex:1;overflow-y:auto;max-height:none}
-  /* Inner content: max-width centered */
-  .sa > div{max-width:900px;margin:0 auto;width:100%}
-  /* Bottom nav → hidden, desktop nav visible */
+  .sa > div{max-width:900px;margin:0 auto;width:100%;padding-left:clamp(0px,2vw,12px);padding-right:clamp(0px,2vw,12px);box-sizing:border-box}
   .bnav{display:none!important}
   .desk-nav{display:flex!important}
-  /* Desktop hero: limit height */
-  .phone > div[style*="linear-gradient"]{max-height:280px;padding-bottom:28px!important}
+  .phone > div[style*="linear-gradient"]{max-height:280px;padding-bottom:28px!important;overflow:hidden;flex-shrink:0}
 }
-/* ── MOBILE: phone-shell ── */
-@media(max-width:699px){
+@media(max-width:767px){
   .pw{padding:0;background:#FAF6F1;min-height:calc(100svh - 42px);display:flex;flex-direction:column}
   .phone{max-width:100%;width:100%;min-height:calc(100svh - 42px)}
   .desk-nav{display:none!important}
-  /* Landing: show mobile, hide desktop */
   .land-mobile{display:flex!important}
   .land-desktop{display:none!important}
+  .show-mobile-block{display:flex!important}
 }
-@media(min-width:700px){
-  /* Landing: hide mobile shell, show desktop page */
+@media(min-width:768px){
   .land-mobile{display:none!important}
-  .land-desktop{display:block!important;width:100%;overflow-y:auto;height:calc(100vh - 42px)}
+  .land-desktop{display:block!important;width:100%;overflow-x:clip;overflow-y:auto;height:calc(100vh - 42px)}
+  .show-mobile-block{display:none!important}
 }
-.sa{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.bnav{position:sticky;bottom:0;z-index:20;display:flex;background:white;border-top:1px solid #E4EDE9}
-.bi{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 0 6px;border:none;background:none;cursor:pointer;gap:2px}
+@media(min-width:768px) and (max-width:1100px){
+  .land-hero-grid{grid-template-columns:1fr!important;gap:40px!important}
+  .land-hero-shell{padding:clamp(28px,4vw,48px) clamp(20px,4vw,40px)!important;min-height:auto!important}
+}
+.land-desktop img,.phone img{max-width:100%;height:auto}
+.sa{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-width:0}
+.bnav{position:sticky;bottom:0;z-index:20;display:flex;background:white;border-top:1px solid #E4EDE9;padding-bottom:env(safe-area-inset-bottom,0)}
+.bi{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:52px;padding:10px 2px 8px;border:none;background:none;cursor:pointer;gap:4px;-webkit-tap-highlight-color:transparent}
+.bi-lbl{font-size:11px;line-height:1.2;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:380px){.bi-lbl{font-size:10px}}
 .card{background:white;border-radius:12px;border:.5px solid #E4EDE9;overflow:hidden}
 .cp{padding:12px 14px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;border-radius:8px;font-weight:600;transition:opacity .1s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-family:inherit;border-radius:8px;font-weight:600;transition:opacity .1s;min-height:44px;min-width:44px;padding:10px 14px}
 .btn:active{opacity:.85}
 .bp{background:#4A7C6F;color:white}
 .bg{background:rgba(255,255,255,.14);color:white;border:1px solid rgba(255,255,255,.22)}
-.bf{width:100%;padding:12px;font-size:13px}
-.inp{width:100%;padding:9px 11px;border:1.5px solid #E4EDE9;border-radius:8px;font-size:12px;font-family:inherit;background:#F4FAF8;outline:none;color:#2C3E35}
+.bf{width:100%;padding:12px 16px;font-size:14px;min-height:48px;min-width:0}
+.inp{width:100%;padding:12px 14px;border:1.5px solid #E4EDE9;border-radius:8px;font-size:14px;font-family:inherit;background:#F4FAF8;outline:none;color:#2C3E35;min-height:44px}
 .inp:focus{border-color:#4A7C6F}
-.badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 8px;border-radius:50px;white-space:nowrap}
-.al{display:flex;min-height:100vh}
-.am{flex:1;min-width:0;display:flex;flex-direction:column}
-.ah{height:56px;background:white;border-bottom:1px solid #E4EDE9;display:flex;align-items:center;padding:0 20px;gap:12px;position:sticky;top:0;z-index:30;flex-shrink:0}
-.ac{flex:1;overflow-y:auto;padding:20px}
+textarea.inp{min-height:88px;padding-top:10px}
+.badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:50px;white-space:nowrap}
+.al{display:flex;min-height:100vh;overflow-x:clip}
+.am{flex:1;min-width:0;display:flex;flex-direction:column;overflow-x:clip}
+.hbg{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ah{min-height:56px;height:auto;background:white;border-bottom:1px solid #E4EDE9;display:flex;align-items:center;padding:0 clamp(12px,3vw,20px);gap:12px;position:sticky;top:0;z-index:30;flex-shrink:0}
+.ac{flex:1;overflow-y:auto;overflow-x:clip;padding:20px;min-width:0}
+@media(min-width:1280px){
+  .ac{padding:28px 36px}
+  .ah{padding:0 28px}
+}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin{width:14px;height:14px;border:2.5px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .fu{animation:fu .25s ease both}
+@media (prefers-reduced-motion:reduce){
+  .fu{animation:none!important;opacity:1!important;transform:none!important}
+}
 .pb{display:flex;background:#1E3A2F;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap;align-items:center;padding:0 10px;position:sticky;top:0;z-index:100}
 .pt{padding:10px 12px;border:none;background:none;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;white-space:nowrap;border-bottom:2.5px solid transparent}
 .pt.on{border-bottom-color:#4ABC9E;color:#4ABC9E}
@@ -99,20 +118,24 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 .sc{padding:3px 9px;border-radius:50px;font-size:9px;font-weight:500;cursor:pointer;border:none;font-family:inherit}
 .sc.on{background:#4A7C6F;color:white}
 .sc:not(.on){background:rgba(255,255,255,.1);color:rgba(255,255,255,.65)}
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th{text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:#7A8E85;padding:8px 12px;border-bottom:1px solid #E4EDE9;background:#F4FAF8;white-space:nowrap}
-.tbl td{padding:9px 12px;border-bottom:.5px solid #F0F5F2;color:#2C3E35}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:#7A8E85;padding:10px 12px;border-bottom:1px solid #E4EDE9;background:#F4FAF8;white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:.5px solid #F0F5F2;color:#2C3E35}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:#F4FAF8}
-.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+.tw{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;border-radius:12px}
+@media(max-width:767px){
+  .tbl button,.tbl .btn{font-size:11px!important;min-height:44px;padding:8px 12px!important}
+}
 .nc{background:white;border-radius:14px;padding:14px;border:1px solid #E4EDE9;margin-bottom:8px}
-/* Desktop top nav */
-.desk-nav{background:white;border-bottom:1px solid #E4EDE9;padding:0 24px;height:56px;align-items:center;gap:0;width:100%;flex-shrink:0;position:sticky;top:0;z-index:20}
-.desk-nav-item{padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2.5px solid transparent;color:#7A8E85;white-space:nowrap}
+.desk-nav{background:white;border-bottom:1px solid #E4EDE9;padding:0 clamp(12px,2vw,24px);min-height:56px;height:auto;display:none;flex-wrap:nowrap;align-items:stretch;align-content:center;row-gap:0;column-gap:0;width:100%;max-width:100%;flex-shrink:0;position:sticky;top:0;z-index:20;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.desk-nav-item{padding:0 12px;min-height:48px;display:flex;align-items:center;flex-shrink:0;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2.5px solid transparent;color:#7A8E85;white-space:nowrap}
 .desk-nav-item.on{color:#4A7C6F;border-bottom-color:#4A7C6F;font-weight:600}
 .desk-nav-item:hover{color:#2C3E35}
-/* Desktop header hero → compact */
-@media(min-width:700px){
+@media(min-width:768px) and (max-width:1023px){
+  .desk-nav-item{padding:0 10px;font-size:12px}
+}
+@media(min-width:768px){
   .hero-compact{padding:24px 32px!important;min-height:160px}
   .hero-compact h1{font-size:32px!important}
   .g2{grid-template-columns:1fr 1fr}
@@ -122,11 +145,15 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
   .desk-single{max-width:560px;margin:0 auto}
   .card-hover:hover{border-color:#4A7C6F!important;transform:translateY(-1px);transition:all .15s}
   .nc{border-radius:10px}
-  /* Hero min-height på desktop */
 }
-/* Skjul hero-tjenestekort under 950px — unngår skvisning */
-@media(min-width:700px) and (max-width:950px){
+@media(min-width:768px) and (max-width:950px){
   .hero-cards{display:none!important}
+}
+.settings-toggle{width:52px;height:30px;border-radius:15px;border:none;padding:0;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;display:block}
+.settings-toggle:focus-visible{outline:2px solid #4ABC9E;outline-offset:2px}
+.stack-sm-1{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:639px){
+  .stack-sm-1{grid-template-columns:1fr!important;gap:12px!important}
 }
 `;
 
@@ -199,6 +226,18 @@ const OPPDRAG=[
     {dato:"2026-03-02 17:00",av:"Astrid Hansen (kunde)",handling:"Tid endret: 08:00 → 09:00",arsak:"Lege-avtale om morgenen"},
   ]},
 ];
+const NURSE_NAV=[
+  {id:"nurse-hjem",icon:"🏠",label:"Hjem"},
+  {id:"nurse-oppdrag",icon:"📋",label:"Oppdrag"},
+  {id:"nurse-innsjekk",icon:"✅",label:"Innsjekk"},
+  {id:"nurse-profil",icon:"👤",label:"Profil"},
+];
+function nurseDefaultInnsjekkOppdragId(){
+  const active=OPPDRAG.find(o=>o.status==="active");
+  if(active) return active.id;
+  const pending=OPPDRAG.find(o=>o.status!=="completed");
+  return pending?.id ?? OPPDRAG[0]?.id ?? "1";
+}
 const CHAT=[
   {from:"nurse",text:"Hei! Jeg er på vei, ankommer om ca. 10 min.",time:"10:18"},
   {from:"customer",text:"Tusen takk! Jeg er hjemme 😊",time:"10:19"},
@@ -345,8 +384,8 @@ const INIT_B2B_TILGANGER=[
 // Shows on tablet/desktop as horizontal top nav replacing bottom nav
 function DeskNav({active, onNav, items, title, right}){
   return(
-    <nav className="desk-nav" style={{display:"flex"}}>
-      {title&&<div className="fr" style={{fontSize:15,fontWeight:600,color:C.navy,marginRight:16,whiteSpace:"nowrap"}}>{title}</div>}
+    <nav className="desk-nav">
+      {title&&<div className="fr" style={{fontSize:15,fontWeight:600,color:C.navy,marginRight:16,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",minWidth:0,maxWidth:"min(280px,42vw)",flex:"0 1 auto"}}>{title}</div>}
       {items.map(it=>(
         <button key={it.id+it.label} className={`desk-nav-item${active===it.id?" on":""}`} onClick={()=>onNav(it.id)}>
           <span style={{marginRight:5,fontSize:14}}>{it.icon}</span>{it.label}
@@ -370,12 +409,13 @@ function Bdg({status}){
   const b=M[status]??{l:status,bg:C.softBg,c:C.soft};
   return <span className="badge" style={{background:b.bg,color:b.c}}>{b.l}</span>;
 }
-function PH({title,onBack,bg,slim,rightAction}){
+function PH({title,onBack,bg,slim,rightAction,right}){
   return(
     <div style={{padding:slim?"10px 14px":"12px 14px",display:"flex",alignItems:"center",gap:9,background:bg||`linear-gradient(135deg,${C.navy},${C.greenDark})`,flexShrink:0}}>
-      {onBack&&<button onClick={onBack} style={{width:30,height:30,borderRadius:8,background:"rgba(255,255,255,.18)",border:"none",color:"white",fontSize:17,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>}
-      <span className="fr" style={{fontSize:15,fontWeight:600,color:"white",flex:1}}>{title}</span>
-      {rightAction&&<button onClick={rightAction.fn} style={{background:"rgba(255,255,255,.18)",border:"none",color:"white",borderRadius:8,padding:"4px 10px",fontSize:10,cursor:"pointer",fontFamily:"inherit",fontWeight:600,flexShrink:0}}>{rightAction.label}</button>}
+      {onBack&&<button type="button" onClick={onBack} style={{width:44,height:44,borderRadius:10,background:"rgba(255,255,255,.18)",border:"none",color:"white",fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} aria-label="Tilbake">‹</button>}
+      <span className="fr" style={{fontSize:15,fontWeight:600,color:"white",flex:1,minWidth:0,lineHeight:1.25,overflowWrap:"anywhere"}}>{title}</span>
+      {right&&<div style={{flexShrink:0}}>{right}</div>}
+      {rightAction&&<button type="button" onClick={rightAction.fn} style={{background:"rgba(255,255,255,.18)",border:"none",color:"white",borderRadius:8,padding:"8px 12px",fontSize:12,cursor:"pointer",fontFamily:"inherit",fontWeight:600,flexShrink:0,minHeight:44}}>{rightAction.label}</button>}
     </div>
   );
 }
@@ -383,12 +423,43 @@ function BNav({active,onNav,items}){
   return(
     <nav className="bnav">
       {items.map(it=>(
-        <button key={it.id+it.label} className="bi" onClick={()=>onNav(it.id)}>
-          <span style={{fontSize:20}}>{it.icon}</span>
-          <span style={{fontSize:9,fontWeight:active===it.id?600:400,color:active===it.id?C.green:C.soft}}>{it.label}</span>
+        <button type="button" key={it.id+it.label} className="bi" onClick={()=>onNav(it.id)}>
+          <span style={{fontSize:20,lineHeight:1}} aria-hidden>{it.icon}</span>
+          <span className="bi-lbl" style={{fontWeight:active===it.id?600:400,color:active===it.id?C.green:C.soft}}>{it.label}</span>
         </button>
       ))}
     </nav>
+  );
+}
+
+function ModalPortal({ children, overlayStyle }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const safePad = "max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))";
+  return createPortal(
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 1000,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxSizing: "border-box",
+        padding: safePad,
+        overflowY: "auto",
+        WebkitOverflowScrolling: "touch",
+        ...overlayStyle
+      }}
+    >
+      {children}
+    </div>,
+    document.body
   );
 }
 const BN_K=[{id:"hjem",icon:"🏠",label:"Hjem"},{id:"bestill",icon:"➕",label:"Bestill"},{id:"mine",icon:"📋",label:"Mine"},{id:"chat-kunde",icon:"💬",label:"Chat"},{id:"kunde-profil",icon:"👤",label:"Profil"}];
@@ -396,7 +467,7 @@ const BN_K=[{id:"hjem",icon:"🏠",label:"Hjem"},{id:"bestill",icon:"➕",label:
 // ══ KUNDE ═════════════════════════════════════════════════════
 // ── Global Toast system ────────────────────────────────────────
 function useToast(){
-  const[toasts,setToasts]=React.useState([]);
+  const[toasts,setToasts]=useState([]);
   const toast=(msg,type="ok",dur=2400)=>{
     const id=Date.now();
     setToasts(p=>[...p,{id,msg,type}]);
@@ -696,8 +767,9 @@ function GlemtPassord({onNav}){
       <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 28px",textAlign:"center"}}>
         <div style={{width:72,height:72,borderRadius:20,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:34,marginBottom:20}}>📧</div>
         <div className="fr" style={{fontSize:20,fontWeight:700,color:C.navy,marginBottom:8}}>Sjekk innboksen</div>
-        <div style={{fontSize:12,color:C.soft,lineHeight:1.7,marginBottom:6}}>Vi har sendt en tilbakestillingslenke til</div>
-        <div style={{fontSize:13,fontWeight:600,color:C.navy,marginBottom:24}}>{epost}</div>
+        <div style={{fontSize:13,fontWeight:600,color:C.navy,lineHeight:1.5,marginBottom:16,maxWidth:340}}>
+          Reset-lenke sendt til {epost}
+        </div>
         <div style={{background:C.greenXL,borderRadius:10,padding:"10px 14px",fontSize:10,color:C.navyMid,lineHeight:1.6,marginBottom:28,width:"100%"}}>
           Lenken er gyldig i 30 minutter. Sjekk spam-mappen hvis du ikke finner e-posten.
         </div>
@@ -739,7 +811,7 @@ function KundeProfil({onNav}){
 
       {/* Slette-bekreftelse */}
       {slettBekreft&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.5)",padding:20}}>
           <div style={{background:"white",borderRadius:16,padding:"24px",width:"100%",maxWidth:360,boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
             <div style={{fontSize:30,textAlign:"center",marginBottom:12}}>⚠️</div>
             <div style={{fontSize:15,fontWeight:700,color:C.navy,textAlign:"center",marginBottom:8}}>Slett min konto</div>
@@ -754,12 +826,12 @@ function KundeProfil({onNav}){
               <button onClick={()=>{toast("Sletting initiert — du mottar bekreftelse på e-post","warn");setSlettBekreft(false);}} style={{flex:1,padding:"10px 0",fontSize:12,borderRadius:9,background:C.danger,color:"white",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Slett konto</button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Data-utlevering bekreftelse */}
       {datautlevering&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.5)",padding:20}}>
           <div style={{background:"white",borderRadius:16,padding:"24px",width:"100%",maxWidth:360}}>
             <div style={{fontSize:30,textAlign:"center",marginBottom:12}}>📦</div>
             <div style={{fontSize:15,fontWeight:700,color:C.navy,textAlign:"center",marginBottom:8}}>Last ned dine data</div>
@@ -771,7 +843,7 @@ function KundeProfil({onNav}){
               <button onClick={()=>{toast("Dataeksport sendes til din e-post","ok");setDatautlevering(false);}} className="btn bp" style={{flex:1,padding:"10px 0",fontSize:12,borderRadius:9}}>Send meg data</button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Faner */}
@@ -821,6 +893,9 @@ function KundeProfil({onNav}){
               </div>
               <button onClick={()=>toast("Legg til pårørende")} style={{marginTop:8,width:"100%",padding:"9px 0",fontSize:11,borderRadius:9,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit"}}>+ Legg til pårørende</button>
             </div>
+            <button type="button" onClick={()=>onNav("logout")} className="btn" style={{width:"100%",marginTop:20,padding:"12px 0",fontSize:13,borderRadius:11,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>
+              Logg ut
+            </button>
           </div>
         )}
 
@@ -993,10 +1068,10 @@ function Landing({onNav}){
           </div>
           <div style={{display:"inline-flex",alignItems:"center",gap:4,background:"rgba(232,164,164,.2)",border:"1px solid rgba(232,164,164,.35)",borderRadius:50,padding:"3px 11px",marginBottom:12,fontSize:10,fontWeight:500,color:"#F2C4C4"}}>♡ Omsorg og støtte</div>
           <h1 className="fr" style={{fontSize:27,fontWeight:600,color:"white",lineHeight:1.2,marginBottom:10}}>Omsorg levert<br/><em style={{color:"#F2C4C4"}}>til din dør</em></h1>
-          <p style={{fontSize:13,color:"rgba(255,255,255,.75)",lineHeight:1.6,marginBottom:18}}>Profesjonelle helsetjenester i hjemmet for eldre og nybakte mødre.</p>
+          <p style={{fontSize:14,color:"rgba(255,255,255,.8)",lineHeight:1.6,marginBottom:18}}>Profesjonelle helsetjenester i hjemmet for eldre og nybakte mødre.</p>
           <div style={{display:"flex",gap:8,marginBottom:14}}>
-            <button className="btn bp" onClick={()=>onNav("bestill")} style={{flex:1,padding:"12px 0",fontSize:13,borderRadius:11}}>Bestill nå</button>
-            <button className="btn bg" onClick={()=>onNav("login")} style={{flex:1,padding:"12px 0",fontSize:12,borderRadius:11}}>Logg inn</button>
+            <button type="button" className="btn bp" onClick={()=>onNav("bestill")} style={{flex:1,minHeight:48,padding:"12px 0",fontSize:14,borderRadius:11}}>Bestill nå</button>
+            <button type="button" className="btn bg" onClick={()=>onNav("login")} style={{flex:1,minHeight:48,padding:"12px 0",fontSize:14,borderRadius:11}}>Logg inn</button>
           </div>
           <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
             {["✓ Autorisert","📍 7 kommuner","⭐ 4.9/5"].map(p=><div key={p} style={{background:"rgba(255,255,255,.15)",borderRadius:50,padding:"3px 10px",fontSize:10,fontWeight:500,color:"white"}}>{p}</div>)}
@@ -1009,7 +1084,7 @@ function Landing({onNav}){
               <span className="fr" style={{fontSize:15,fontWeight:600,color:C.navy}}>Eldre & Pårørende</span>
             </div>
             {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-              <div key={sv.type} onClick={()=>onNav("bestill")} className="card" style={{marginBottom:6,padding:"10px 12px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
+              <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card" style={{marginBottom:6,padding:"10px 12px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
                 <div style={{width:36,height:36,borderRadius:9,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{sv.icon}</div>
                 <div style={{flex:1}}><div style={{fontSize:12,fontWeight:600,color:C.navy}}>{sv.name}</div><div style={{fontSize:10,color:C.soft}}>{sv.detail}</div></div>
                 <div style={{fontSize:10,fontWeight:500,color:C.green}}>fra {sv.price} kr</div>
@@ -1022,7 +1097,7 @@ function Landing({onNav}){
               <span className="fr" style={{fontSize:15,fontWeight:600,color:C.navy}}>Barselstøtte</span>
             </div>
             {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-              <div key={sv.type} onClick={()=>onNav("bestill")} style={{background:"white",borderRadius:8,padding:"8px 10px",display:"flex",alignItems:"center",gap:8,marginBottom:5,cursor:"pointer",border:`0.5px solid ${C.border}`}}>
+              <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} style={{background:"white",borderRadius:8,padding:"8px 10px",display:"flex",alignItems:"center",gap:8,marginBottom:5,cursor:"pointer",border:`0.5px solid ${C.border}`}}>
                 <span style={{fontSize:14}}>{sv.icon}</span><span style={{fontSize:12,fontWeight:500,color:C.navy}}>{sv.name}</span>
                 <span style={{marginLeft:"auto",fontSize:10,color:C.gold,fontWeight:500}}>fra {sv.price} kr</span>
               </div>
@@ -1039,12 +1114,12 @@ function Landing({onNav}){
         </div>
       </div>
 
-      {/* ══ DESKTOP-VERSJON (≥ 700px) — ekte landingsside ══ */}
+      {/* ══ DESKTOP-VERSJON (≥ 768px) — ekte landingsside ══ */}
       <div className="land-desktop">
 
         {/* ── HERO ── */}
-        <div style={{background:"linear-gradient(135deg,#1E3A2F 0%,#2C5C52 50%,#1a3028 100%)",minHeight:"60vh",display:"flex",alignItems:"center",padding:"64px 40px"}}>
-          <div style={{maxWidth:1200,margin:"0 auto",width:"100%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,alignItems:"center"}}>
+        <div className="land-hero-shell" style={{background:"linear-gradient(135deg,#1E3A2F 0%,#2C5C52 50%,#1a3028 100%)",minHeight:"60vh",display:"flex",alignItems:"center",padding:"64px 40px"}}>
+          <div className="land-hero-grid" style={{maxWidth:1200,margin:"0 auto",width:"100%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,alignItems:"center"}}>
             {/* Venstre: tekst */}
             <div>
               <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:32}}>
@@ -1120,7 +1195,7 @@ function Landing({onNav}){
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
                 {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill")} className="card"
+                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
                     style={{cursor:"pointer",overflow:"hidden",transition:"all .18s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
@@ -1147,7 +1222,7 @@ function Landing({onNav}){
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
                 {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill")} className="card"
+                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
                     style={{cursor:"pointer",overflow:"hidden",transition:"all .18s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
@@ -1238,11 +1313,21 @@ function Landing({onNav}){
   );
 }
 
-function Login({onNav}){
+function Login({onNav,onMockKundeLogin}){
   const[type,setType]=useState(null);
   const[bedriftMode,setBedriftMode]=useState(null);
   const[mode,setMode]=useState("login");
   const[email,setEmail]=useState("");
+  const[password,setPassword]=useState("");
+  const[fulltNavn,setFulltNavn]=useState("");
+  const[kundeLoginFeil,setKundeLoginFeil]=useState("");
+  const fullforKundeMock=()=>{
+    setKundeLoginFeil("");
+    if(onMockKundeLogin)onMockKundeLogin();
+    else{
+      onNav("hjem");
+    }
+  };
   const isKommune=email.includes(".kommune.no");
 
   // ── 1. Velg hvem du er ─────────────────────────────────────
@@ -1286,24 +1371,36 @@ function Login({onNav}){
         <div style={{fontSize:10,color:"rgba(255,255,255,.6)"}}>Logg inn eller opprett konto</div>
       </div>
       <div className="sa" style={{padding:"14px 18px"}}>
-        <div style={{position:"relative",marginBottom:10}}>
-          <div style={{position:"absolute",top:-8,left:"50%",transform:"translateX(-50%)",background:C.gold,color:"white",fontSize:8,fontWeight:600,padding:"1px 8px",borderRadius:50,whiteSpace:"nowrap",zIndex:2}}>KOMMER SNART</div>
-          <button disabled style={{width:"100%",padding:"12px 0",background:C.vipps,color:"white",border:"none",borderRadius:11,fontSize:13,fontWeight:600,opacity:.4,cursor:"not-allowed",display:"flex",alignItems:"center",justifyContent:"center",gap:7,fontFamily:"inherit"}}>
-            <span>💜</span> Fortsett med Vipps
-          </button>
-        </div>
-        <button onClick={()=>onNav("hjem")} style={{width:"100%",padding:"12px 0",background:"white",color:C.navy,border:`1.5px solid ${C.border}`,borderRadius:11,fontSize:13,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:12,fontFamily:"inherit"}}>
-          🌐 Fortsett med Google
+        <div className="login-stack">
+        <button type="button" disabled title="Kommer når EiraNova AS er registrert" style={{width:"100%",minHeight:48,padding:"12px 0",background:C.vipps,color:"white",border:"none",borderRadius:11,fontSize:14,fontWeight:600,opacity:.55,cursor:"not-allowed",display:"flex",alignItems:"center",justifyContent:"center",gap:7,fontFamily:"inherit",marginBottom:12}}>
+          <span style={{fontSize:18,lineHeight:1}} aria-hidden>💜</span> Fortsett med Vipps
         </button>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}><div style={{flex:1,height:1,background:C.border}}/><span style={{fontSize:10,color:C.soft}}>eller e-post</span><div style={{flex:1,height:1,background:C.border}}/></div>
-        <div style={{display:"flex",background:C.greenXL,borderRadius:9,padding:3,marginBottom:12}}>
-          {["login","register"].map(m=><button key={m} onClick={()=>setMode(m)} style={{flex:1,padding:"6px 0",borderRadius:7,fontSize:11,fontWeight:500,cursor:"pointer",border:"none",background:mode===m?"white":"transparent",color:mode===m?C.green:C.soft,fontFamily:"inherit"}}>{m==="login"?"Logg inn":"Ny konto"}</button>)}
+        <button type="button" onClick={()=>{klikkRegistrert();fullforKundeMock();}} style={{width:"100%",minHeight:48,padding:"12px 0",background:"white",color:"#1F1F1F",border:"1.5px solid #DADCE0",borderRadius:11,fontSize:14,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:9,marginBottom:12,fontFamily:"inherit",boxShadow:"0 1px 4px rgba(0,0,0,.08)"}}>
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+          Fortsett med Google
+        </button>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><div style={{flex:1,height:1,background:C.border}}/><span style={{fontSize:10,color:C.soft}}>eller</span><div style={{flex:1,height:1,background:C.border}}/></div>
+        {mode==="register"&&<div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Fullt navn</label><input className="inp" placeholder="Ola Nordmann" value={fulltNavn} onChange={e=>setFulltNavn(e.target.value)}/></div>}
+        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label><input className="inp" type="email" placeholder="ola@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
+        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••" value={password} onChange={e=>setPassword(e.target.value)}/></div>
+        {mode==="login"&&(
+          <>
+            {kundeLoginFeil&&<div style={{fontSize:11,color:C.danger,marginBottom:8}}>{kundeLoginFeil}</div>}
+            <button type="button" onClick={()=>{
+              klikkRegistrert();
+              if(!email.trim()||!password.trim()){
+                setKundeLoginFeil("Skriv inn e-post og passord.");
+                return;
+              }
+              fullforKundeMock();
+            }} className="btn bp bf" style={{borderRadius:11}}>Logg inn</button>
+          </>
+        )}
+        {mode==="register"&&<button type="button" onClick={()=>onNav("push-tillatelse")} className="btn bp bf" style={{borderRadius:11}}>Opprett konto</button>}
+        {mode==="login"&&<div style={{textAlign:"center",marginTop:12}}><span onClick={()=>onNav("glemt-passord")} style={{fontSize:11,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span></div>}
+        {mode==="login"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Ny bruker? </span><span onClick={()=>setMode("register")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Registrer deg</span></div>}
+        {mode==="register"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Har du allerede konto? </span><span onClick={()=>setMode("login")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Logg inn</span></div>}
         </div>
-        {mode==="register"&&<div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Fullt navn</label><input className="inp" placeholder="Ola Nordmann"/></div>}
-        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label><input className="inp" type="email" placeholder="ola@example.com"/></div>
-        <div style={{marginBottom:mode==="login"?5:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••"/></div>
-        {mode==="login"&&<div style={{textAlign:"right",marginBottom:12}}><span onClick={()=>onNav("glemt-passord")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span></div>}
-        <button onClick={()=>mode==="login"?onNav("hjem"):onNav("push-tillatelse")} className="btn bp bf" style={{borderRadius:11}}>{mode==="login"?"Logg inn":"Opprett konto"}</button>
       </div>
     </div>
   );
@@ -1468,14 +1565,14 @@ function Hjem({onNav}){
       </div>
 
       {/* Mobile: neste avtale-kort */}
-      <div className="show-mobile-block" style={{margin:"-12px 12px 0",background:"white",borderRadius:13,padding:11,boxShadow:"0 4px 14px rgba(0,0,0,.09)",display:"none",alignItems:"center",gap:10,position:"relative",zIndex:10,flexShrink:0}}>
-        <div style={{width:40,height:40,borderRadius:10,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>🚿</div>
-        <div style={{flex:1}}>
-          <div style={{fontSize:9,color:C.soft,fontWeight:500,textTransform:"uppercase",letterSpacing:.5}}>Neste avtale</div>
-          <div style={{fontSize:13,fontWeight:600,color:C.navy}}>Morgensstell & dusj</div>
-          <div style={{fontSize:10,fontWeight:500,color:C.green}}>Tirsdag 4. mars · 08:00</div>
+      <div className="show-mobile-block" style={{margin:"-12px 12px 0",background:"white",borderRadius:13,padding:12,boxShadow:"0 4px 14px rgba(0,0,0,.09)",alignItems:"center",gap:10,position:"relative",zIndex:10,flexShrink:0}}>
+        <div style={{width:44,height:44,borderRadius:10,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>🚿</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:11,color:C.soft,fontWeight:600,textTransform:"uppercase",letterSpacing:.5}}>Neste avtale</div>
+          <div style={{fontSize:14,fontWeight:600,color:C.navy}}>Morgensstell & dusj</div>
+          <div style={{fontSize:13,fontWeight:500,color:C.green}}>Tirsdag 4. mars · 08:00</div>
         </div>
-        <button className="btn bp" style={{fontSize:10,padding:"6px 10px"}}>Detaljer</button>
+        <button type="button" className="btn bp" style={{fontSize:13,padding:"10px 14px",minHeight:44,flexShrink:0}}>Detaljer</button>
       </div>
 
       <div className="sa" style={{padding:"clamp(14px,2vw,28px) clamp(12px,3vw,40px)"}}>
@@ -1487,7 +1584,7 @@ function Hjem({onNav}){
             {/* Eldre */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(8px,1.2vw,14px)",marginBottom:"clamp(12px,1.5vw,20px)"}}>
               {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-                <div key={sv.type} onClick={()=>onNav("bestill")} className="card"
+                <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
                   style={{cursor:"pointer",overflow:"hidden",transition:"all .15s"}}
                   onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 18px rgba(0,0,0,.1)"}}
                   onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
@@ -1508,7 +1605,7 @@ function Hjem({onNav}){
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
                 {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill")} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
+                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,.08)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                     <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6}}>{sv.icon}</div>
@@ -1547,23 +1644,29 @@ function Hjem({onNav}){
   );
 }
 
-function Bestill({onNav}){
-  const[step,setStep]=useState(1);
-  const[sel,setSel]=useState(null);
+function Bestill({onNav,preselectedType=null}){
+  const defaultService=SERVICES.find(s=>s.type==="morgensstell")||SERVICES[0];
+  const fromType=t=>SERVICES.find(s=>s.type===t)||defaultService;
+  const[step,setStep]=useState(1); // 1=dato/tid, 2=sykepleier, 3=betaling
+  const[sel,setSel]=useState(()=>fromType(preselectedType));
   const[date,setDate]=useState("Tirsdag 4. mars");
   const[time,setTime]=useState("09:00");
   const[chosenNurse,setChosenNurse]=useState(null); // null = EiraNova velger
 
-  // Step 4: betaling
-  if(step===4)return <Betaling onBack={()=>setStep(3)} onNav={onNav} service={sel??SERVICES[0]} date={date} time={time}/>;
+  useEffect(()=>{
+    setSel(fromType(preselectedType));
+  },[preselectedType]);
 
-  // Step 3: velg sykepleier
-  if(step===3)return(
+  // Steg 3: betaling
+  if(step===3)return <Betaling onBack={()=>setStep(2)} onNav={onNav} service={sel??defaultService} date={date} time={time}/>;
+
+  // Steg 2: velg sykepleier
+  if(step===2)return(
     <div className="phone fu">
-      <PH title="Velg sykepleier" onBack={()=>setStep(2)}/>
+      <PH title="Velg sykepleier" onBack={()=>setStep(1)}/>
       <div className="sa" style={{padding:13}}>
         {/* La EiraNova velge */}
-        <div onClick={()=>{setChosenNurse(null);setStep(4);}} className="card" style={{padding:"12px 14px",marginBottom:12,cursor:"pointer",border:`2px solid ${chosenNurse===null?C.green:C.border}`,background:chosenNurse===null?C.greenBg:"white"}}>
+        <div onClick={()=>{setChosenNurse(null);setStep(3);}} className="card" style={{padding:"12px 14px",marginBottom:12,cursor:"pointer",border:`2px solid ${chosenNurse===null?C.green:C.border}`,background:chosenNurse===null?C.greenBg:"white"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <div style={{width:44,height:44,borderRadius:11,background:C.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20}}>✨</div>
             <div style={{flex:1}}>
@@ -1616,18 +1719,26 @@ function Bestill({onNav}){
             </div>
           );
         })}
-        <button onClick={()=>setStep(4)} className="btn bp bf" style={{borderRadius:11,marginTop:4}}>
+        <button type="button" onClick={()=>setStep(3)} className="btn bp bf" style={{borderRadius:11,marginTop:4}}>
           {chosenNurse?`Fortsett med ${chosenNurse.split(" ")[0]} →`:"Gå til betaling →"}
         </button>
       </div>
     </div>
   );
 
-  // Step 2: dato og tid
-  if(step===2)return(
+  // Steg 1: dato og tid (tjeneste valgt fra hjem eller standard)
+  if(step===1)return(
     <div className="phone fu">
-      <PH title="Dato og tid" onBack={()=>setStep(1)}/>
+      <PH title="Dato og tid" onBack={()=>onNav("hjem")}/>
       <div className="sa" style={{padding:13}}>
+        <div className="card cp" style={{marginBottom:10,display:"flex",alignItems:"center",gap:12}}>
+          <div style={{width:44,height:44,borderRadius:10,background:sel?.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{sel?.icon}</div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:10,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5}}>Valgt tjeneste</div>
+            <div style={{fontSize:14,fontWeight:600,color:C.navy}}>{sel?.name}</div>
+            <div style={{fontSize:12,color:C.soft}}>fra {sel?.price} kr · {sel?.duration} min</div>
+          </div>
+        </div>
         <div className="card cp" style={{marginBottom:10}}>
           <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:7}}>Velg dato</div>
           {["Man 3. mars","Tirs 4. mars","Ons 5. mars","Tors 6. mars"].map(d=>(
@@ -1651,40 +1762,17 @@ function Bestill({onNav}){
         <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:12,justifyContent:"center"}}>
           {[1,2,3].map(s=>(
             <div key={s} style={{display:"flex",alignItems:"center",gap:6}}>
-              <div style={{width:22,height:22,borderRadius:"50%",background:s<=2?C.green:C.border,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"white"}}>{s}</div>
-              {s<3&&<div style={{width:20,height:2,background:s<2?C.green:C.border,borderRadius:1}}/>}
+              <div style={{width:22,height:22,borderRadius:"50%",background:s<=1?C.green:C.border,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"white"}}>{s}</div>
+              {s<3&&<div style={{width:20,height:2,background:s<1?C.green:C.border,borderRadius:1}}/>}
             </div>
           ))}
         </div>
-        <button onClick={()=>setStep(3)} className="btn bp bf" style={{borderRadius:11}}>Velg sykepleier →</button>
+        <button type="button" onClick={()=>setStep(2)} className="btn bp bf" style={{borderRadius:11}}>Velg sykepleier →</button>
       </div>
     </div>
   );
 
-  // Step 1: velg tjeneste
-  return(
-    <div className="phone fu">
-      <PH title="Bestill tjeneste" onBack={()=>onNav("hjem")}/>
-      <div className="sa" style={{padding:13}}>
-        <div style={{fontSize:10,fontWeight:600,color:C.green,textTransform:"uppercase",letterSpacing:1,marginBottom:7}}>🏡 Eldre & Pårørende</div>
-        {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-          <div key={sv.type} onClick={()=>{setSel(sv);setStep(2);}} className="card" style={{padding:"10px 12px",display:"flex",alignItems:"center",gap:10,marginBottom:6,border:`1.5px solid ${sel?.type===sv.type?C.green:C.border}`,cursor:"pointer"}}>
-            <div style={{width:38,height:38,borderRadius:9,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{sv.icon}</div>
-            <div style={{flex:1}}><div style={{fontSize:12,fontWeight:600,color:C.navy}}>{sv.name}</div><div style={{fontSize:9,color:C.soft}}>{sv.detail} · {sv.duration} min</div><div style={{fontSize:10,fontWeight:500,color:C.green,marginTop:1}}>fra {sv.price} kr</div></div>
-            <span style={{color:C.soft,fontSize:16}}>›</span>
-          </div>
-        ))}
-        <div style={{fontSize:10,fontWeight:600,color:C.gold,textTransform:"uppercase",letterSpacing:1,marginBottom:7,marginTop:6}}>🤱 Barselstøtte</div>
-        {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-          <div key={sv.type} onClick={()=>{setSel(sv);setStep(2);}} className="card" style={{padding:"10px 12px",display:"flex",alignItems:"center",gap:10,marginBottom:6,cursor:"pointer"}}>
-            <div style={{width:38,height:38,borderRadius:9,background:C.goldBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{sv.icon}</div>
-            <div style={{flex:1}}><div style={{fontSize:12,fontWeight:600,color:C.navy}}>{sv.name}</div><div style={{fontSize:9,color:C.soft}}>{sv.detail}</div><div style={{fontSize:10,fontWeight:500,color:C.gold,marginTop:1}}>fra {sv.price} kr</div></div>
-            <span style={{color:C.soft,fontSize:16}}>›</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return null;
 }
 
 function Betaling({onBack,onNav,service,date,time}){
@@ -1835,56 +1923,81 @@ function ChatKunde({onNav}){
 }
 
 // ══ SYKEPLEIER ════════════════════════════════════════════════
-function NurseLogin({onNav}){
-  const[picker,setPicker]=useState(false);
-  const ACCS=[{email:"lise@eiranova.no",name:"Lise Andersen",av:"LA",c:"#2C5C52"},{email:"sara@eiranova.no",name:"Sara Lindgren",av:"SL",c:"#1A73E8"},{email:"anne@eiranova.no",name:"Anne Sørensen",av:"AS",c:"#1A73E8"}];
-  if(picker)return(
-    <div className="phone fu" style={{background:"white"}}>
-      <div className="sa" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px 20px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:2,marginBottom:24}}>
-          <span style={{fontSize:24,fontWeight:700,letterSpacing:-1}}><span style={{color:"#4285F4"}}>G</span><span style={{color:"#EA4335"}}>o</span><span style={{color:"#FBBC04"}}>o</span><span style={{color:"#4285F4"}}>g</span><span style={{color:"#34A853"}}>l</span><span style={{color:"#EA4335"}}>e</span></span>
-        </div>
-        <div className="fr" style={{fontSize:19,fontWeight:500,color:"#202124",marginBottom:5,textAlign:"center"}}>Velg en konto</div>
-        <div style={{fontSize:12,color:"#5F6368",marginBottom:20,textAlign:"center"}}>for å fortsette til EiraNova</div>
-        <div style={{width:"100%",maxWidth:320,border:"1px solid #DADCE0",borderRadius:12,overflow:"hidden",marginBottom:14}}>
-          {ACCS.map((a,i)=>(
-            <div key={a.email} onClick={()=>onNav("nurse-rolle")} style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",cursor:"pointer",background:"white",borderBottom:i<ACCS.length-1?"1px solid #F1F3F4":"none"}}>
-              <div style={{width:38,height:38,borderRadius:"50%",background:a.c,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:600,color:"white",flexShrink:0}}>{a.av}</div>
-              <div><div style={{fontSize:14,fontWeight:500,color:"#202124"}}>{a.name}</div><div style={{fontSize:12,color:"#5F6368"}}>{a.email}</div></div>
-            </div>
-          ))}
-          <div style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",cursor:"pointer",borderTop:"1px solid #F1F3F4"}}>
-            <div style={{width:38,height:38,borderRadius:"50%",background:"#F1F3F4",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>👤</div>
-            <div style={{fontSize:14,color:"#202124"}}>Bruk en annen konto</div>
-          </div>
-        </div>
-        <button onClick={()=>setPicker(false)} style={{padding:"8px 18px",background:"none",border:`1px solid ${C.border}`,borderRadius:50,fontSize:12,color:C.soft,cursor:"pointer",fontFamily:"inherit"}}>← Tilbake</button>
-      </div>
-    </div>
+function NurseBottomNav({onNav,activeId}){
+  return(
+    <nav className="bnav">
+      {NURSE_NAV.map(it=>(
+        <button type="button" key={it.id} className="bi" onClick={()=>onNav(it.id)}>
+          <span style={{fontSize:20,lineHeight:1}} aria-hidden>{it.icon}</span>
+          <span className="bi-lbl" style={{fontWeight:activeId===it.id?600:400,color:activeId===it.id?C.green:C.soft}}>{it.label}</span>
+        </button>
+      ))}
+    </nav>
   );
+}
+function NurseLogin({onNav,onMockNurseLogin}){
+  const[email,setEmail]=useState("");
+  const[passord,setPassord]=useState("");
+  const[feil,setFeil]=useState("");
+  const fullforNurseMock=()=>{
+    setFeil("");
+    if(onMockNurseLogin)onMockNurseLogin();
+    else onNav("nurse-rolle");
+  };
+  const loggInnMock=()=>{
+    klikkRegistrert();
+    const erIntern=e=>e.trim().toLowerCase().endsWith("@eiranova.no");
+    if(!erIntern(email)){
+      setFeil("Kun @eiranova.no-e-post er tillatt i mock-innlogging.");
+      return;
+    }
+    if(!passord.trim()){
+      setFeil("Skriv inn passord.");
+      return;
+    }
+    fullforNurseMock();
+  };
   return(
     <div className="phone fu">
       <div style={{padding:"30px 18px 28px",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,textAlign:"center"}}>
         <div style={{fontSize:36,marginBottom:10}}>🩺</div>
         <div className="fr" style={{fontSize:21,fontWeight:600,color:"white",marginBottom:4}}>Logg inn som ansatt</div>
-        <div style={{fontSize:11,color:"rgba(255,255,255,.65)"}}>Kun for EiraNova-ansatte</div>
+        <div style={{fontSize:11,color:"rgba(255,255,255,.65)"}}>Kun for inviterte EiraNova-ansatte</div>
       </div>
       <div className="sa" style={{padding:"22px 18px"}}>
-        <div style={{background:C.greenXL,borderRadius:13,padding:"14px 16px",marginBottom:16,border:`1.5px solid ${C.greenBg}`}}>
-          <div style={{fontSize:10,fontWeight:600,color:C.green,textTransform:"uppercase",letterSpacing:.8,marginBottom:12}}>Innloggede Google-kontoer</div>
-          {[{email:"lise@eiranova.no",name:"Lise Andersen",av:"LA"},{email:"sara@eiranova.no",name:"Sara Lindgren",av:"SL"}].map(a=>(
-            <div key={a.email} onClick={()=>onNav("nurse-rolle")} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 11px",background:"white",borderRadius:10,marginBottom:7,cursor:"pointer",border:`1.5px solid ${C.border}`}}>
-              <div style={{width:34,height:34,borderRadius:"50%",background:C.greenDark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:600,color:"white",flexShrink:0}}>{a.av}</div>
-              <div style={{flex:1}}><div style={{fontSize:12,fontWeight:600,color:C.navy}}>{a.name}</div><div style={{fontSize:10,color:C.soft}}>{a.email}</div></div>
-              <div style={{background:C.greenBg,borderRadius:50,padding:"2px 8px",fontSize:9,color:C.green,fontWeight:600}}>@eiranova.no</div>
-            </div>
-          ))}
-        </div>
-        <button onClick={()=>setPicker(true)} style={{width:"100%",padding:"12px 0",background:"white",color:"#1F1F1F",border:"1.5px solid #DADCE0",borderRadius:11,fontSize:13,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:9,marginBottom:10,fontFamily:"inherit"}}>
-          <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
-          Fortsett med Google
+        <div className="login-stack">
+        <button
+          type="button"
+          onClick={()=>{klikkRegistrert();fullforNurseMock();}}
+          className="btn bp bf"
+          style={{borderRadius:11,marginBottom:12,fontSize:14,padding:"14px 12px"}}
+        >
+          🌐 Logg inn med Google
         </button>
-        <p style={{fontSize:9,color:C.soft,textAlign:"center",lineHeight:1.5}}>Kun <strong>@eiranova.no</strong>-kontoer har tilgang.</p>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
+          <div style={{flex:1,height:1,background:C.border}}/>
+          <span style={{fontSize:10,color:C.soft}}>eller e-post + passord</span>
+          <div style={{flex:1,height:1,background:C.border}}/>
+        </div>
+        <div style={{background:C.greenXL,borderRadius:13,padding:"14px 16px",marginBottom:16,border:`1.5px solid ${C.greenBg}`}}>
+          <div style={{fontSize:10,fontWeight:600,color:C.green,textTransform:"uppercase",letterSpacing:.8,marginBottom:8}}>E-post + passord</div>
+          <div style={{fontSize:10,color:C.soft,lineHeight:1.5,marginBottom:10}}>Mock-auth uten Supabase.</div>
+          <div style={{marginBottom:8}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label>
+            <input className="inp" type="email" placeholder="fornavn@eiranova.no" value={email} onChange={e=>setEmail(e.target.value)}/>
+          </div>
+          <div style={{marginBottom:6}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label>
+            <input className="inp" type="password" placeholder="••••••••" value={passord} onChange={e=>setPassord(e.target.value)}/>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <span onClick={()=>onNav("glemt-passord")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span>
+          </div>
+        </div>
+        {feil&&<div style={{fontSize:12,color:C.danger,marginTop:-8,marginBottom:8}}>{feil}</div>}
+        <button type="button" onClick={loggInnMock} className="btn bp bf" style={{borderRadius:11,marginBottom:10}}>Logg inn med e-post</button>
+        <p style={{fontSize:12,color:C.soft,textAlign:"center",lineHeight:1.5}}>Kun <strong>@eiranova.no</strong>-kontoer skal ha tilgang i produksjon.</p>
+        </div>
       </div>
     </div>
   );
@@ -1944,91 +2057,167 @@ function NurseRolle({onNav}){
 function NurseHjem({onNav}){
   const{toast,ToastContainer}=useToast();
   const done=OPPDRAG.filter(o=>o.status==="completed").length;
-  const NURSE_NAV=[{id:"nurse-hjem",icon:"🏠",label:"Hjem"},{id:"nurse-hjem",icon:"📋",label:"Oppdrag"},{id:"chat-kunde",icon:"💬",label:"Meldinger"},{id:"nurse-profil",icon:"👤",label:"Profil"}];
+  const neste=OPPDRAG.find(o=>o.status!=="completed");
+  const deskRight=(
+    <div style={{display:"flex",alignItems:"center",gap:8,fontSize:12,color:C.soft,flexShrink:0}}>
+      <span style={{width:28,height:28,borderRadius:"50%",background:C.sidebarAccent,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"white"}}>SL</span>
+      <span className="hm" style={{whiteSpace:"nowrap"}}>Sara Lindgren</span>
+    </div>
+  );
   return(
     <div className="phone fu">
       <ToastContainer/>
-      {/* Desktop top nav */}
-      <DeskNav active="nurse-hjem" onNav={onNav} items={NURSE_NAV} title="EiraNova · Sara Lindgren"
-        right={<div style={{display:"flex",alignItems:"center",gap:8,fontSize:12,color:C.soft}}>
-          <span style={{width:28,height:28,borderRadius:"50%",background:C.sidebarAccent,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"white"}}>SL</span>
-          <span>Sara Lindgren</span>
-        </div>}/>
-      {/* Header */}
+      <DeskNav active="nurse-hjem" onNav={onNav} items={NURSE_NAV} title="EiraNova · Sara Lindgren" right={deskRight}/>
       <div style={{padding:"clamp(14px,2vw,24px) clamp(14px,3vw,32px)",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,flexShrink:0}}>
         <div style={{maxWidth:900,margin:"0 auto"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-            <div>
+            <div style={{minWidth:0}}>
               <div className="fr" style={{fontSize:"clamp(16px,1.8vw,22px)",fontWeight:600,color:"white"}}>Min arbeidsdag</div>
               <div style={{fontSize:"clamp(10px,1vw,13px)",color:"rgba(255,255,255,.6)"}}>Mandag 3. mars · Sara L.</div>
             </div>
-            <div style={{width:40,height:40,borderRadius:"50%",background:"rgba(255,255,255,.18)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:"white"}}>SL</div>
+            <div style={{width:40,height:40,borderRadius:"50%",background:"rgba(255,255,255,.18)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:"white",flexShrink:0}}>SL</div>
           </div>
           <div style={{background:"rgba(255,255,255,.12)",borderRadius:10,padding:"10px 14px"}}>
-            <div style={{display:"flex",justifyContent:"space-between",fontSize:"clamp(10px,1vw,12px)",color:"rgba(255,255,255,.7)",marginBottom:6}}><span>Progresjon</span><span>{done}/{OPPDRAG.length} oppdrag</span></div>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:"clamp(10px,1vw,12px)",color:"rgba(255,255,255,.7)",marginBottom:6}}><span>Progresjon i dag</span><span>{done}/{OPPDRAG.length} oppdrag</span></div>
             <div style={{height:6,borderRadius:50,background:"rgba(255,255,255,.2)",overflow:"hidden"}}><div style={{height:"100%",borderRadius:50,background:C.sidebarAccent,width:`${(done/OPPDRAG.length)*100}%`}}/></div>
           </div>
         </div>
       </div>
-      {/* Content */}
       <div className="sa" style={{padding:"clamp(13px,2vw,28px) clamp(13px,3vw,32px)"}}>
-        <div style={{maxWidth:900,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,420px),1fr))",gap:12}}>
-          {OPPDRAG.map(op=>(
-            <div key={op.id} onClick={()=>onNav("nurse-innsjekk")} className="nc" style={{cursor:"pointer",opacity:op.status==="completed"?.6:1}}>
+        <div style={{maxWidth:900,margin:"0 auto"}}>
+          <div style={{fontSize:10,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.8,marginBottom:8}}>Neste oppdrag</div>
+          {neste?(
+            <div className="nc" style={{cursor:"pointer",marginBottom:12}} onClick={()=>onNav("nurse-innsjekk",{oppdragId:neste.id})}>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
-                <div style={{width:44,height:44,borderRadius:11,background:op.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{op.icon}</div>
-                <div style={{flex:1}}>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><span style={{fontSize:"clamp(12px,1.2vw,14px)",fontWeight:600,color:C.navy}}>{op.customer}</span><Bdg status={op.status}/></div>
-                  <div style={{fontSize:"clamp(10px,1vw,12px)",color:C.soft}}>{op.service}</div>
-                  <div style={{fontSize:"clamp(10px,1vw,12px)",color:C.soft}}>🕐 {op.time} · 📍 {op.address}</div>
+                <div style={{width:48,height:48,borderRadius:12,background:neste.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{neste.icon}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4,flexWrap:"wrap"}}>
+                    <span style={{fontSize:"clamp(13px,1.3vw,15px)",fontWeight:600,color:C.navy}}>{neste.customer}</span>
+                    <Bdg status={neste.status}/>
+                  </div>
+                  <div style={{fontSize:12,color:C.soft,marginBottom:2}}>{neste.service}</div>
+                  <div style={{fontSize:12,color:C.navyMid}}>🕐 {neste.date} kl. {neste.time}</div>
+                  <div style={{fontSize:11,color:C.soft,marginTop:4}}>📍 {neste.address}</div>
                 </div>
               </div>
-              {op.status==="active"&&(
-                <div style={{marginTop:12,display:"flex",gap:8}}>
-                  <button className="btn bp" style={{flex:1,fontSize:"clamp(10px,1vw,12px)",padding:"8px 0",borderRadius:9}}>📍 Naviger</button>
-                  <button className="btn" onClick={e=>{e.stopPropagation();onNav("chat-kunde");}} style={{flex:1,fontSize:"clamp(10px,1vw,12px)",padding:"8px 0",borderRadius:9,background:C.greenBg,color:C.green}}>💬 Chat</button>
+              {neste.status==="active"&&(
+                <div style={{marginTop:14,display:"flex",gap:8,flexWrap:"wrap"}}>
+                  <button type="button" className="btn bp" style={{flex:1,minWidth:120,fontSize:"clamp(10px,1vw,12px)",padding:"8px 0",borderRadius:9}} onClick={e=>{e.stopPropagation();toast("Åpner navigasjon","ok");}}>📍 Naviger</button>
+                  <button type="button" className="btn" onClick={e=>{e.stopPropagation();onNav("chat-kunde");}} style={{flex:1,minWidth:120,fontSize:"clamp(10px,1vw,12px)",padding:"8px 0",borderRadius:9,background:C.greenBg,color:C.green}}>💬 Melding</button>
                 </div>
               )}
             </div>
-          ))}
+          ):(
+            <div className="card cp" style={{marginBottom:12,fontSize:13,color:C.soft}}>Ingen åpne oppdrag igjen i dag ✓</div>
+          )}
+          <button type="button" className="btn" onClick={()=>onNav("nurse-oppdrag")} style={{width:"100%",padding:"12px 16px",fontSize:13,borderRadius:11,background:"white",color:C.green,border:`1.5px solid ${C.green}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>
+            Se alle dagens oppdrag →
+          </button>
         </div>
       </div>
-      {/* Mobile bottom nav only */}
-      <nav className="bnav">
-        {NURSE_NAV.map((it,i)=>(
-          <button key={i} className="bi" onClick={()=>onNav(it.id)}><span style={{fontSize:20}}>{it.icon}</span><span style={{fontSize:9,fontWeight:i===0?600:400,color:i===0?C.green:C.soft}}>{it.label}</span></button>
-        ))}
-      </nav>
+      <NurseBottomNav onNav={onNav} activeId="nurse-hjem"/>
     </div>
   );
 }
-function NurseInnsjekk({onNav}){
-  const{toast,ToastContainer}=useToast();
-  const[done,setDone]=useState(false);
-  const[checks,setChecks]=useState([false,false,false,false,false]);
-  if(done)return(
-    <div className="phone fu">
-      <ToastContainer/><PH title="Oppdrag fullført" onBack={()=>onNav("nurse-hjem")}/>
-      <div className="sa" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,textAlign:"center"}}>
-        <div style={{fontSize:56,marginBottom:14}}>✅</div>
-        <div className="fr" style={{fontSize:20,fontWeight:600,color:C.navy,marginBottom:6}}>Oppdrag fullført!</div>
-        <div style={{fontSize:12,color:C.soft,lineHeight:1.6,marginBottom:22}}>Rapport sendt. Neste kl. 13:00 hos Kari Olsen.</div>
-        <button onClick={()=>onNav("nurse-hjem")} className="btn bp bf" style={{borderRadius:11}}>Tilbake til arbeidsdag</button>
-      </div>
+
+function NurseOppdrag({onNav}){
+  const deskRight=(
+    <div style={{display:"flex",alignItems:"center",gap:8,fontSize:12,color:C.soft,flexShrink:0}}>
+      <span style={{width:28,height:28,borderRadius:"50%",background:C.sidebarAccent,display:"inline-flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"white"}}>SL</span>
+      <span className="hm" style={{whiteSpace:"nowrap"}}>Sara Lindgren</span>
     </div>
   );
   return(
     <div className="phone fu">
-      <PH title="Innsjekk · Olaf Eriksen" onBack={()=>onNav("nurse-hjem")}/>
+      <DeskNav active="nurse-oppdrag" onNav={onNav} items={NURSE_NAV} title="EiraNova · Sara Lindgren" right={deskRight}/>
+      <div style={{padding:"clamp(14px,2vw,24px) clamp(14px,3vw,32px)",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,flexShrink:0}}>
+        <div style={{maxWidth:900,margin:"0 auto"}}>
+          <div className="fr" style={{fontSize:"clamp(16px,1.8vw,22px)",fontWeight:600,color:"white",marginBottom:4}}>Dagens oppdrag</div>
+          <div style={{fontSize:"clamp(10px,1vw,13px)",color:"rgba(255,255,255,.65)"}}>Mandag 3. mars · {OPPDRAG.length} oppdrag</div>
+        </div>
+      </div>
+      <div className="sa" style={{padding:"clamp(13px,2vw,28px) clamp(13px,3vw,32px)"}}>
+        <div style={{maxWidth:900,margin:"0 auto",display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,420px),1fr))",gap:12}}>
+          {OPPDRAG.map(op=>(
+            <div
+              key={op.id}
+              role="button"
+              tabIndex={0}
+              onClick={()=>onNav("nurse-innsjekk",{oppdragId:op.id})}
+              onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onNav("nurse-innsjekk",{oppdragId:op.id});}}}
+              className="nc"
+              style={{cursor:"pointer",opacity:op.status==="completed"?.65:1}}
+            >
+              <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+                <div style={{width:44,height:44,borderRadius:11,background:op.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{op.icon}</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:4,flexWrap:"wrap"}}>
+                    <span style={{fontSize:"clamp(12px,1.2vw,14px)",fontWeight:600,color:C.navy}}>{op.customer}</span>
+                    <Bdg status={op.status}/>
+                  </div>
+                  <div style={{fontSize:"clamp(10px,1vw,12px)",color:C.soft,marginBottom:3}}>{op.service}</div>
+                  <div style={{fontSize:"clamp(10px,1vw,12px)",color:C.navyMid}}>🕐 {op.date} kl. {op.time}</div>
+                  <div style={{fontSize:"clamp(10px,1vw,12px)",color:C.soft,marginTop:4,lineHeight:1.45}}>📍 {op.address}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <NurseBottomNav onNav={onNav} activeId="nurse-oppdrag"/>
+    </div>
+  );
+}
+function NurseInnsjekk({onNav,focusOppdragId}){
+  const{toast,ToastContainer}=useToast();
+  const resolvedId=focusOppdragId!=null&&String(focusOppdragId)!==""?String(focusOppdragId):nurseDefaultInnsjekkOppdragId();
+  const op=OPPDRAG.find(o=>String(o.id)===resolvedId)??OPPDRAG[0];
+  const[done,setDone]=useState(false);
+  const[checks,setChecks]=useState([false,false,false,false,false]);
+  useEffect(()=>{
+    setDone(false);
+    setChecks([false,false,false,false,false]);
+  },[op.id]);
+  const nesteEtter=OPPDRAG.filter(o=>String(o.id)!==String(op.id)&&o.status!=="completed")[0];
+  const notatTekst=op.id==="2"
+    ?"Dør kode 1234. Pårørende: Kari (tlf. 900 12 345)."
+    :`Besøk hos ${op.customer}. Meld fra til koordinator ved avvik.`;
+  if(done)return(
+    <div className="phone fu">
+      <ToastContainer/>
+      <PH title="Oppdrag fullført" onBack={()=>onNav("nurse-hjem")}/>
+      <div className="sa" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:24,textAlign:"center",flex:1}}>
+        <div style={{fontSize:56,marginBottom:14}}>✅</div>
+        <div className="fr" style={{fontSize:20,fontWeight:600,color:C.navy,marginBottom:6}}>Oppdrag fullført!</div>
+        <div style={{fontSize:12,color:C.soft,lineHeight:1.6,marginBottom:22,maxWidth:320}}>
+          Rapport sendt for {op.customer}.
+          {nesteEtter?` Neste kl. ${nesteEtter.time} hos ${nesteEtter.customer}.`:" Du er ferdig med planlagte oppdrag i dag."}
+        </div>
+        <button type="button" onClick={()=>onNav("nurse-hjem")} className="btn bp bf" style={{borderRadius:11}}>Tilbake til arbeidsdag</button>
+      </div>
+      <NurseBottomNav onNav={onNav} activeId="nurse-innsjekk"/>
+    </div>
+  );
+  return(
+    <div className="phone fu">
+      <ToastContainer/>
+      <PH title={`Innsjekk · ${op.customer}`} onBack={()=>onNav("nurse-oppdrag")}/>
       <div className="sa" style={{padding:13}}>
         <div className="card cp" style={{marginBottom:10}}>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-            <div style={{width:44,height:44,borderRadius:11,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>🏠</div>
-            <div><div style={{fontSize:13,fontWeight:600,color:C.navy}}>Olaf Eriksen</div><div style={{fontSize:10,color:C.soft}}>Storgata 45, Moss · Etasje 2</div></div>
+            <div style={{width:44,height:44,borderRadius:11,background:op.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22}}>{op.icon}</div>
+            <div style={{minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:C.navy}}>{op.customer}</div>
+              <div style={{fontSize:10,color:C.soft}}>{op.service} · {op.date} kl. {op.time}</div>
+              <div style={{fontSize:10,color:C.soft,marginTop:2}}>📍 {op.address}</div>
+              <div style={{marginTop:6}}><Bdg status={op.status}/></div>
+            </div>
           </div>
-          <div style={{background:C.greenXL,borderRadius:8,padding:"8px 10px",fontSize:11,color:C.navyMid,lineHeight:1.6}}><strong>Notat:</strong> Dør kode 1234. Pårørende: Kari (tlf. 900 12 345).</div>
-          <div style={{display:"flex",gap:7,marginTop:10}}>
-            {["📞 Ring","💬 Chat","🗺️ Kart"].map(b=><button key={b} className="btn" style={{flex:1,fontSize:10,padding:"7px 0",background:C.greenBg,color:C.green,borderRadius:8}}>{b}</button>)}
+          <div style={{background:C.greenXL,borderRadius:8,padding:"8px 10px",fontSize:11,color:C.navyMid,lineHeight:1.6}}><strong>Notat:</strong> {notatTekst}</div>
+          <div style={{display:"flex",gap:7,marginTop:10,flexWrap:"wrap"}}>
+            <button type="button" className="btn" style={{flex:1,minWidth:90,fontSize:10,padding:"7px 0",background:C.greenBg,color:C.green,borderRadius:8}} onClick={()=>toast(`Ringer ${op.phone}`,"ok")}>📞 Ring</button>
+            <button type="button" className="btn" onClick={()=>onNav("chat-kunde")} style={{flex:1,minWidth:90,fontSize:10,padding:"7px 0",background:C.greenBg,color:C.green,borderRadius:8}}>💬 Chat</button>
+            <button type="button" className="btn" style={{flex:1,minWidth:90,fontSize:10,padding:"7px 0",background:C.greenBg,color:C.green,borderRadius:8}} onClick={()=>toast("Åpner kart","ok")}>🗺️ Kart</button>
           </div>
         </div>
         <div style={{fontSize:10,fontWeight:600,color:C.navy,textTransform:"uppercase",letterSpacing:1,marginBottom:7}}>Sjekkliste</div>
@@ -2039,8 +2228,9 @@ function NurseInnsjekk({onNav}){
           </div>
         ))}
         <div style={{marginTop:14}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:5}}>Rapport / Notater</label><textarea className="inp" rows={3} placeholder="Beskriv gjennomføringen..." style={{resize:"none",lineHeight:1.5}}/></div>
-        <button onClick={()=>setDone(true)} className="btn bp bf" style={{borderRadius:11,marginTop:12}}>✅ Fullfør og send rapport</button>
+        <button type="button" onClick={()=>setDone(true)} className="btn bp bf" style={{borderRadius:11,marginTop:12}}>✅ Fullfør og send rapport</button>
       </div>
+      <NurseBottomNav onNav={onNav} activeId="nurse-innsjekk"/>
     </div>
   );
 }
@@ -2053,7 +2243,7 @@ function NurseProfil({onNav}){
     <div className="phone fu">
       <ToastContainer/>
       <PH title="Min profil" onBack={()=>onNav("nurse-hjem")} right={
-        <button onClick={()=>setEditMode(e=>!e)} style={{fontSize:11,padding:"4px 11px",background:"rgba(255,255,255,.18)",border:"1px solid rgba(255,255,255,.3)",borderRadius:50,color:"white",cursor:"pointer",fontFamily:"inherit"}}>
+        <button type="button" onClick={()=>setEditMode(e=>!e)} style={{fontSize:11,padding:"8px 14px",minHeight:44,background:"rgba(255,255,255,.18)",border:"1px solid rgba(255,255,255,.3)",borderRadius:50,color:"white",cursor:"pointer",fontFamily:"inherit"}}>
           {editMode?"Lagre":"Rediger"}
         </button>
       }/>
@@ -2118,8 +2308,12 @@ function NurseProfil({onNav}){
         <button style={{width:"100%",padding:"10px",background:"white",border:`1.5px solid ${C.danger}`,borderRadius:10,fontSize:11,color:C.danger,cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>
           Meld deg utilgjengelig i dag
         </button>
+        <button type="button" onClick={()=>onNav("nurse-login")} className="btn" style={{width:"100%",marginTop:12,padding:"12px 0",fontSize:13,borderRadius:11,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>
+          Logg ut
+        </button>
         <div style={{height:16}}/>
       </div>
+      <NurseBottomNav onNav={onNav} activeId="nurse-profil"/>
     </div>
   );
 }
@@ -2173,7 +2367,7 @@ const ANAV=[
   {id:"innstillinger",icon:"⚙️",label:"Innstillinger"},
 ];
 
-function ASidebar({current,open,onClose,onNav}){
+function ASidebar({current,open,onClose,onNav,onLogout}){
   return(
     <>
       <div className={`overlay${open?" open":""}`} onClick={onClose}/>
@@ -2183,25 +2377,28 @@ function ASidebar({current,open,onClose,onNav}){
           <div><div className="fr" style={{fontSize:15,fontWeight:600,color:"white"}}>Eira<span style={{color:"#E8C4A4"}}>Nova</span></div><div style={{fontSize:9,color:"rgba(255,255,255,.4)"}}>Adminpanel</div></div>
           <button onClick={onClose} className="hd" style={{marginLeft:"auto",background:"none",border:"none",color:"rgba(255,255,255,.5)",fontSize:20,cursor:"pointer"}}>✕</button>
         </div>
+        <div style={{padding:"12px 18px",borderBottom:"1px solid rgba(255,255,255,.08)",flexShrink:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:36,height:36,borderRadius:"50%",background:C.sidebarAccent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"white",flexShrink:0}}>LA</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:"white"}}>Lise Andersen</div>
+              <div style={{fontSize:10,color:C.sidebarMuted}}>Administrator</div>
+            </div>
+            <button type="button" onClick={()=>{onLogout?.();onClose();}} style={{flexShrink:0,padding:"8px 12px",background:"rgba(255,255,255,.12)",color:"white",border:"1px solid rgba(255,255,255,.22)",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Logg ut</button>
+          </div>
+        </div>
         <nav style={{flex:1,overflowY:"auto",padding:"8px 0"}}>
           <div style={{fontSize:9,fontWeight:600,color:"rgba(255,255,255,.3)",textTransform:"uppercase",letterSpacing:1,padding:"10px 18px 4px"}}>Oversikt</div>
           {ANAV.map(item=>{
             const a=current===item.id;
             return(
               <button key={item.id} onClick={()=>{onNav(item.id);onClose();}}
-                style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"11px 18px",background:a?C.sidebarActive:"transparent",borderLeft:`3px solid ${a?C.sidebarAccent:"transparent"}`,border:"none",color:a?"white":C.sidebarText,fontSize:13,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+                style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"11px 18px",background:a?C.sidebarActive:"transparent",borderTop:"none",borderRight:"none",borderBottom:"none",borderLeft:`3px solid ${a?C.sidebarAccent:"transparent"}`,color:a?"white":C.sidebarText,fontSize:13,cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
                 <span style={{fontSize:16,opacity:a?1:.75}}>{item.icon}</span>{item.label}
               </button>
             );
           })}
         </nav>
-        <div style={{padding:"12px 18px 14px",borderTop:"1px solid rgba(255,255,255,.08)"}}>
-          <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:10}}>
-            <div style={{width:30,height:30,borderRadius:"50%",background:C.sidebarAccent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"white"}}>LA</div>
-            <div><div style={{fontSize:12,fontWeight:500,color:"white"}}>Lise Andersen</div><div style={{fontSize:9,color:C.sidebarMuted}}>Administrator</div></div>
-          </div>
-          <button style={{width:"100%",padding:"7px",background:"rgba(255,255,255,.07)",color:"rgba(255,255,255,.5)",border:"none",borderRadius:8,fontSize:11,cursor:"pointer",fontFamily:"inherit"}}>← Logg ut</button>
-        </div>
       </aside>
     </>
   );
@@ -2236,7 +2433,6 @@ function AHeader({onMenuClick,page}){
           )}
         </div>
         <div style={{width:34,height:34,borderRadius:8,background:C.border,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>🔔</div>
-        <div style={{width:32,height:32,borderRadius:"50%",background:C.sidebarAccent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:"white"}}>LA</div>
       </div>
     </header>
   );
@@ -2257,7 +2453,7 @@ function ADashboard(){
       </div>
       <div className="g2 g2m1" style={{marginBottom:18}}>
         <div className="card">
-          <div style={{padding:"12px 14px",borderBottom:`1px solid ${C.border}`}} className="fr" style={{fontSize:14,fontWeight:600,color:C.navy}}>Oppdrag i dag</div>
+          <div className="fr" style={{padding:"12px 14px",borderBottom:`1px solid ${C.border}`,fontSize:14,fontWeight:600,color:C.navy}}>Oppdrag i dag</div>
           {ORDERS.map(o=>(
             <div key={o.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 14px",borderBottom:`0.5px solid ${C.border}`}}>
               <span style={{fontSize:14}}>{o.service.split(" ")[0]}</span>
@@ -2311,7 +2507,7 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
   const valgtType=arsakTyper.find(a=>a.key===arsakType);
   const refusjonFarge=arsakType==="sykepleier_syk"?"#16A34A":arsakType==="kunde_syk"?C.gold:C.soft;
   return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
       <ToastContainer/>
       <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:620,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
         {/* Header */}
@@ -2335,7 +2531,7 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
           {/* ── DETALJER ── */}
           {tab==="detaljer"&&(
             <div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:16}}>
+              <div className="stack-sm-1" style={{marginBottom:16}}>
                 {[
                   {l:"Kunde",v:oppdrag.customer,icon:"👤"},
                   {l:"Telefon",v:oppdrag.phone,icon:"📞"},
@@ -2384,7 +2580,7 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
                 {arsakType==="sykepleier_syk"&&<div style={{fontSize:10,color:C.soft}}>Kunden varsles automatisk. Refusjon via {oppdrag.betaltVia==="b2b"?"kreditnota på neste faktura":oppdrag.betaltVia==="vipps"?"Vipps API (1-3 dager)":"Stripe (5-10 dager)"}.</div>}
               </div>
               {/* Endre-felter */}
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
+              <div className="stack-sm-1" style={{marginBottom:14}}>
                 {(arsakType==="tidendring"||arsakType==="annet")&&(
                   <>
                     <div>
@@ -2457,7 +2653,7 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
           )}
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }
 
@@ -2586,7 +2782,7 @@ function KrediterPrivatModal({onClose,onSave,prefilledOppdrag=null}){
   const stegLabels=modus==="fri"?["Type","Detaljer","Bekreft"]:["Bestilling","Detaljer","Bekreft"];
 
   return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.5)",padding:20}}>
       <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:540,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
 
         {/* Header */}
@@ -2808,7 +3004,7 @@ function KrediterPrivatModal({onClose,onSave,prefilledOppdrag=null}){
           )}
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }
 
@@ -2853,7 +3049,7 @@ function KreditnotaB2BModal({onClose,onSave,prefilledOppdrag=null}){
   const selectedOrg=B2B_C.find(c=>c.name===kunde);
 
   return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.5)",padding:20}}>
       <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:600,maxHeight:"92vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
 
         {/* Header */}
@@ -3187,21 +3383,23 @@ function KreditnotaB2BModal({onClose,onSave,prefilledOppdrag=null}){
                       Ref. oppdrag: {valgteOppdrag.map(o=>`#${o.id}`).join(", ")}
                     </div>
                   )}
-                  <table style={{width:"100%",borderCollapse:"collapse",marginBottom:10}}>
-                    <thead><tr style={{borderBottom:`1px solid ${C.border}`}}>
-                      {["Beskrivelse","Ant.","Pris","Sum"].map(h=><th key={h} style={{fontSize:9,fontWeight:600,color:C.soft,textAlign:h==="Ant."||h==="Pris"||h==="Sum"?"right":"left",padding:"4px 0",textTransform:"uppercase",letterSpacing:.4}}>{h}</th>)}
+                  <div className="tw" style={{marginBottom:10}}>
+                  <table className="tbl">
+                    <thead><tr>
+                      {["Beskrivelse","Ant.","Pris","Sum"].map(h=><th key={h} style={{textAlign:h==="Ant."||h==="Pris"||h==="Sum"?"right":"left"}}>{h}</th>)}
                     </tr></thead>
                     <tbody>
                       {linjer.filter(l=>l.beskrivelse).map((l,i)=>(
-                        <tr key={i} style={{borderBottom:`1px solid ${C.border}`}}>
-                          <td style={{fontSize:11,padding:"6px 0"}}>{l.beskrivelse}</td>
-                          <td style={{fontSize:11,textAlign:"right"}}>{l.antall}</td>
-                          <td style={{fontSize:11,textAlign:"right"}}>{Number(l.pris).toLocaleString("nb-NO")} kr</td>
-                          <td style={{fontSize:11,textAlign:"right",fontWeight:600}}>{(Number(l.antall)*Number(l.pris)).toLocaleString("nb-NO")} kr</td>
+                        <tr key={i}>
+                          <td>{l.beskrivelse}</td>
+                          <td style={{textAlign:"right"}}>{l.antall}</td>
+                          <td style={{textAlign:"right"}}>{Number(l.pris).toLocaleString("nb-NO")} kr</td>
+                          <td style={{textAlign:"right",fontWeight:600}}>{(Number(l.antall)*Number(l.pris)).toLocaleString("nb-NO")} kr</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  </div>
                   <div style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderTop:`2px solid ${C.navy}`}}>
                     <span style={{fontSize:12,fontWeight:700,color:C.navy}}>Total kreditbeløp</span>
                     <span style={{fontSize:14,fontWeight:700,color:"#2C5C52"}}>{total.toLocaleString("nb-NO")} kr</span>
@@ -3224,7 +3422,7 @@ function KreditnotaB2BModal({onClose,onSave,prefilledOppdrag=null}){
           )}
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }
 
@@ -3633,7 +3831,7 @@ function AB2B({setDrawer}){
         <div>
           {/* Avtale-modal */}
           {avtaleModal&&(
-            <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+            <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
               <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:520,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
                 <div style={{padding:"16px 20px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div>
@@ -3733,7 +3931,7 @@ function AB2B({setDrawer}){
                   </div>
                 </div>
               </div>
-            </div>
+            </ModalPortal>
           )}
 
           {/* Header */}
@@ -3873,7 +4071,7 @@ function VikarPanel(){
       <ToastContainer/>
       {/* ── Vikar-detaljmodal ── */}
       {valgtVikar&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:540,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
             <div style={{padding:"18px 22px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
@@ -3940,7 +4138,7 @@ function VikarPanel(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* KPI-strip */}
@@ -4440,7 +4638,7 @@ function AAnsatte(){
 
       {/* Modal: Ny intern ansatt */}
       {modal==="ny"&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:16}}>
           <div style={{background:"white",borderRadius:16,padding:22,width:"100%",maxWidth:420,boxShadow:"0 8px 40px rgba(0,0,0,.2)"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
               <span className="fr" style={{fontSize:16,fontWeight:600,color:C.navy}}>Ny intern ansatt</span>
@@ -4466,13 +4664,13 @@ function AAnsatte(){
               <button onClick={create} className="btn bp" style={{flex:2,padding:11,borderRadius:10,fontSize:12}}>Opprett + Workspace</button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Modal: Gi B2B-tilgang — 4-stegs sikkerhetsflyt */}
       {b2bModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.5)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-          <div style={{background:"white",borderRadius:"18px 18px 0 0",padding:"20px 18px 30px",width:"100%",maxWidth:500,maxHeight:"88vh",overflowY:"auto"}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.5)",padding:20}}>
+          <div style={{background:"white",borderRadius:18,padding:"20px 18px 30px",width:"100%",maxWidth:500,maxHeight:"88vh",overflowY:"auto"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
               <div>
                 <div className="fr" style={{fontSize:16,fontWeight:600,color:C.navy}}>Gi B2B-tilgang</div>
@@ -4542,12 +4740,12 @@ function AAnsatte(){
 
             <button onClick={()=>setB2bModal(null)} className="btn bp bf" style={{borderRadius:11}}>Lukk</button>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Modal: Revisjonsspor */}
       {revisjonModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:16}}>
           <div style={{background:"white",borderRadius:16,padding:20,width:"100%",maxWidth:400,boxShadow:"0 8px 40px rgba(0,0,0,.2)"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
               <div>
@@ -4575,13 +4773,13 @@ function AAnsatte(){
             </div>
             <button onClick={()=>setRevisjonModal(null)} className="btn bp bf" style={{borderRadius:10}}>Lukk</button>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
 
       {/* Modal: Slett intern ansatt */}
       {del&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:200,display:"flex",alignItems:"center",justifyContent:"center",padding:16}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:16}}>
           <div style={{background:"white",borderRadius:16,padding:22,width:"100%",maxWidth:380,boxShadow:"0 8px 40px rgba(0,0,0,.2)"}}>
             <div style={{fontSize:30,textAlign:"center",marginBottom:10}}>⚠️</div>
             <div className="fr" style={{fontSize:15,fontWeight:600,color:C.navy,textAlign:"center",marginBottom:7}}>Fjern ansatt?</div>
@@ -4596,7 +4794,7 @@ function AAnsatte(){
               <button onClick={()=>remove(del)} style={{flex:1,padding:11,background:C.danger,color:"white",border:"none",borderRadius:10,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Ja, fjern</button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
     </div>
   );
@@ -4608,8 +4806,8 @@ function ADrawer({type,onClose}){
     ?[["Organisasjonsnummer","922456789"],["Firmanavn","Automatisk utfylt"],["Kundetype","Kommune / Borettslag / Bedrift"],["Kontakt e-post","faktura@bedrift.no"],["Betalingsfrist","14 / 30 dager"]]
     :[["Pasient","Søk eller velg kunde..."],["Tjeneste","Velg tjeneste..."],["Dato","Velg dato..."],["Sykepleier","Tildel (valgfritt)"]];
   return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.42)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-      <div style={{background:"white",borderRadius:"16px 16px 0 0",padding:"18px 18px 28px",width:"100%",maxWidth:540,maxHeight:"85vh",overflowY:"auto"}}>
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.42)",padding:20}}>
+      <div style={{background:"white",borderRadius:16,padding:"18px 18px 28px",width:"100%",maxWidth:540,maxHeight:"85vh",overflowY:"auto"}}>
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
           <span className="fr" style={{fontSize:16,fontWeight:600,color:C.navy}}>{type==="b2b"?"Legg til B2B-kunde":"Nytt oppdrag"}</span>
           <button onClick={onClose} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:C.soft}}>✕</button>
@@ -4620,7 +4818,7 @@ function ADrawer({type,onClose}){
         {type==="b2b"&&<div style={{marginBottom:12,background:C.greenBg,borderRadius:8,padding:"9px 12px",fontSize:11,color:C.greenDark}}>✓ Registrert i ELMA — EHF-faktura sendes automatisk via PEPPOL</div>}
         <button onClick={onClose} className="btn bp bf" style={{borderRadius:10}}>{type==="b2b"?"Legg til kunde":"Opprett oppdrag"}</button>
       </div>
-    </div>
+    </ModalPortal>
   );
 }
 
@@ -4668,7 +4866,7 @@ const PAKKER=[
 function B2BLogin({onNav}){
   // B2B-innlogging skjer nå via Kunde-app → Login → Bedriftskunde
   // Denne komponenten er beholdt for bakoverkompatibilitet men ruter direkte videre
-  React.useEffect(()=>{ onNav("login"); },[]);
+  useEffect(()=>{ onNav("login"); },[]);
   return null;
 }
 
@@ -4892,8 +5090,8 @@ function B2BBruker({onNav}){
 
       {/* Ekstra-modal */}
       {ekstraModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-          <div style={{background:"white",borderRadius:"16px 16px 0 0",padding:"18px 16px 28px",width:"100%",maxWidth:420,maxHeight:"75vh",overflowY:"auto"}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
+          <div style={{background:"white",borderRadius:16,padding:"18px 16px 28px",width:"100%",maxWidth:420,maxHeight:"75vh",overflowY:"auto"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
               <span className="fr" style={{fontSize:15,fontWeight:600,color:C.navy}}>Ekstra tjeneste</span>
               <button onClick={()=>setEkstraModal(false)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:C.soft}}>✕</button>
@@ -4907,7 +5105,7 @@ function B2BBruker({onNav}){
               </div>
             ))}
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       <nav className="bnav">
@@ -5011,7 +5209,7 @@ function LonnPanel({lonnTab,setLonnTab}){
       {lonnTab==="oversikt"&&(
         <div>
           {valgtAnsatt&&(
-            <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+            <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
               <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:560,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
                 <div style={{padding:"18px 22px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div style={{display:"flex",alignItems:"center",gap:12}}>
@@ -5065,7 +5263,7 @@ function LonnPanel({lonnTab,setLonnTab}){
                   </div>
                 </div>
               </div>
-            </div>
+            </ModalPortal>
           )}
           <div className="card tw">
             <div style={{padding:"12px 16px",borderBottom:`1px solid ${C.border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -5932,9 +6130,9 @@ function OkonomiPage(){
       {okonomiTab==="kalkulator"&&<PrisKalkulator/>}
       {okonomiTab==="regnskap"&&<>
 
-      {/* Eksport-modal */}}
+      {/* Eksport-modal */}
       {eksportModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:480,boxShadow:"0 20px 60px rgba(0,0,0,.2)"}}>
             <div style={{padding:"16px 20px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"16px 16px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div style={{fontSize:15,fontWeight:600,color:"white"}}>📤 Eksporter til Tripletex</div>
@@ -5965,7 +6163,7 @@ function OkonomiPage(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Periode-velger + handlinger */}
@@ -6191,9 +6389,9 @@ function InnstillingerPage(){
   const[journalBekreft,setJournalBekreft]=useState(false);
 
   const Toggle=({on,onToggle})=>(
-    <div onClick={onToggle} style={{width:38,height:22,borderRadius:11,background:on?"#4A7C6F":"#D1D5DB",cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
-      <div style={{position:"absolute",top:3,left:on?18:3,width:16,height:16,borderRadius:"50%",background:"white",transition:"left .2s",boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
-    </div>
+    <button type="button" className="settings-toggle" onClick={onToggle} aria-pressed={on} style={{background:on?"#4A7C6F":"#D1D5DB"}}>
+      <span style={{position:"absolute",top:4,left:on?26:4,width:22,height:22,borderRadius:"50%",background:"white",transition:"left .2s",boxShadow:"0 1px 3px rgba(0,0,0,.2)",pointerEvents:"none"}}/>
+    </button>
   );
   const Section=({title,icon,children})=>(
     <div className="card" style={{marginBottom:18}}>
@@ -6206,18 +6404,18 @@ function InnstillingerPage(){
   );
   const Field=({label,value,type="text",hint})=>(
     <div style={{marginBottom:14}}>
-      <label style={{fontSize:11,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>{label}</label>
-      <input defaultValue={value} type={type} style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:12,fontFamily:"inherit",background:C.greenXL,color:C.navy,outline:"none"}}/>
+      <label style={{fontSize:12,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>{label}</label>
+      <input defaultValue={value} type={type} className="inp" style={{width:"100%"}}/>
       {hint&&<div style={{fontSize:10,color:C.soft,marginTop:3}}>{hint}</div>}
     </div>
   );
 
   return(
-    <div className="fu" style={{maxWidth:780}}>
+    <div className="fu" style={{width:"100%",maxWidth:780,margin:"0 auto"}}>
 
       {/* ── B2B bekreftelsesmodal ── */}
       {b2bBekreft&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:440,boxShadow:"0 20px 60px rgba(0,0,0,.22)",padding:"24px"}}>
             <div style={{fontSize:32,textAlign:"center",marginBottom:12}}>{b2bAktiv?"⚠️":"🏢"}</div>
             <div style={{fontSize:15,fontWeight:700,color:C.navy,textAlign:"center",marginBottom:8}}>
@@ -6242,7 +6440,7 @@ function InnstillingerPage(){
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* ── B2B Global toggle — øverst ── */}
@@ -6281,7 +6479,7 @@ function InnstillingerPage(){
 
       {/* ── Journal bekreftelsesmodal ── */}
       {journalBekreft&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:460,boxShadow:"0 20px 60px rgba(0,0,0,.22)",padding:"24px"}}>
             <div style={{fontSize:32,textAlign:"center",marginBottom:12}}>{journalAktiv?"⚠️":"📋"}</div>
             <div style={{fontSize:15,fontWeight:700,color:C.navy,textAlign:"center",marginBottom:8}}>
@@ -6332,7 +6530,7 @@ function InnstillingerPage(){
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* ── Journalmodul-toggle ── */}
@@ -6412,7 +6610,7 @@ function InnstillingerPage(){
 
       {/* ── Notifikasjoner ── */}
       {mottakerModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.48)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.48)",padding:20}}>
           <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:540,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
             <div style={{padding:"16px 20px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
@@ -6498,7 +6696,7 @@ function InnstillingerPage(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       <Section title="Notifikasjoner" icon="🔔">
@@ -6576,7 +6774,7 @@ function InnstillingerPage(){
 
       {/* ── Dekningsområder ── */}
       {areaModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:420,boxShadow:"0 20px 60px rgba(0,0,0,.22)"}}>
             <div style={{padding:"15px 20px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"16px 16px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div style={{fontSize:14,fontWeight:600,color:"white"}}>{areaModal==="ny"?"+ Nytt dekningsområde":"✏️ Rediger område"}</div>
@@ -6638,7 +6836,7 @@ function InnstillingerPage(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       <Section title="Dekningsområder & åpningstider" icon="📍">
@@ -7269,7 +7467,7 @@ function TjenesteAdmin(){
     <div className="fu">
       {/* ── Tjeneste-modal ── */}
       {modal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.48)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.48)",padding:20}}>
           <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:580,maxHeight:"92vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
             <div style={{padding:"18px 22px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
@@ -7392,12 +7590,12 @@ function TjenesteAdmin(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* Slett-bekreftelse */}
       {slettModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.48)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.48)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:400,padding:"24px",boxShadow:"0 20px 60px rgba(0,0,0,.2)"}}>
             <div style={{fontSize:32,textAlign:"center",marginBottom:12}}>⚠️</div>
             <div style={{fontSize:15,fontWeight:700,color:C.navy,textAlign:"center",marginBottom:8}}>Deaktiver tjeneste?</div>
@@ -7414,12 +7612,12 @@ function TjenesteAdmin(){
               </button>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* ── Kategori-modal ── */}
       {katModal&&(
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.45)",zIndex:1001,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
+        <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:20}}>
           <div style={{background:"white",borderRadius:16,width:"100%",maxWidth:400,boxShadow:"0 20px 60px rgba(0,0,0,.25)"}}>
             <div style={{padding:"16px 20px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"16px 16px 0 0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div style={{fontSize:14,fontWeight:600,color:"white"}}>{katModal==="ny"?"+ Ny kategori":"✏️ Rediger kategori"}</div>
@@ -7487,7 +7685,7 @@ function TjenesteAdmin(){
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       {/* ── Kategorier-oversikt ── */}
@@ -7621,7 +7819,7 @@ function TjenesteAdmin(){
 }
 
 
-function Admin({initPage="dashboard"}){
+function Admin({initPage="dashboard",onLogout}){
   const[open,setOpen]=useState(false);
   const[page,setPage]=useState(initPage);
   const[drawer,setDrawer]=useState(null);
@@ -7635,7 +7833,7 @@ function Admin({initPage="dashboard"}){
   };
   return(
     <div className="al">
-      <ASidebar current={page} open={open} onClose={()=>setOpen(false)} onNav={p=>{setPage(p);setOpen(false);}}/>
+      <ASidebar current={page} open={open} onClose={()=>setOpen(false)} onNav={p=>{setPage(p);setOpen(false);}} onLogout={onLogout}/>
       <div className="am">
         <AHeader onMenuClick={()=>setOpen(true)} page={page}/>
         <div className="ac">{pages[page]??pages.dashboard}</div>
@@ -7773,50 +7971,86 @@ const KANSELLERING_REGLER={
 
 const SC={
   kunde:[["landing","Start"],["login","Login"],["push-tillatelse","Push"],["samtykke","Samtykke"],["onboarding","Onboarding"],["glemt-passord","Glemt pw"],["hjem","Hjem"],["bestill","Bestill"],["betaling","Betaling"],["bekreftelse","OK"],["mine","Mine"],["kunde-profil","Profil"],["oppdrag-i-gang","Pågår"],["chat-kunde","Chat"],["b2b-dashboard","B2B koordinator"],["b2b-bestill","B2B bestill"],["b2b-bruker","B2B bruker"]],
-  nurse:[["nurse-login","Login"],["nurse-rolle","Rolle"],["nurse-hjem","Hjem"],["nurse-innsjekk","Innsjekk"],["nurse-rapport","Rapport"],["nurse-profil","Profil"]],
+  nurse:[["nurse-login","Login"],["nurse-rolle","Rolle"],["nurse-hjem","Hjem"],["nurse-oppdrag","Oppdrag"],["nurse-innsjekk","Innsjekk"],["nurse-rapport","Rapport"],["nurse-profil","Profil"]],
 };
 const SCREENS={
   landing:Landing,login:Login,"push-tillatelse":PushTillatelse,samtykke:Samtykke,onboarding:Onboarding,"glemt-passord":GlemtPassord,"kunde-profil":KundeProfil,"oppdrag-i-gang":OppdragIGang,hjem:Hjem,bestill:Bestill,
   betaling:p=><Betaling {...p} service={SERVICES[0]} date="Tirsdag 4. mars" time="09:00"/>,
   bekreftelse:Bekreftelse,mine:Mine,"chat-kunde":ChatKunde,
-  "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-hjem":NurseHjem,
-  "nurse-innsjekk":NurseInnsjekk,"nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
+  "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
+  "nurse-innsjekk":p=><NurseInnsjekk {...p} focusOppdragId={p.focusOppdragId}/>,
+  "nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
   "admin-panel":()=><Admin initPage="dashboard"/>,
   "b2b-login":B2BLogin,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
-export default function App(){
-  const[tab,setTab]=useState("kunde");
-  const[screen,setScreen]=useState("landing");
+export default function App({
+  forcedTab=null,
+  forcedScreen=null,
+  showPrototypeToolbar=true,
+}){
+  const defaultScreenByTab={kunde:"landing",nurse:"nurse-login",admin:"admin-panel"};
+  const initialTab=forcedTab??"kunde";
+  const initialScreen=forcedScreen??defaultScreenByTab[initialTab]??"landing";
+  const[tab,setTab]=useState(initialTab);
+  const[screen,setScreen]=useState(initialScreen);
   const[ap,setAp]=useState("dashboard");
   const[loggedIn,setLoggedIn]=useState(false);
-  const isAdmin=tab==="admin";
+  const[nurseLoggedIn,setNurseLoggedIn]=useState(false);
+  const[bestillPreselect,setBestillPreselect]=useState(null);
+  const[nurseFocusOppdragId,setNurseFocusOppdragId]=useState(null);
+  const mockKundeLogin=useCallback(()=>{setLoggedIn(true);setScreen("hjem");},[]);
+  const mockNurseLogin=useCallback(()=>{setNurseLoggedIn(true);setScreen("nurse-rolle");},[]);
+  const isTabLocked=Boolean(forcedTab);
+  const activeTab=isTabLocked?forcedTab:tab;
+  const isAdmin=activeTab==="admin";
   const isAdminPanel=screen==="admin-panel"; // sykepleier valgte koordinator-rolle
-  const navTo=(s)=>{
+  const navTo=(s,serviceType)=>{
+    if(s==="logout"){setLoggedIn(false);setBestillPreselect(null);setScreen("login");return;}
     const krevInnlogging=["bestill","mine","kunde-profil","oppdrag-i-gang","chat-kunde"];
     if(krevInnlogging.includes(s)&&!loggedIn){setScreen("login-gate");return;}
+    if(s==="bestill")setBestillPreselect(serviceType??null);
+    else setBestillPreselect(null);
     setScreen(s);
     if(s==="hjem"||s==="onboarding")setLoggedIn(true);
+  };
+  const nurseNav=(s,meta)=>{
+    if(s==="nurse-login"){
+      setNurseLoggedIn(false);
+      setNurseFocusOppdragId(null);
+      setScreen(s);
+      return;
+    }
+    const kreveNurseSessjon=["nurse-rolle","nurse-hjem","nurse-oppdrag","nurse-innsjekk","nurse-profil","nurse-rapport"];
+    if(kreveNurseSessjon.includes(s)&&!nurseLoggedIn){
+      setScreen("nurse-login");
+      return;
+    }
+    if(s==="nurse-innsjekk"&&meta?.oppdragId!=null)setNurseFocusOppdragId(String(meta.oppdragId));
+    else if(s!=="nurse-innsjekk")setNurseFocusOppdragId(null);
+    setScreen(s);
   };
   const Comp=SCREENS[screen];
   return(
     <>
       <style>{CSS}</style>
-      <div className="pb">
-        <div className="fr" style={{fontSize:14,fontWeight:600,color:"white",padding:"9px 8px 9px 4px",marginRight:6}}>Eira<span style={{color:"#E8C4A4"}}>Nova</span></div>
-        {TABS.map(t=><button key={t.id} className={`pt${tab===t.id?" on":""}`} onClick={()=>{setTab(t.id);if(t.id!=="admin")setScreen(t.def);}}>{t.label}</button>)}
-        <div className="ps">
-          {(isAdmin||isAdminPanel)
-            ?ADMIN_SC.map(([p,l])=><button key={p} className={`sc${ap===p?" on":""}`} onClick={()=>setAp(p)}>{l}</button>)
-            :(SC[tab]??[]).map(([s,l])=><button key={s} className={`sc${screen===s?" on":""}`} onClick={()=>tab==="kunde"?navTo(s):setScreen(s)}>{l}</button>)
-          }
+      {showPrototypeToolbar&&(
+        <div className="pb">
+          <div className="fr" style={{fontSize:14,fontWeight:600,color:"white",padding:"9px 8px 9px 4px",marginRight:6}}>Eira<span style={{color:"#E8C4A4"}}>Nova</span></div>
+          {!isTabLocked&&TABS.map(t=><button key={t.id} className={`pt${activeTab===t.id?" on":""}`} onClick={()=>{setTab(t.id);if(t.id!=="admin"){setScreen(t.def);if(t.id!=="nurse"){setNurseFocusOppdragId(null);setNurseLoggedIn(false);}if(t.id!=="kunde")setLoggedIn(false);}}}>{t.label}</button>)}
+          <div className="ps">
+            {(isAdmin||isAdminPanel)
+              ?ADMIN_SC.map(([p,l])=><button key={p} className={`sc${ap===p?" on":""}`} onClick={()=>setAp(p)}>{l}</button>)
+              :(SC[activeTab]??[]).map(([scr,l])=><button key={scr} className={`sc${screen===scr?" on":""}`} onClick={()=>activeTab==="kunde"?navTo(scr):activeTab==="nurse"?nurseNav(scr):setScreen(scr)}>{l}</button>)
+            }
+          </div>
         </div>
-      </div>
+      )}
       {(isAdmin||isAdminPanel)
-        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap}/>
-        :<div className="pw">
+        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}}/>
+        :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={tab==="kunde"?navTo:setScreen} onBack={()=>{}}/>
+            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
