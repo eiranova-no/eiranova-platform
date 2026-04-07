@@ -1158,6 +1158,57 @@ function LandKundeMobile({onNav}){
               ))}
             </div>
           </div>
+
+          {/* Sykepleiere — samme seksjon som desktop, tilpasset smal skjerm */}
+          <div style={{background:"white",padding:"22px 14px 28px"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:20,flexWrap:"wrap",gap:10}}>
+              <div>
+                <div className="fr" style={{fontSize:20,fontWeight:600,color:C.navy,marginBottom:4}}>Møt våre sykepleiere</div>
+                <div style={{fontSize:12,color:C.soft,lineHeight:1.45}}>Autorisert helsepersonell i ditt nærområde</div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:6,background:C.greenBg,borderRadius:50,padding:"6px 14px",flexShrink:0}}>
+                <div style={{width:8,height:8,borderRadius:"50%",background:"#16A34A"}}/>
+                <span style={{fontSize:12,color:C.green,fontWeight:600}}>{NURSES.filter(n=>n.status==="available").length} ledig nå</span>
+              </div>
+            </div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr",gap:12,marginBottom:20}}>
+              {NURSES.map(n=>(
+                <div key={n.name} className="card" style={{padding:14,display:"flex",gap:12,alignItems:"flex-start"}}>
+                  <div style={{position:"relative",flexShrink:0}}>
+                    <div style={{width:52,height:52,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDark},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:700,color:"white",border:`3px solid ${C.greenBg}`}}>{n.av}</div>
+                    <div style={{position:"absolute",bottom:2,right:2,width:12,height:12,borderRadius:"50%",background:n.status==="available"?"#16A34A":n.status==="on_assignment"?C.gold:C.soft,border:"2.5px solid white"}}/>
+                  </div>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
+                      <span style={{fontSize:14,fontWeight:700,color:C.navy}}>{n.name}</span>
+                      <div style={{display:"flex",alignItems:"center",gap:3,flexShrink:0}}>
+                        <span>⭐</span><span style={{fontSize:12,fontWeight:700,color:C.navy}}>{n.rating}</span>
+                        <span style={{fontSize:10,color:C.soft}}>({n.antallOppdrag})</span>
+                      </div>
+                    </div>
+                    <div style={{fontSize:11,color:C.green,fontWeight:600,marginBottom:6}}>{n.tittel} · {n.erfaring}</div>
+                    <div style={{fontSize:11,color:C.soft,lineHeight:1.55,marginBottom:8}}>"{n.bio}"</div>
+                    <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>
+                      {n.spesialitet.map(s=><span key={s} style={{fontSize:9,background:C.greenXL,color:C.green,padding:"3px 8px",borderRadius:5,fontWeight:500,border:`0.5px solid ${C.border}`}}>{s}</span>)}
+                    </div>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <span style={{fontSize:10,color:C.soft}}>📍 {n.omrade}</span>
+                      <span style={{fontSize:10,padding:"3px 9px",borderRadius:50,fontWeight:600,
+                        background:n.status==="available"?"#F0FDF4":n.status==="on_assignment"?C.goldBg:C.softBg,
+                        color:n.status==="available"?"#16A34A":n.status==="on_assignment"?C.goldDark:C.soft}}>
+                        {n.status==="available"?"Ledig nå":n.status==="on_assignment"?"På oppdrag":"Pause"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{textAlign:"center"}}>
+              <button type="button" onClick={()=>onNav("login")} className="btn bp" style={{width:"100%",maxWidth:400,margin:"0 auto",display:"block",padding:"12px 20px",fontSize:13,fontWeight:600,borderRadius:12,cursor:"pointer",fontFamily:"inherit"}}>
+                Bestill en sykepleier →
+              </button>
+            </div>
+          </div>
         </div>
       </div>
   );
@@ -2032,19 +2083,21 @@ function NurseLogin({onNav,onMockNurseLogin}){
         <div className="fr" style={{fontSize:21,fontWeight:600,color:"white",marginBottom:4}}>Logg inn som ansatt</div>
         <div style={{fontSize:11,color:"rgba(255,255,255,.65)"}}>Kun for inviterte EiraNova-ansatte</div>
       </div>
-      <div className="sa" style={{padding:"22px 18px",position:"relative",zIndex:1}}>
-        <div className="login-stack" style={{position:"relative",zIndex:2,pointerEvents:"auto"}}>
+      <div className="sa" style={{padding:"22px 18px",position:"relative",zIndex:1,isolation:"isolate",minHeight:0}}>
+        <div className="login-stack" style={{position:"relative",zIndex:5,pointerEvents:"auto",isolation:"isolate"}}>
         {!showPassordLogin?(
           <>
+            <div style={{position:"relative",zIndex:20,isolation:"isolate",flexShrink:0,width:"100%",marginBottom:10}}>
             <button
               type="button"
               onClick={eiraKontoKlikk}
               className="btn bp bf"
-              style={{flexShrink:0,borderRadius:11,marginBottom:10,fontSize:14,padding:"16px 14px",cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation",display:"flex",flexDirection:"column",alignItems:"center",gap:6,lineHeight:1.3}}
+              style={{position:"relative",zIndex:1,isolation:"isolate",flexShrink:0,width:"100%",borderRadius:11,fontSize:14,padding:"16px 14px",cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation",display:"flex",flexDirection:"column",alignItems:"center",gap:6,lineHeight:1.3}}
             >
               <span style={{fontWeight:600}}>Logg inn med EiraNova-konto</span>
               <span style={{fontSize:11,fontWeight:500,opacity:0.92}}>Bruker din @eiranova.no e-post</span>
             </button>
+            </div>
             <div style={{position:"relative",zIndex:10,isolation:"isolate",flexShrink:0,width:"100%"}}>
               <button
                 type="button"
@@ -2627,7 +2680,6 @@ function ASidebar({current,open,onClose,onNav,onLogout}){
               <div style={{fontSize:13,fontWeight:600,color:"white"}}>Lise Andersen</div>
               <div style={{fontSize:10,color:C.sidebarMuted}}>Administrator</div>
             </div>
-            <button type="button" onClick={()=>{onLogout?.();onClose();}} style={{flexShrink:0,padding:"8px 12px",background:"rgba(255,255,255,.12)",color:"white",border:"1px solid rgba(255,255,255,.22)",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Logg ut</button>
           </div>
         </div>
         <nav style={{flex:1,overflowY:"auto",padding:"8px 0"}}>
@@ -2642,6 +2694,9 @@ function ASidebar({current,open,onClose,onNav,onLogout}){
             );
           })}
         </nav>
+        <div style={{marginTop:"auto",padding:"12px 18px 24px",flexShrink:0,borderTop:"1px solid rgba(255,255,255,.08)"}}>
+          <button type="button" onClick={()=>{onLogout?.();onClose();}} style={{width:"100%",padding:"10px 12px",background:"rgba(255,255,255,.12)",color:"white",border:"1px solid rgba(255,255,255,.22)",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Logg ut</button>
+        </div>
       </aside>
     </>
   );
