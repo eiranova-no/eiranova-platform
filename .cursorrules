@@ -37,3 +37,9 @@ Regler:
   8. oppdrag_endringer: append-only
   9. journal_tilganger: append-only
  10. K-JOURNAL-001 starter IKKE uten NHN-sertifisering
+
+Kilde til sannhet:
+  Eneste gyldige kilde = ~/code/eiranova-platform/ (repo-root)
+  Prototype = apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
+  Aldri les fra nedlastede kopier, outputs/-mapper eller eksterne filer.
+  Alle endringer skjer i repo-et via Read/StrReplace/Grep på faktiske stier.

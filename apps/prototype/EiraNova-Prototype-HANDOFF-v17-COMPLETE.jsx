@@ -1,8 +1,29 @@
-import { useCallback,useEffect,useState } from "react";
+import { useCallback,useEffect,useState,useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 function klikkRegistrert(){
   if(process.env.NODE_ENV==="development")console.log("klikk registrert");
+}
+function erGyldigEpost(s){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s).trim());
+}
+function fulltNavnMinToOrd(navn){
+  const ord=String(navn||"").trim().split(/\s+/).filter(Boolean);
+  return ord.length>=2;
+}
+
+function subscribeViewportMin768(cb){
+  if(typeof window==="undefined")return()=>{};
+  const mq=window.matchMedia("(min-width:768px)");
+  mq.addEventListener("change",cb);
+  return()=>mq.removeEventListener("change",cb);
+}
+function useViewportMin768(){
+  return useSyncExternalStore(
+    subscribeViewportMin768,
+    ()=>window.matchMedia("(min-width:768px)").matches,
+    ()=>false
+  );
 }
 
 const C = {
@@ -45,6 +66,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 /* Next.js-innebygging: full høyde uten prototyp-verktøylinje (42px) */
 .pw-app{position:relative;isolation:isolate;min-height:100svh!important}
 .pw-app .phone{position:relative;z-index:0;min-height:100svh!important}
+/* Flex scroll: uten min-height:0 kan .sa «vise» feil høyde og i enkelte nettlesere blokkere klikk under */
+.pw-app .phone .sa{min-height:0}
 @media(min-width:768px){
   .pw-app{min-height:100vh!important}
   .pw-app .phone{min-height:100vh!important}
@@ -66,12 +89,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
   .desk-nav{display:none!important}
   .land-mobile{display:flex!important}
   .land-desktop{display:none!important}
-  .show-mobile-block{display:flex!important}
 }
 @media(min-width:768px){
   .land-mobile{display:none!important}
   .land-desktop{display:block!important;width:100%;overflow-x:clip;overflow-y:auto;height:calc(100vh - 42px)}
-  .show-mobile-block{display:none!important}
 }
 @media(min-width:768px) and (max-width:1100px){
   .land-hero-grid{grid-template-columns:1fr!important;gap:40px!important}
@@ -626,12 +647,36 @@ function Samtykke({onNav}){
           </div>
         </div>
 
-        <button onClick={()=>kanFortsette&&onNav("onboarding")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10,opacity:kanFortsette?1:.4}}>
+        <button onClick={()=>kanFortsette&&onNav("epost-bekreftelse")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10,opacity:kanFortsette?1:.4}}>
           Godkjenn og fortsett →
         </button>
         <div style={{fontSize:9,color:C.soft,textAlign:"center",lineHeight:1.6}}>
           Du kan trekke samtykket når som helst under Profil → Personvern
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ══ E-POST BEKREFTELSE (etter samtykke, før onboarding) ════════
+function EpostBekreftelse({onNav,regEpost}){
+  const{toast,ToastContainer}=useToast();
+  const vistEpost=(regEpost&&String(regEpost).trim())||"din e-postadresse";
+  return(
+    <div className="phone fu" style={{background:C.cream}}>
+      <ToastContainer/>
+      <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 28px",textAlign:"center",maxWidth:540,margin:"0 auto",width:"100%"}}>
+        <div style={{width:80,height:80,borderRadius:24,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:40,marginBottom:22,border:`1px solid ${C.border}`}}>📧</div>
+        <div className="fr" style={{fontSize:22,fontWeight:700,color:C.navy,marginBottom:10}}>Sjekk e-posten din</div>
+        <div style={{fontSize:13,color:C.soft,lineHeight:1.7,marginBottom:26,maxWidth:400}}>
+          Vi har sendt en bekreftelseslink til <strong style={{color:C.navy}}>{vistEpost}</strong>. Klikk lenken for å aktivere kontoen.
+        </div>
+        <button type="button" onClick={()=>onNav("onboarding")} className="btn bp" style={{width:"100%",maxWidth:400,padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:12}}>
+          Jeg har bekreftet e-posten →
+        </button>
+        <button type="button" onClick={()=>toast("Ny e-post sendt!","ok")} style={{background:"none",border:"none",color:C.green,fontSize:12,cursor:"pointer",fontFamily:"inherit",fontWeight:600,textDecoration:"underline"}}>
+          Send på nytt
+        </button>
       </div>
     </div>
   );
@@ -722,21 +767,8 @@ function Onboarding({onNav}){
             <div style={{fontSize:14,fontWeight:600,color:C.navy,marginBottom:8}}>
               Velkommen{hvem==="parorende"&&navn?`, og hei til ${navn}!`:"!"}
             </div>
-            <div style={{fontSize:11,color:C.soft,lineHeight:1.7,marginBottom:24}}>
+            <div style={{fontSize:11,color:C.soft,lineHeight:1.7}}>
               Du er klar til å bestille din første tjeneste. Sykepleieren møter deg hjemme, i ro og mak.
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:8}}>
-              {[
-                {icon:"🚿",tekst:"Morgensstell & dusj",pris:"fra 590 kr"},
-                {icon:"🏠",tekst:"Praktisk bistand",pris:"fra 490 kr"},
-                {icon:"☕",tekst:"Besøksvenn",pris:"fra 390 kr"},
-              ].map(t=>(
-                <div key={t.tekst} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",background:"white",borderRadius:11,border:`1px solid ${C.border}`}}>
-                  <span style={{fontSize:22}}>{t.icon}</span>
-                  <span style={{fontSize:12,fontWeight:600,color:C.navy,flex:1,textAlign:"left"}}>{t.tekst}</span>
-                  <span style={{fontSize:10,color:C.soft}}>{t.pris}</span>
-                </div>
-              ))}
             </div>
           </div>
         )}
@@ -749,7 +781,7 @@ function Onboarding({onNav}){
             {steg===0?"Neste →":"Lagre adresse →"}
           </button>
         ):(
-          <button onClick={()=>onNav("oppdrag-i-gang")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>
+          <button onClick={()=>onNav("hjem")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>
             Bestill din første tjeneste →
           </button>
         )}
@@ -759,9 +791,26 @@ function Onboarding({onNav}){
 }
 
 // ══ GLEMT PASSORD ══════════════════════════════════════════════
-function GlemtPassord({onNav}){
+function GlemtPassord({onNav,nurseMode=false}){
   const[steg,setSteg]=useState("epost"); // epost | sendt
   const[epost,setEpost]=useState("");
+  const[validerFeil,setValiderFeil]=useState("");
+  const tilbakeLogin=()=>onNav(nurseMode?"nurse-login":"login");
+  const sendLenke=()=>{
+    setValiderFeil("");
+    const e=String(epost).trim();
+    if(!e){setValiderFeil("Skriv inn e-postadressen.");return;}
+    if(nurseMode){
+      if(!e.toLowerCase().endsWith("@eiranova.no")){
+        setValiderFeil("Kun @eiranova.no-kontoer kan tilbakestille passord her");
+        return;
+      }
+    }else if(!erGyldigEpost(e)){
+      setValiderFeil("Ugyldig e-postformat.");
+      return;
+    }
+    setSteg("sendt");
+  };
   if(steg==="sendt")return(
     <div className="phone fu" style={{background:C.cream}}>
       <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 28px",textAlign:"center"}}>
@@ -773,23 +822,24 @@ function GlemtPassord({onNav}){
         <div style={{background:C.greenXL,borderRadius:10,padding:"10px 14px",fontSize:10,color:C.navyMid,lineHeight:1.6,marginBottom:28,width:"100%"}}>
           Lenken er gyldig i 30 minutter. Sjekk spam-mappen hvis du ikke finner e-posten.
         </div>
-        <button onClick={()=>onNav("login")} style={{fontSize:12,color:C.green,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>← Tilbake til innlogging</button>
+        <button onClick={tilbakeLogin} style={{fontSize:12,color:C.green,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>← Tilbake til innlogging</button>
       </div>
     </div>
   );
   return(
     <div className="phone fu" style={{background:C.cream}}>
       <div style={{padding:"24px 20px 20px",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`}}>
-        <button onClick={()=>onNav("login")} style={{background:"rgba(255,255,255,.15)",border:"none",color:"white",borderRadius:8,padding:"4px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>← Tilbake</button>
+        <button onClick={tilbakeLogin} style={{background:"rgba(255,255,255,.15)",border:"none",color:"white",borderRadius:8,padding:"4px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit",marginBottom:12}}>← Tilbake</button>
         <div className="fr" style={{fontSize:18,fontWeight:600,color:"white",marginBottom:2}}>Glemt passord?</div>
         <div style={{fontSize:10,color:"rgba(255,255,255,.6)"}}>Vi sender deg en lenke for å opprette nytt passord</div>
       </div>
       <div style={{padding:"24px 20px"}}>
         <div style={{marginBottom:16}}>
           <label style={{fontSize:11,fontWeight:600,color:C.navy,display:"block",marginBottom:5}}>Din e-postadresse</label>
-          <input value={epost} onChange={e=>setEpost(e.target.value)} className="inp" type="email" placeholder="ola@example.com"/>
+          <input value={epost} onChange={e=>{setEpost(e.target.value);if(validerFeil)setValiderFeil("");}} className="inp" type="email" placeholder={nurseMode?"fornavn@eiranova.no":"ola@example.com"}/>
         </div>
-        <button onClick={()=>epost&&setSteg("sendt")} className="btn bp" style={{width:"100%",padding:"13px 0",fontSize:13,borderRadius:11,opacity:epost?1:.4}}>
+        {validerFeil&&<div style={{fontSize:12,color:C.danger,marginTop:-8,marginBottom:12}}>{validerFeil}</div>}
+        <button type="button" onClick={sendLenke} className="btn bp" style={{width:"100%",padding:"13px 0",fontSize:13,borderRadius:11}}>
           Send tilbakestillingslenke
         </button>
       </div>
@@ -1052,11 +1102,8 @@ function OppdragIGang({onNav}){
   );
 }
 
-function Landing({onNav}){
-  // Detekterer bredt skjerm via CSS-klasse — håndteres av .pw breakpoint
+function LandKundeMobile({onNav}){
   return(
-    <>
-      {/* ══ MOBIL-VERSJON (< 700px) — phone-shell som før ══ */}
       <div className="land-mobile phone fu">
         <div style={{padding:"32px 18px 28px",background:"linear-gradient(160deg,#1E3A2F 0%,#2C5C52 60%,#1E3A2F 100%)"}}>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:22}}>
@@ -1113,8 +1160,11 @@ function Landing({onNav}){
           </div>
         </div>
       </div>
+  );
+}
 
-      {/* ══ DESKTOP-VERSJON (≥ 768px) — ekte landingsside ══ */}
+function LandKundeDesktop({onNav}){
+  return(
       <div className="land-desktop">
 
         {/* ── HERO ── */}
@@ -1137,8 +1187,8 @@ function Landing({onNav}){
                 Profesjonelle helsetjenester i hjemmet for eldre og nybakte mødre — med autorisert helsepersonell i ditt nærområde.
               </p>
               <div style={{display:"flex",gap:14,marginBottom:28}}>
-                <button className="btn bp" onClick={()=>onNav("bestill")} style={{padding:"15px 36px",fontSize:16,borderRadius:13}}>Bestill nå</button>
-                <button className="btn bg" onClick={()=>onNav("login")} style={{padding:"15px 28px",fontSize:15,borderRadius:13}}>Logg inn</button>
+                <button type="button" className="btn bp" onClick={()=>onNav("bestill")} style={{padding:"15px 36px",fontSize:16,borderRadius:13}}>Bestill nå</button>
+                <button type="button" className="btn bg" onClick={()=>onNav("login")} style={{padding:"15px 28px",fontSize:15,borderRadius:13}}>Logg inn</button>
               </div>
               <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
                 {["✓ Autorisert helsepersonell","📍 7 kommuner i Østfold","⭐ 4.9 av 5 · 1000+ oppdrag"].map(p=>(
@@ -1163,7 +1213,7 @@ function Landing({onNav}){
                     <div style={{fontSize:10,background:"rgba(22,163,74,.2)",color:"#4ade80",padding:"3px 10px",borderRadius:50,fontWeight:600}}>Ledig</div>
                   </div>
                 ))}
-                <button onClick={()=>onNav("bestill")} style={{width:"100%",marginTop:16,padding:"11px 0",background:C.green,color:"white",border:"none",borderRadius:10,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+                <button type="button" onClick={()=>onNav("bestill")} style={{width:"100%",marginTop:16,padding:"11px 0",background:C.green,color:"white",border:"none",borderRadius:10,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
                   Bestill time nå →
                 </button>
               </div>
@@ -1289,7 +1339,7 @@ function Landing({onNav}){
               ))}
             </div>
             <div style={{textAlign:"center"}}>
-              <button onClick={()=>onNav("login")} style={{padding:"13px 40px",background:C.green,color:"white",border:"none",borderRadius:12,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
+              <button type="button" onClick={()=>onNav("login")} style={{padding:"13px 40px",background:C.green,color:"white",border:"none",borderRadius:12,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>
                 Bestill en sykepleier →
               </button>
             </div>
@@ -1309,8 +1359,12 @@ function Landing({onNav}){
           </div>
         </div>
       </div>
-    </>
   );
+}
+
+function Landing({onNav}){
+  const desktop=useViewportMin768();
+  return desktop?<LandKundeDesktop onNav={onNav}/>:<LandKundeMobile onNav={onNav}/>;
 }
 
 function Login({onNav,onMockKundeLogin}){
@@ -1321,6 +1375,7 @@ function Login({onNav,onMockKundeLogin}){
   const[password,setPassword]=useState("");
   const[fulltNavn,setFulltNavn]=useState("");
   const[kundeLoginFeil,setKundeLoginFeil]=useState("");
+  const[regFeil,setRegFeil]=useState({fn:"",ep:"",pw:""});
   const fullforKundeMock=()=>{
     setKundeLoginFeil("");
     if(onMockKundeLogin)onMockKundeLogin();
@@ -1380,9 +1435,9 @@ function Login({onNav,onMockKundeLogin}){
           Fortsett med Google
         </button>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><div style={{flex:1,height:1,background:C.border}}/><span style={{fontSize:10,color:C.soft}}>eller</span><div style={{flex:1,height:1,background:C.border}}/></div>
-        {mode==="register"&&<div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Fullt navn</label><input className="inp" placeholder="Ola Nordmann" value={fulltNavn} onChange={e=>setFulltNavn(e.target.value)}/></div>}
-        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label><input className="inp" type="email" placeholder="ola@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
-        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••" value={password} onChange={e=>setPassword(e.target.value)}/></div>
+        {mode==="register"&&<div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Fullt navn</label><input className="inp" placeholder="Ola Nordmann" value={fulltNavn} onChange={e=>{setFulltNavn(e.target.value);if(regFeil.fn)setRegFeil(r=>({...r,fn:""}));}}/>{regFeil.fn&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.fn}</div>}</div>}
+        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label><input className="inp" type="email" placeholder="ola@example.com" value={email} onChange={e=>{setEmail(e.target.value);if(regFeil.ep)setRegFeil(r=>({...r,ep:""}));}}/>{mode==="register"&&regFeil.ep&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.ep}</div>}</div>
+        <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••" value={password} onChange={e=>{setPassword(e.target.value);if(regFeil.pw)setRegFeil(r=>({...r,pw:""}));}}/>{mode==="register"&&regFeil.pw&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.pw}</div>}</div>
         {mode==="login"&&(
           <>
             {kundeLoginFeil&&<div style={{fontSize:11,color:C.danger,marginBottom:8}}>{kundeLoginFeil}</div>}
@@ -1396,10 +1451,18 @@ function Login({onNav,onMockKundeLogin}){
             }} className="btn bp bf" style={{borderRadius:11}}>Logg inn</button>
           </>
         )}
-        {mode==="register"&&<button type="button" onClick={()=>onNav("push-tillatelse")} className="btn bp bf" style={{borderRadius:11}}>Opprett konto</button>}
+        {mode==="register"&&<button type="button" onClick={()=>{
+          const err={fn:"",ep:"",pw:""};
+          if(!fulltNavnMinToOrd(fulltNavn))err.fn="Skriv fullt navn (minst to ord: fornavn og etternavn).";
+          if(!erGyldigEpost(email))err.ep="Ugyldig e-postformat.";
+          if(String(password).length<8)err.pw="Passord må ha minst 8 tegn.";
+          if(err.fn||err.ep||err.pw){setRegFeil(err);return;}
+          setRegFeil({fn:"",ep:"",pw:""});
+          onNav("push-tillatelse",undefined,{kundeRegEpost:String(email).trim()});
+        }} className="btn bp bf" style={{borderRadius:11}}>Opprett konto</button>}
         {mode==="login"&&<div style={{textAlign:"center",marginTop:12}}><span onClick={()=>onNav("glemt-passord")} style={{fontSize:11,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span></div>}
-        {mode==="login"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Ny bruker? </span><span onClick={()=>setMode("register")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Registrer deg</span></div>}
-        {mode==="register"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Har du allerede konto? </span><span onClick={()=>setMode("login")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Logg inn</span></div>}
+        {mode==="login"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Ny bruker? </span><span onClick={()=>{setMode("register");setRegFeil({fn:"",ep:"",pw:""});}} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Registrer deg</span></div>}
+        {mode==="register"&&<div style={{textAlign:"center",marginTop:10}}><span style={{fontSize:10,color:C.soft}}>Har du allerede konto? </span><span onClick={()=>{setMode("login");setRegFeil({fn:"",ep:"",pw:""});}} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Logg inn</span></div>}
         </div>
       </div>
     </div>
@@ -1518,6 +1581,8 @@ function Login({onNav,onMockKundeLogin}){
               <div style={{fontSize:11,fontWeight:700,color:"#6D28D9",marginBottom:3}}>Bruker / Pasient</div>
               <div style={{fontSize:10,color:"#5B21B6",lineHeight:1.55}}>Din koordinator har lagt deg til i EiraNova og sendt en invitasjons-e-post med aktiveringslenke.</div>
             </div>
+            <button type="button" onClick={()=>onNav("b2b-bruker-aktivering")} className="btn bp bf" style={{borderRadius:11,marginBottom:12}}>Aktiver konto med invitasjon →</button>
+            <div style={{fontSize:10,color:C.soft,marginBottom:10,textAlign:"center"}}>Har du allerede aktivert? Logg inn under.</div>
             <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Din e-post</label><input className="inp" type="email" placeholder="ola.nordmann@gmail.com"/></div>
             <div style={{marginBottom:12}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••"/></div>
             <button onClick={()=>onNav("b2b-bruker")} className="btn bp bf" style={{borderRadius:11,marginBottom:12}}>Logg inn</button>
@@ -1562,17 +1627,6 @@ function Hjem({onNav}){
             <button className="btn bp" style={{fontSize:"clamp(10px,1vw,12px)",padding:"7px 14px",marginLeft:8}}>Detaljer</button>
           </div>
         </div>
-      </div>
-
-      {/* Mobile: neste avtale-kort */}
-      <div className="show-mobile-block" style={{margin:"-12px 12px 0",background:"white",borderRadius:13,padding:12,boxShadow:"0 4px 14px rgba(0,0,0,.09)",alignItems:"center",gap:10,position:"relative",zIndex:10,flexShrink:0}}>
-        <div style={{width:44,height:44,borderRadius:10,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>🚿</div>
-        <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:11,color:C.soft,fontWeight:600,textTransform:"uppercase",letterSpacing:.5}}>Neste avtale</div>
-          <div style={{fontSize:14,fontWeight:600,color:C.navy}}>Morgensstell & dusj</div>
-          <div style={{fontSize:13,fontWeight:500,color:C.green}}>Tirsdag 4. mars · 08:00</div>
-        </div>
-        <button type="button" className="btn bp" style={{fontSize:13,padding:"10px 14px",minHeight:44,flexShrink:0}}>Detaljer</button>
       </div>
 
       <div className="sa" style={{padding:"clamp(14px,2vw,28px) clamp(12px,3vw,40px)"}}>
@@ -1939,14 +1993,17 @@ function NurseLogin({onNav,onMockNurseLogin}){
   const[email,setEmail]=useState("");
   const[passord,setPassord]=useState("");
   const[feil,setFeil]=useState("");
+  const[showPassordLogin,setShowPassordLogin]=useState(false);
   const fullforNurseMock=()=>{
     setFeil("");
     if(onMockNurseLogin)onMockNurseLogin();
     else onNav("nurse-rolle");
   };
-  const loggInnMock=()=>{
+  const loggInnMock=e=>{
+    if(e){e.preventDefault();e.stopPropagation();}
+    if(process.env.NODE_ENV==="development")console.log("nurse klikk");
     klikkRegistrert();
-    const erIntern=e=>e.trim().toLowerCase().endsWith("@eiranova.no");
+    const erIntern=s=>s.trim().toLowerCase().endsWith("@eiranova.no");
     if(!erIntern(email)){
       setFeil("Kun @eiranova.no-e-post er tillatt i mock-innlogging.");
       return;
@@ -1957,46 +2014,107 @@ function NurseLogin({onNav,onMockNurseLogin}){
     }
     fullforNurseMock();
   };
+  const eiraKontoKlikk=e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    if(process.env.NODE_ENV==="development")console.log("nurse klikk");
+    klikkRegistrert();
+    fullforNurseMock();
+  };
+  const tilbakePrimær=()=>{
+    setShowPassordLogin(false);
+    setFeil("");
+  };
   return(
     <div className="phone fu">
-      <div style={{padding:"30px 18px 28px",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,textAlign:"center"}}>
+      <div style={{padding:"30px 18px 28px",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,textAlign:"center",flexShrink:0}}>
         <div style={{fontSize:36,marginBottom:10}}>🩺</div>
         <div className="fr" style={{fontSize:21,fontWeight:600,color:"white",marginBottom:4}}>Logg inn som ansatt</div>
         <div style={{fontSize:11,color:"rgba(255,255,255,.65)"}}>Kun for inviterte EiraNova-ansatte</div>
       </div>
-      <div className="sa" style={{padding:"22px 18px"}}>
-        <div className="login-stack">
-        <button
-          type="button"
-          onClick={()=>{klikkRegistrert();fullforNurseMock();}}
-          className="btn bp bf"
-          style={{borderRadius:11,marginBottom:12,fontSize:14,padding:"14px 12px"}}
-        >
-          🌐 Logg inn med Google
-        </button>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-          <div style={{flex:1,height:1,background:C.border}}/>
-          <span style={{fontSize:10,color:C.soft}}>eller e-post + passord</span>
-          <div style={{flex:1,height:1,background:C.border}}/>
-        </div>
-        <div style={{background:C.greenXL,borderRadius:13,padding:"14px 16px",marginBottom:16,border:`1.5px solid ${C.greenBg}`}}>
-          <div style={{fontSize:10,fontWeight:600,color:C.green,textTransform:"uppercase",letterSpacing:.8,marginBottom:8}}>E-post + passord</div>
-          <div style={{fontSize:10,color:C.soft,lineHeight:1.5,marginBottom:10}}>Mock-auth uten Supabase.</div>
-          <div style={{marginBottom:8}}>
-            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label>
-            <input className="inp" type="email" placeholder="fornavn@eiranova.no" value={email} onChange={e=>setEmail(e.target.value)}/>
-          </div>
-          <div style={{marginBottom:6}}>
-            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label>
-            <input className="inp" type="password" placeholder="••••••••" value={passord} onChange={e=>setPassord(e.target.value)}/>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <span onClick={()=>onNav("glemt-passord")} style={{fontSize:10,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span>
-          </div>
-        </div>
-        {feil&&<div style={{fontSize:12,color:C.danger,marginTop:-8,marginBottom:8}}>{feil}</div>}
-        <button type="button" onClick={loggInnMock} className="btn bp bf" style={{borderRadius:11,marginBottom:10}}>Logg inn med e-post</button>
-        <p style={{fontSize:12,color:C.soft,textAlign:"center",lineHeight:1.5}}>Kun <strong>@eiranova.no</strong>-kontoer skal ha tilgang i produksjon.</p>
+      <div className="sa" style={{padding:"22px 18px",position:"relative",zIndex:1}}>
+        <div className="login-stack" style={{position:"relative",zIndex:2,pointerEvents:"auto"}}>
+        {!showPassordLogin?(
+          <>
+            <button
+              type="button"
+              onClick={eiraKontoKlikk}
+              className="btn bp bf"
+              style={{flexShrink:0,borderRadius:11,marginBottom:10,fontSize:14,padding:"16px 14px",cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation",display:"flex",flexDirection:"column",alignItems:"center",gap:6,lineHeight:1.3}}
+            >
+              <span style={{fontWeight:600}}>Logg inn med EiraNova-konto</span>
+              <span style={{fontSize:11,fontWeight:500,opacity:0.92}}>Bruker din @eiranova.no e-post</span>
+            </button>
+            <div style={{position:"relative",zIndex:10,isolation:"isolate",flexShrink:0,width:"100%"}}>
+              <button
+                type="button"
+                onClick={e=>{
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowPassordLogin(true);
+                  setFeil("");
+                }}
+                style={{
+                  display:"block",
+                  width:"100%",
+                  margin:0,
+                  padding:"14px 12px",
+                  minHeight:48,
+                  boxSizing:"border-box",
+                  background:"transparent",
+                  border:"none",
+                  borderRadius:8,
+                  cursor:"pointer",
+                  fontFamily:"inherit",
+                  fontSize:12,
+                  fontWeight:600,
+                  color:C.green,
+                  textAlign:"center",
+                  textDecoration:"underline",
+                  textUnderlineOffset:3,
+                  WebkitAppearance:"none",
+                  appearance:"none",
+                  WebkitTapHighlightColor:"transparent",
+                  touchAction:"manipulation",
+                }}
+              >
+                Kan ikke logge inn? Bruk e-post og passord →
+              </button>
+            </div>
+            <p style={{fontSize:11,color:C.soft,textAlign:"center",lineHeight:1.5,margin:"14px 0 0"}}>
+              Kun <strong style={{color:C.navyMid}}>@eiranova.no</strong>-kontoer har tilgang.
+            </p>
+          </>
+        ):(
+          <>
+            <button
+              type="button"
+              onClick={tilbakePrimær}
+              style={{background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontSize:11,color:C.green,fontWeight:600,padding:"0 0 14px",textAlign:"left",width:"100%"}}
+            >
+              ← Tilbake til EiraNova-konto innlogging
+            </button>
+            <div style={{background:C.greenXL,borderRadius:13,padding:"14px 16px",marginBottom:12,border:`1.5px solid ${C.greenBg}`}}>
+              <div style={{marginBottom:8}}>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label>
+                <input className="inp" type="email" placeholder="fornavn@eiranova.no" value={email} onChange={e=>setEmail(e.target.value)}/>
+              </div>
+              <div style={{marginBottom:6}}>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label>
+                <input className="inp" type="password" placeholder="••••••••" value={passord} onChange={e=>setPassord(e.target.value)}/>
+              </div>
+              <div style={{textAlign:"right",marginBottom:10}}>
+                <button type="button" onClick={()=>onNav("glemt-passord",{nurseMode:true})} style={{fontSize:10,color:C.green,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600,padding:0}}>Glemt passord?</button>
+              </div>
+              <p style={{fontSize:10,color:C.soft,lineHeight:1.55,margin:0}}>
+                Problemer med innlogging? Kontakt din leder eller post@eiranova.no
+              </p>
+            </div>
+            {feil&&<div style={{fontSize:12,color:C.danger,marginBottom:8}}>{feil}</div>}
+            <button type="button" onClick={loggInnMock} className="btn bp bf" style={{borderRadius:11,marginBottom:10,cursor:"pointer",WebkitTapHighlightColor:"transparent",touchAction:"manipulation"}}>Logg inn med e-post</button>
+            <p style={{fontSize:12,color:C.soft,textAlign:"center",lineHeight:1.5,margin:0}}>Kun <strong>@eiranova.no</strong>-kontoer skal ha tilgang i produksjon.</p>
+          </>
+        )}
         </div>
       </div>
     </div>
@@ -2004,6 +2122,7 @@ function NurseLogin({onNav,onMockNurseLogin}){
 }
 
 function NurseRolle({onNav}){
+  const[isNy]=useState(true);
   return(
     <div className="phone fu">
       {/* Desktop: enkel sentrert side */}
@@ -2026,6 +2145,8 @@ function NurseRolle({onNav}){
             <div key={r.role} onClick={()=>{
               if(r.screen==="admin-redirect"){
                 onNav("admin-panel"); // Koordinator → adminpanelet
+              } else if(r.role==="sykepleier"&&isNy){
+                onNav("nurse-onboarding");
               } else {
                 onNav(r.screen);
               }
@@ -2049,6 +2170,128 @@ function NurseRolle({onNav}){
             💡 Koordinator/Admin-rollen åpner adminpanelet. Velg sykepleier-rollen for daglig arbeidsdag og pasientoppfølging.
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function NurseOnboarding({onNav}){
+  const[steg,setSteg]=useState(0);
+  const fornavn="Sara";
+  const antallSteg=4;
+  const progressW=`${Math.round((steg/Math.max(antallSteg-1,1))*100)}%`;
+  const[hpr,setHpr]=useState("");
+  const[tittel,setTittel]=useState("Sykepleier");
+  const TITLER=["Sykepleier","Hjelpepleier","Vernepleier","Helsefagarbeider"];
+  const SPEC_OPTS=["Eldre","Barsel","Demens","Psykiatri","Palliasjon","Barn"];
+  const[spec,setSpec]=useState([]);
+  const toggleSpec=x=>setSpec(p=>p.includes(x)?p.filter(s=>s!==x):[...p,x]);
+  const KOMM_NAVN=["Moss","Fredrikstad","Sarpsborg","Råde","Vestby","Ås","Ski"];
+  const[kommSel,setKommSel]=useState(()=>new Set(["Moss"]));
+  const toggleKomm=k=>setKommSel(p=>{const n=new Set(p);if(n.has(k))n.delete(k);else n.add(k);return n;});
+  const[reisetid,setReisetid]=useState("30 min");
+  const REISE_OPTS=["15 min","30 min","45 min","60 min+"];
+
+  return(
+    <div className="phone fu" style={{background:C.cream}}>
+      <div style={{height:3,background:C.border,flexShrink:0}}>
+        <div style={{height:"100%",background:C.green,width:progressW,transition:"width .4s ease"}}/>
+      </div>
+      <div style={{padding:"16px 20px 0",flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",maxWidth:540,margin:"0 auto",width:"100%"}}>
+        <span style={{fontSize:10,color:C.soft}}>{steg+1} av {antallSteg}</span>
+        {steg<antallSteg-1&&(
+          <button type="button" onClick={()=>onNav("nurse-hjem")} style={{fontSize:10,color:C.soft,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Hopp over</button>
+        )}
+      </div>
+      <div className="sa" style={{padding:"20px 22px",display:"flex",flexDirection:"column",maxWidth:540,margin:"0 auto",width:"100%",boxSizing:"border-box"}}>
+        {steg===0&&(
+          <>
+            <div className="fr" style={{fontSize:22,fontWeight:700,color:C.navy,marginBottom:10}}>Velkommen til EiraNova 🌿</div>
+            <div style={{fontSize:14,fontWeight:600,color:C.navy,marginBottom:8}}>Hei {fornavn}!</div>
+            <div style={{fontSize:12,color:C.soft,lineHeight:1.7,marginBottom:28}}>
+              Du er nå registrert som sykepleier hos EiraNova. La oss sette opp profilen din.
+            </div>
+          </>
+        )}
+        {steg===1&&(
+          <>
+            <div className="fr" style={{fontSize:18,fontWeight:700,color:C.navy,marginBottom:6}}>Din profesjonelle profil</div>
+            <div style={{fontSize:11,color:C.soft,marginBottom:16,lineHeight:1.6}}>Opplysningene brukes i planlegging og ved tildeling av oppdrag.</div>
+            <div style={{marginBottom:12}}>
+              <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>HPR-nummer</label>
+              <input className="inp" placeholder="7123456" value={hpr} onChange={e=>setHpr(e.target.value.replace(/\D/g,"").slice(0,9))}/>
+              <div style={{fontSize:9,color:C.soft,marginTop:4}}>Hentes fra Helsepersonellregisteret</div>
+            </div>
+            <div style={{marginBottom:14}}>
+              <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Tittel</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                {TITLER.map(t=>(
+                  <button type="button" key={t} onClick={()=>setTittel(t)} className="btn" style={{padding:"8px 12px",fontSize:11,borderRadius:50,minHeight:0,background:tittel===t?C.green:"white",color:tittel===t?"white":C.navy,border:`1.5px solid ${tittel===t?C.green:C.border}`}}>{t}</button>
+                ))}
+              </div>
+            </div>
+            <div style={{marginBottom:8}}>
+              <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Spesialiteter</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:8}}>
+                {SPEC_OPTS.map(s=>(
+                  <button type="button" key={s} onClick={()=>toggleSpec(s)} className="btn" style={{padding:"8px 12px",fontSize:11,borderRadius:50,minHeight:0,background:spec.includes(s)?C.greenBg:"white",color:C.navy,border:`1.5px solid ${spec.includes(s)?C.green:C.border}`}}>{s}{spec.includes(s)?" ✓":""}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+        {steg===2&&(
+          <>
+            <div className="fr" style={{fontSize:18,fontWeight:700,color:C.navy,marginBottom:6}}>Ditt dekningsområde</div>
+            <div style={{fontSize:11,color:C.soft,marginBottom:14,lineHeight:1.6}}>Velg kommuner du kan ta oppdrag i, og maksimal reisetid.</div>
+            <div style={{background:"white",borderRadius:13,padding:"12px 14px",border:`1.5px solid ${C.border}`,marginBottom:14}}>
+              {KOMM_NAVN.map(k=>(
+                <label key={k} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 0",borderBottom:k!==KOMM_NAVN[KOMM_NAVN.length-1]?`1px solid ${C.border}`:"none",cursor:"pointer",fontSize:12,color:C.navy}}>
+                  <input type="checkbox" checked={kommSel.has(k)} onChange={()=>toggleKomm(k)} style={{accentColor:C.green,width:18,height:18}}/>
+                  {k}
+                </label>
+              ))}
+            </div>
+            <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Maks reisetid</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              {REISE_OPTS.map(r=>(
+                <button type="button" key={r} onClick={()=>setReisetid(r)} className="btn" style={{padding:"10px 8px",fontSize:11,background:reisetid===r?C.greenBg:"white",color:C.navy,border:`2px solid ${reisetid===r?C.green:C.border}`}}>{r}</button>
+              ))}
+            </div>
+          </>
+        )}
+        {steg===3&&(
+          <>
+            <div className="fr" style={{fontSize:20,fontWeight:700,color:C.navy,marginBottom:8,textAlign:"center"}}>Alt er klart! 🎉</div>
+            <div style={{background:"white",borderRadius:13,padding:"14px 16px",border:`1.5px solid ${C.border}`,marginBottom:14,fontSize:11,color:C.navy}}>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${C.border}`}}><span style={{color:C.soft}}>HPR</span><span style={{fontWeight:600}}>{hpr||"—"}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${C.border}`}}><span style={{color:C.soft}}>Tittel</span><span style={{fontWeight:600}}>{tittel}</span></div>
+              <div style={{padding:"6px 0",borderBottom:`1px solid ${C.border}`}}><span style={{color:C.soft}}>Spesialiteter</span><div style={{fontWeight:600,marginTop:4}}>{spec.length?spec.join(", "):"—"}</div></div>
+              <div style={{padding:"6px 0 0"}}><span style={{color:C.soft}}>Kommuner</span><div style={{fontWeight:600,marginTop:4}}>{[...kommSel].join(", ")||"—"}</div></div>
+              <div style={{padding:"8px 0 0",fontSize:10,color:C.soft}}>Maks reisetid: {reisetid}</div>
+            </div>
+            <div style={{background:C.greenXL,borderRadius:12,padding:"12px 14px",border:`1px solid ${C.green}`,fontSize:11,color:C.navyMid,lineHeight:1.65,marginBottom:8}}>
+              Din profil er sendt til godkjenning. Du vil motta e-post når du er godkjent.
+            </div>
+            <div style={{fontSize:10,color:C.soft,lineHeight:1.6}}>
+              Når du er godkjent: sjekk «Min arbeidsdag» for dagens oppdrag, bruk Innsjekk ved ankomst, og send korte meldinger til kunden via chat når det trengs.
+            </div>
+          </>
+        )}
+      </div>
+      <div style={{padding:"16px 22px 24px",flexShrink:0,maxWidth:540,margin:"0 auto",width:"100%",boxSizing:"border-box"}}>
+        {steg===0&&(
+          <button type="button" onClick={()=>setSteg(1)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>Kom i gang →</button>
+        )}
+        {steg===1&&(
+          <button type="button" onClick={()=>hpr.trim()&&setSteg(2)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:hpr.trim()?1:.4}}>Neste →</button>
+        )}
+        {steg===2&&(
+          <button type="button" onClick={()=>kommSel.size&&setSteg(3)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:kommSel.size?1:.4}}>Neste →</button>
+        )}
+        {steg===3&&(
+          <button type="button" onClick={()=>onNav("nurse-hjem")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>Gå til min arbeidsdag →</button>
+        )}
       </div>
     </div>
   );
@@ -4863,6 +5106,184 @@ const PAKKER=[
 /* ═══════════════════════════════════════════════════════════════
    B2B KOORDINATOR-PORTAL
    ═══════════════════════════════════════════════════════════════ */
+function B2BOnboarding({onNav}){
+  const org=B2B_C[0];
+  const avtaleLabel=org.prismodell==="rammeavtale"?"Rammeavtale":"Per bestilling";
+  const[steg,setSteg]=useState(0);
+  const[fulltNavn,setFulltNavn]=useState("Bjørn Haugen");
+  const[telefon,setTelefon]=useState("");
+  const[fakturaAdr,setFakturaAdr]=useState("Postmottak helse og omsorg\n1501 Moss");
+  const[ehfPå,setEhfPå]=useState(org.type==="kommune");
+  const[forsteBrukerNavn,setForsteBrukerNavn]=useState("");
+  const[forsteBrukerEpost,setForsteBrukerEpost]=useState("");
+  const totalSteg=3;
+  const kanSendeForsteBruker=forsteBrukerNavn.trim().length>0&&erGyldigEpost(forsteBrukerEpost);
+  const progressW=`${Math.round((steg/Math.max(totalSteg-1,1))*100)}%`;
+  const fullfør=(dest)=>onNav(dest,undefined,{b2bOnboardingDone:true});
+
+  return(
+    <div className="phone fu" style={{background:C.cream}}>
+      <div style={{height:3,background:C.border,flexShrink:0}}>
+        <div style={{height:"100%",background:C.green,width:progressW,transition:"width .4s ease"}}/>
+      </div>
+      <div style={{padding:"16px 20px 0",flexShrink:0,display:"flex",justifyContent:"space-between",alignItems:"center",maxWidth:540,margin:"0 auto",width:"100%"}}>
+        <span style={{fontSize:10,color:C.soft}}>{steg+1} av {totalSteg}</span>
+        {steg<totalSteg-1&&(
+          <button type="button" onClick={()=>fullfør("b2b-dashboard")} style={{fontSize:10,color:C.soft,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Hopp over</button>
+        )}
+      </div>
+      <div className="sa" style={{padding:"20px 22px",maxWidth:540,margin:"0 auto",width:"100%",boxSizing:"border-box"}}>
+        {steg===0&&(
+          <>
+            <div className="fr" style={{fontSize:20,fontWeight:700,color:C.navy,marginBottom:8}}>Velkommen, {fulltNavn.split(" ")[0]}! 🏢</div>
+            <div style={{background:"white",borderRadius:13,padding:"14px 16px",border:`1.5px solid ${C.border}`,marginBottom:14,fontSize:12,color:C.navy}}>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${C.border}`}}><span style={{color:C.soft}}>Organisasjon</span><span style={{fontWeight:600}}>{org.name}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0",borderBottom:`1px solid ${C.border}`}}><span style={{color:C.soft}}>Org.nr.</span><span style={{fontWeight:600}}>{org.org}</span></div>
+              <div style={{display:"flex",justifyContent:"space-between",padding:"6px 0"}}><span style={{color:C.soft}}>Avtale</span><span style={{fontWeight:600}}>{avtaleLabel}</span></div>
+            </div>
+            <div style={{fontSize:11,color:C.soft,lineHeight:1.65,marginBottom:8}}>
+              Din rammeavtale med EiraNova er aktiv. La oss sette opp koordinatorkontoen.
+            </div>
+          </>
+        )}
+        {steg===1&&(
+          <>
+            <div className="fr" style={{fontSize:18,fontWeight:700,color:C.navy,marginBottom:6}}>Kontaktinformasjon</div>
+            <div style={{fontSize:11,color:C.soft,marginBottom:14,lineHeight:1.6}}>Disse opplysningene brukes av EiraNova ved behov for avklaring og på faktura.</div>
+            <div style={{marginBottom:12}}>
+              <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Fullt navn</label>
+              <input className="inp" value={fulltNavn} onChange={e=>setFulltNavn(e.target.value)} placeholder="Fornavn Etternavn"/>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Direkte telefon</label>
+              <input className="inp" value={telefon} onChange={e=>setTelefon(e.target.value)} placeholder="415 00 000"/>
+            </div>
+            <div style={{marginBottom:12}}>
+              <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Fakturaadresse</label>
+              <textarea className="inp" value={fakturaAdr} onChange={e=>setFakturaAdr(e.target.value)} rows={3} style={{resize:"vertical",minHeight:72}}/>
+            </div>
+            <div style={{background:"white",borderRadius:13,padding:"12px 14px",border:`1.5px solid ${C.border}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+              <div>
+                <div style={{fontSize:12,fontWeight:600,color:C.navy}}>EHF-aktivert</div>
+                <div style={{fontSize:9,color:C.soft,marginTop:2,lineHeight:1.45}}>Fakturaer sendes via PEPPOL til kommunens fakturasystem</div>
+              </div>
+              <button type="button" className="settings-toggle" onClick={()=>setEhfPå(v=>!v)} aria-pressed={ehfPå} style={{position:"relative",background:ehfPå?C.green:"#D1D5DB",flexShrink:0}}>
+                <span style={{position:"absolute",top:4,left:ehfPå?26:4,width:22,height:22,borderRadius:"50%",background:"white",transition:"left .2s",boxShadow:"0 1px 3px rgba(0,0,0,.2)",pointerEvents:"none"}}/>
+              </button>
+            </div>
+          </>
+        )}
+        {steg===2&&(
+          <>
+            <div className="fr" style={{fontSize:18,fontWeight:700,color:C.navy,marginBottom:8}}>Dine brukere</div>
+            <div style={{fontSize:12,color:C.soft,lineHeight:1.65,marginBottom:16}}>
+              Du kan nå legge til brukere som skal motta tjenester fra EiraNova.
+            </div>
+            <div style={{background:"white",borderRadius:13,padding:"14px 16px",border:`1.5px solid ${C.border}`}}>
+              <div style={{fontSize:11,fontWeight:600,color:C.navy,marginBottom:12}}>Første bruker</div>
+              <div style={{marginBottom:12}}>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Fullt navn</label>
+                <input className="inp" value={forsteBrukerNavn} onChange={e=>setForsteBrukerNavn(e.target.value)} placeholder="Ola Nordmann" autoComplete="name"/>
+              </div>
+              <div>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>E-post</label>
+                <input className="inp" type="email" value={forsteBrukerEpost} onChange={e=>setForsteBrukerEpost(e.target.value)} placeholder="ola@eksempel.no" autoComplete="email"/>
+              </div>
+            </div>
+            <div style={{marginTop:12,fontSize:10,color:C.soft,lineHeight:1.55}}>
+              Brukeren får invitasjon på e-post for å aktivere kontoen og kan deretter motta bestillinger.
+            </div>
+          </>
+        )}
+      </div>
+      <div style={{padding:"16px 22px 24px",flexShrink:0,maxWidth:540,margin:"0 auto",width:"100%",boxSizing:"border-box"}}>
+        {steg===0&&(
+          <button type="button" onClick={()=>setSteg(1)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>Kom i gang →</button>
+        )}
+        {steg===1&&(
+          <button type="button" onClick={()=>telefon.trim()&&setSteg(2)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:telefon.trim()?1:.4}}>Neste →</button>
+        )}
+        {steg===2&&(
+          <div style={{display:"flex",flexDirection:"column",gap:10}}>
+            <button type="button" onClick={()=>kanSendeForsteBruker&&fullfør("b2b-bestill")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:kanSendeForsteBruker?1:.4}}>Legg til første bruker nå →</button>
+            <button type="button" onClick={()=>fullfør("b2b-dashboard")} className="btn" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Gjør dette senere →</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function B2BBrukerAktivering({onNav}){
+  const orgNavn=B2B_C[0].name;
+  const[steg,setSteg]=useState(0);
+  const[fulltNavn,setFulltNavn]=useState("");
+  const[fdato,setFdato]=useState("");
+  const[pin,setPin]=useState("");
+  const[pinBek,setPinBek]=useState("");
+  const[feil,setFeil]=useState({fn:"",fd:"",pin:""});
+
+  const validerOgAktiver=()=>{
+    const e={fn:"",fd:"",pin:""};
+    if(!fulltNavn.trim())e.fn="Fullt navn er påkrevd.";
+    if(!/^\d{2}\.\d{2}\.\d{4}$/.test(fdato.trim()))e.fd="Fødselsdato må være DD.MM.ÅÅÅÅ.";
+    if(!/^\d{4}$/.test(pin))e.pin="PIN må være nøyaktig 4 siffer.";
+    else if(pin!==pinBek)e.pin="PIN og bekreft PIN er ikke like.";
+    setFeil(e);
+    if(e.fn||e.fd||e.pin)return;
+    setSteg(1);
+  };
+
+  if(steg===1)return(
+    <div className="phone fu" style={{background:C.cream}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 28px",textAlign:"center",maxWidth:540,margin:"0 auto",width:"100%"}}>
+        <div style={{fontSize:52,marginBottom:12}}>✅</div>
+        <div className="fr" style={{fontSize:20,fontWeight:700,color:C.navy,marginBottom:8}}>Konto aktivert!</div>
+        <div style={{fontSize:13,color:C.navy,fontWeight:600,marginBottom:10}}>{fulltNavn.trim()}</div>
+        <div style={{fontSize:12,color:C.soft,lineHeight:1.65,marginBottom:24,maxWidth:400}}>
+          Du er koblet til <strong style={{color:C.navy}}>{orgNavn}</strong>. Din koordinator vil nå sette opp tjenester for deg.
+        </div>
+        <button type="button" onClick={()=>onNav("b2b-bruker")} className="btn bp" style={{width:"100%",maxWidth:400,padding:"14px 0",fontSize:14,borderRadius:13}}>Gå til min oversikt →</button>
+      </div>
+    </div>
+  );
+
+  return(
+    <div className="phone fu" style={{background:C.cream}}>
+      <div style={{padding:"22px 20px 18px",background:`linear-gradient(160deg,#1A2E24,#2C5C52)`,flexShrink:0}}>
+        <button type="button" onClick={()=>onNav("login")} style={{background:"rgba(255,255,255,.15)",border:"none",color:"white",borderRadius:8,padding:"4px 10px",fontSize:11,cursor:"pointer",fontFamily:"inherit",marginBottom:10}}>← Tilbake</button>
+        <div className="fr" style={{fontSize:18,fontWeight:600,color:"white",marginBottom:4}}>Aktiver din konto</div>
+        <div style={{fontSize:10,color:"rgba(255,255,255,.65)",lineHeight:1.5}}>Du har mottatt en invitasjon fra {orgNavn}.</div>
+      </div>
+      <div style={{padding:"16px 20px 0",display:"flex",justifyContent:"flex-end",maxWidth:540,margin:"0 auto",width:"100%"}}>
+        <button type="button" onClick={()=>onNav("b2b-bruker")} style={{fontSize:10,color:C.soft,background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Hopp over</button>
+      </div>
+      <div className="sa" style={{padding:"12px 22px 24px",maxWidth:540,margin:"0 auto",width:"100%",boxSizing:"border-box"}}>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Fullt navn</label>
+          <input className="inp" value={fulltNavn} onChange={e=>{setFulltNavn(e.target.value);if(feil.fn)setFeil(f=>({...f,fn:""}));}} placeholder="Ola Nordmann"/>
+          {feil.fn&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{feil.fn}</div>}
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Fødselsdato</label>
+          <input className="inp" value={fdato} onChange={e=>{setFdato(e.target.value);if(feil.fd)setFeil(f=>({...f,fd:""}));}} placeholder="DD.MM.ÅÅÅÅ" inputMode="numeric"/>
+          {feil.fd&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{feil.fd}</div>}
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Ny PIN (4 siffer)</label>
+          <input className="inp" type="password" inputMode="numeric" value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,"").slice(0,4))}/>
+        </div>
+        <div style={{marginBottom:16}}>
+          <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Bekreft PIN</label>
+          <input className="inp" type="password" inputMode="numeric" value={pinBek} onChange={e=>{setPinBek(e.target.value.replace(/\D/g,"").slice(0,4));if(feil.pin)setFeil(f=>({...f,pin:""}));}}/>
+          {feil.pin&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{feil.pin}</div>}
+        </div>
+        <button type="button" onClick={validerOgAktiver} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>Aktiver konto →</button>
+      </div>
+    </div>
+  );
+}
+
 function B2BLogin({onNav}){
   // B2B-innlogging skjer nå via Kunde-app → Login → Bedriftskunde
   // Denne komponenten er beholdt for bakoverkompatibilitet men ruter direkte videre
@@ -7970,18 +8391,19 @@ const KANSELLERING_REGLER={
 };
 
 const SC={
-  kunde:[["landing","Start"],["login","Login"],["push-tillatelse","Push"],["samtykke","Samtykke"],["onboarding","Onboarding"],["glemt-passord","Glemt pw"],["hjem","Hjem"],["bestill","Bestill"],["betaling","Betaling"],["bekreftelse","OK"],["mine","Mine"],["kunde-profil","Profil"],["oppdrag-i-gang","Pågår"],["chat-kunde","Chat"],["b2b-dashboard","B2B koordinator"],["b2b-bestill","B2B bestill"],["b2b-bruker","B2B bruker"]],
-  nurse:[["nurse-login","Login"],["nurse-rolle","Rolle"],["nurse-hjem","Hjem"],["nurse-oppdrag","Oppdrag"],["nurse-innsjekk","Innsjekk"],["nurse-rapport","Rapport"],["nurse-profil","Profil"]],
+  kunde:[["landing","Start"],["login","Login"],["push-tillatelse","Push"],["samtykke","Samtykke"],["epost-bekreftelse","E-post"],["onboarding","Onboarding"],["glemt-passord","Glemt pw"],["hjem","Hjem"],["bestill","Bestill"],["betaling","Betaling"],["bekreftelse","OK"],["mine","Mine"],["kunde-profil","Profil"],["oppdrag-i-gang","Pågår"],["chat-kunde","Chat"],["b2b-dashboard","B2B koordinator"],["b2b-onboarding","B2B ny"],["b2b-bestill","B2B bestill"],["b2b-bruker","B2B bruker"],["b2b-bruker-aktivering","B2B aktiver"]],
+  nurse:[["nurse-login","Login"],["nurse-rolle","Rolle"],["nurse-onboarding","SP onboard"],["nurse-hjem","Hjem"],["nurse-oppdrag","Oppdrag"],["nurse-innsjekk","Innsjekk"],["nurse-rapport","Rapport"],["nurse-profil","Profil"]],
+  b2b:[["b2b-login","B2B intro"],["login","Kunde-login"],["b2b-onboarding","Koord. onboard"],["b2b-dashboard","Dashboard"],["b2b-bestill","Bestill"],["b2b-bruker","Bruker"],["b2b-bruker-aktivering","Aktivering"]],
 };
 const SCREENS={
-  landing:Landing,login:Login,"push-tillatelse":PushTillatelse,samtykke:Samtykke,onboarding:Onboarding,"glemt-passord":GlemtPassord,"kunde-profil":KundeProfil,"oppdrag-i-gang":OppdragIGang,hjem:Hjem,bestill:Bestill,
+  landing:Landing,login:Login,"push-tillatelse":PushTillatelse,samtykke:Samtykke,"epost-bekreftelse":EpostBekreftelse,onboarding:Onboarding,"glemt-passord":GlemtPassord,"kunde-profil":KundeProfil,"oppdrag-i-gang":OppdragIGang,hjem:Hjem,bestill:Bestill,
   betaling:p=><Betaling {...p} service={SERVICES[0]} date="Tirsdag 4. mars" time="09:00"/>,
   bekreftelse:Bekreftelse,mine:Mine,"chat-kunde":ChatKunde,
-  "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
+  "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-onboarding":NurseOnboarding,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
   "nurse-innsjekk":p=><NurseInnsjekk {...p} focusOppdragId={p.focusOppdragId}/>,
   "nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
   "admin-panel":()=><Admin initPage="dashboard"/>,
-  "b2b-login":B2BLogin,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
+  "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
 export default function App({
@@ -7999,29 +8421,45 @@ export default function App({
   const[nurseLoggedIn,setNurseLoggedIn]=useState(false);
   const[bestillPreselect,setBestillPreselect]=useState(null);
   const[nurseFocusOppdragId,setNurseFocusOppdragId]=useState(null);
+  const[kundeRegEpost,setKundeRegEpost]=useState("");
+  const[isNyKoordinator,setIsNyKoordinator]=useState(true);
+  const[glemtPassordNurseMode,setGlemtPassordNurseMode]=useState(false);
   const mockKundeLogin=useCallback(()=>{setLoggedIn(true);setScreen("hjem");},[]);
   const mockNurseLogin=useCallback(()=>{setNurseLoggedIn(true);setScreen("nurse-rolle");},[]);
   const isTabLocked=Boolean(forcedTab);
   const activeTab=isTabLocked?forcedTab:tab;
   const isAdmin=activeTab==="admin";
   const isAdminPanel=screen==="admin-panel"; // sykepleier valgte koordinator-rolle
-  const navTo=(s,serviceType)=>{
+  const navTo=(s,serviceType,opts)=>{
+    const o=opts&&typeof opts==="object"?opts:null;
+    if(o?.kundeRegEpost!=null)setKundeRegEpost(String(o.kundeRegEpost));
     if(s==="logout"){setLoggedIn(false);setBestillPreselect(null);setScreen("login");return;}
+    if(s==="glemt-passord")setGlemtPassordNurseMode(false);
     const krevInnlogging=["bestill","mine","kunde-profil","oppdrag-i-gang","chat-kunde"];
     if(krevInnlogging.includes(s)&&!loggedIn){setScreen("login-gate");return;}
-    if(s==="bestill")setBestillPreselect(serviceType??null);
+    if(o?.b2bOnboardingDone)setIsNyKoordinator(false);
+    let dest=s;
+    if(s==="b2b-dashboard"&&isNyKoordinator&&!o?.b2bOnboardingDone)dest="b2b-onboarding";
+    if(dest==="bestill")setBestillPreselect(serviceType??null);
     else setBestillPreselect(null);
-    setScreen(s);
-    if(s==="hjem"||s==="onboarding")setLoggedIn(true);
+    setScreen(dest);
+    if(dest==="hjem"||dest==="onboarding")setLoggedIn(true);
   };
   const nurseNav=(s,meta)=>{
     if(s==="nurse-login"){
       setNurseLoggedIn(false);
       setNurseFocusOppdragId(null);
+      setGlemtPassordNurseMode(false);
       setScreen(s);
       return;
     }
-    const kreveNurseSessjon=["nurse-rolle","nurse-hjem","nurse-oppdrag","nurse-innsjekk","nurse-profil","nurse-rapport"];
+    if(s==="glemt-passord"){
+      setGlemtPassordNurseMode(Boolean(meta?.nurseMode));
+      setNurseFocusOppdragId(null);
+      setScreen("glemt-passord");
+      return;
+    }
+    const kreveNurseSessjon=["nurse-rolle","nurse-onboarding","nurse-hjem","nurse-oppdrag","nurse-innsjekk","nurse-profil","nurse-rapport"];
     if(kreveNurseSessjon.includes(s)&&!nurseLoggedIn){
       setScreen("nurse-login");
       return;
@@ -8050,7 +8488,7 @@ export default function App({
         ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}}/>
         :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})}/>
+            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
