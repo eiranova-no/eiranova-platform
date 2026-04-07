@@ -280,6 +280,29 @@ const NURSES=[
    språk:["Norsk"],rating:4.7,antallOppdrag:89,
    sertifisert:true,omrade:"Moss / Råde"},
 ];
+/** Forhåndsvalg i sykepleierprofil (prototype) */
+const NURSE_PROFIL_SPESIALITETER_CHIPS=["Eldre","Demens","Barsel","Praktisk bistand","Transport","Medisin","Rehabilitering","Morgensstell"];
+const NURSE_PROFIL_OMRADE_CHIPS=["Moss","Rygge","Råde","Vestby","Fredrikstad","Sarpsborg","Ski","Ås"];
+const NURSE_TITTEL_OPTIONS=["Autorisert sykepleier","Hjelpepleier","Vernepleier"];
+const NURSE_PROFIL_MOCK_INDEKS=1; // Maria Kristiansen i demo-flyt
+function parseErfaringAar(erfaringStr){
+  const m=String(erfaringStr||"").match(/(\d+)/);
+  return m?Math.min(60,Math.max(0,parseInt(m[1],10))):0;
+}
+function sykepleierOmradeTilChips(omradeStr){
+  return String(omradeStr||"").split("/").map(s=>s.trim()).filter(Boolean);
+}
+function profilEndringSammendrag(gammel,apply){
+  const del=[];
+  if((gammel.bio||"")!==(apply.bio||""))del.push("Kort beskrivelse");
+  if((gammel.tittel||"")!==(apply.tittel||""))del.push(`Tittel → ${apply.tittel}`);
+  if((gammel.erfaring||"")!==(apply.erfaring||""))del.push(`Erfaring → ${apply.erfaring}`);
+  const gS=[...(gammel.spesialitet||[])].sort().join(",");
+  const nS=[...(apply.spesialitet||[])].sort().join(",");
+  if(gS!==nS)del.push("Spesialiteter");
+  if((gammel.omrade||"")!==(apply.omrade||""))del.push("Dekningsområde");
+  return del.length?del.join(" · "):"Profilfelter oppdatert";
+}
 const OPPDRAG=[
   {id:"1",time:"08:00",date:"Man 3. mars",customer:"Astrid Hansen",phone:"415 22 334",address:"Konggata 12, Moss",service:"Morgensstell",icon:"🚿",cat:"eldre",status:"completed",nurse:"Sara Lindgren",amount:590,betaltVia:"vipps",opprettet:"2026-02-28",startIso:"2026-03-03T08:00:00+01:00",endringer:[
     {dato:"2026-02-28 09:12",av:"Astrid Hansen (kunde)",handling:"Bestilling opprettet",arsak:null},
@@ -1331,7 +1354,7 @@ function KundeAvtaleDetalj({onNav}){
   );
 }
 
-function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES}){
+function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   const[merinfo,setMerinfo]=useState(null);
   return(
       <div className="land-mobile phone fu">
@@ -1405,11 +1428,11 @@ function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES}){
               </div>
               <div style={{display:"flex",alignItems:"center",gap:6,background:C.greenBg,borderRadius:50,padding:"6px 14px",flexShrink:0}}>
                 <div style={{width:8,height:8,borderRadius:"50%",background:"#16A34A"}}/>
-                <span style={{fontSize:12,color:C.green,fontWeight:600}}>{NURSES.filter(n=>n.status==="available").length} ledig nå</span>
+                <span style={{fontSize:12,color:C.green,fontWeight:600}}>{nurses.filter(n=>n.status==="available").length} ledig nå</span>
               </div>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr",gap:12,marginBottom:20}}>
-              {NURSES.map(n=>(
+              {nurses.map(n=>(
                 <div key={n.name} className="card" style={{padding:14,display:"flex",gap:12,alignItems:"flex-start"}}>
                   <div style={{position:"relative",flexShrink:0}}>
                     <div style={{width:52,height:52,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDark},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,fontWeight:700,color:"white",border:`3px solid ${C.greenBg}`}}>{n.av}</div>
@@ -1460,7 +1483,7 @@ function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES}){
   );
 }
 
-function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES}){
+function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   const[merinfo,setMerinfo]=useState(null);
   return(
       <div className="land-desktop">
@@ -1498,7 +1521,7 @@ function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES}){
             <div>
               <div style={{background:"rgba(255,255,255,.08)",borderRadius:20,padding:24,border:"1px solid rgba(255,255,255,.12)",backdropFilter:"blur(10px)",marginBottom:12}}>
                 <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,.5)",textTransform:"uppercase",letterSpacing:1,marginBottom:16}}>Tilgjengelig nå i ditt område</div>
-                {NURSES.filter(n=>n.status==="available").slice(0,2).map(n=>(
+                {nurses.filter(n=>n.status==="available").slice(0,2).map(n=>(
                   <div key={n.name} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid rgba(255,255,255,.08)"}}>
                     <div style={{width:40,height:40,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDark},${C.sidebarAccent})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"white",flexShrink:0,position:"relative"}}>
                       {n.av}
@@ -1601,11 +1624,11 @@ function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES}){
               </div>
               <div style={{display:"flex",alignItems:"center",gap:6,background:C.greenBg,borderRadius:50,padding:"7px 18px"}}>
                 <div style={{width:8,height:8,borderRadius:"50%",background:"#16A34A"}}/>
-                <span style={{fontSize:13,color:C.green,fontWeight:600}}>{NURSES.filter(n=>n.status==="available").length} ledig nå</span>
+                <span style={{fontSize:13,color:C.green,fontWeight:600}}>{nurses.filter(n=>n.status==="available").length} ledig nå</span>
               </div>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:18,marginBottom:28}}>
-              {NURSES.map(n=>(
+              {nurses.map(n=>(
                 <div key={n.name} className="card" style={{padding:20,display:"flex",gap:14,alignItems:"flex-start"}}>
                   <div style={{position:"relative",flexShrink:0}}>
                     <div style={{width:56,height:56,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDark},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,fontWeight:700,color:"white",border:`3px solid ${C.greenBg}`}}>{n.av}</div>
@@ -1669,9 +1692,9 @@ function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES}){
   );
 }
 
-function Landing({onNav,services=DEFAULT_KUNDE_SERVICES}){
+function Landing({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   const desktop=useViewportMin768();
-  return desktop?<LandKundeDesktop onNav={onNav} services={services}/>:<LandKundeMobile onNav={onNav} services={services}/>;
+  return desktop?<LandKundeDesktop onNav={onNav} services={services} nurses={nurses}/>:<LandKundeMobile onNav={onNav} services={services} nurses={nurses}/>;
 }
 
 function Login({onNav,onMockKundeLogin}){
@@ -2027,7 +2050,7 @@ function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES,orders=ORDERS}){
   );
 }
 
-function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES}){
+function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   const defaultService=services.find(s=>s.type==="morgensstell")||services[0];
   const fromType=t=>services.find(s=>s.type===t)||defaultService;
   // 0=tjenesteliste (kun uten forhåndsvalg), 1=dato/tid, 2=sykepleier, 3=betaling
@@ -2073,7 +2096,7 @@ function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES}){
 
         <div style={{fontSize:10,fontWeight:600,color:C.navy,textTransform:"uppercase",letterSpacing:1,marginBottom:9}}>Eller velg selv</div>
 
-        {NURSES.map(n=>{
+        {nurses.map(n=>{
           const avail=n.status==="available";
           const chosen=chosenNurse===n.name;
           return(
@@ -3001,26 +3024,62 @@ function NurseInnsjekk({onNav,focusOppdragId}){
   );
 }
 
-function NurseProfil({onNav}){
+function NurseProfil({onNav,nurses=NURSES,onNurseProfilTilGodkjenning}){
   const{toast,ToastContainer}=useToast();
-  const n=NURSES[1]; // Maria — viser sin offentlige profil
-  const[editMode,setEditMode]=useState(false);
+  const idx=NURSE_PROFIL_MOCK_INDEKS;
+  const n=nurses[idx]??nurses[0];
+  const[profilBildeMock,setProfilBildeMock]=useState(false);
+  const[bio,setBio]=useState(()=>String(n?.bio||"").slice(0,150));
+  const[tittel,setTittel]=useState(()=>(NURSE_TITTEL_OPTIONS.includes(n?.tittel)?n.tittel:NURSE_TITTEL_OPTIONS[0]));
+  const[erfaringAar,setErfaringAar]=useState(()=>parseErfaringAar(n?.erfaring)||5);
+  const[spes,setSpes]=useState(()=>new Set((n?.spesialitet||[]).filter(s=>NURSE_PROFIL_SPESIALITETER_CHIPS.includes(s))));
+  const[omr,setOmr]=useState(()=>new Set(sykepleierOmradeTilChips(n?.omrade).filter(o=>NURSE_PROFIL_OMRADE_CHIPS.includes(o))));
+  useEffect(()=>{
+    const nn=nurses[idx]??nurses[0];
+    if(!nn)return;
+    setBio(String(nn.bio||"").slice(0,150));
+    setTittel(NURSE_TITTEL_OPTIONS.includes(nn.tittel)?nn.tittel:NURSE_TITTEL_OPTIONS[0]);
+    setErfaringAar(parseErfaringAar(nn.erfaring)||0);
+    setSpes(new Set((nn.spesialitet||[]).filter(s=>NURSE_PROFIL_SPESIALITETER_CHIPS.includes(s))));
+    setOmr(new Set(sykepleierOmradeTilChips(nn.omrade).filter(o=>NURSE_PROFIL_OMRADE_CHIPS.includes(o))));
+  },[nurses,idx]);
+  const toggle=(setFn,val)=>{
+    setFn(prev=>{
+      const next=new Set(prev);
+      next.has(val)?next.delete(val):next.add(val);
+      return next;
+    });
+  };
+  const lagre=()=>{
+    if(!onNurseProfilTilGodkjenning||!n){
+      toast("Kan ikke sende til godkjenning (mangler handler)","info");
+      return;
+    }
+    const erfaringStr=`${erfaringAar} år`;
+    const spesArr=[...spes];
+    const omrStr=[...omr].join(" / ");
+    const apply={bio:bio.trim().slice(0,150),tittel,erfaring:erfaringStr,spesialitet:spesArr,omrade:omrStr||n.omrade};
+    const sammendrag=profilEndringSammendrag(n,apply);
+    // TODO: Supabase - lagre profilendring, send til godkjenning
+    // TODO: Resend - varsle Lise om ny profilendring til godkjenning
+    onNurseProfilTilGodkjenning({
+      nurseIndex:idx,
+      nurseName:n.name,
+      sammendrag,
+      apply:{...apply,språk:n.språk,av:n.av,status:n.status,current:n.current,rating:n.rating,antallOppdrag:n.antallOppdrag,sertifisert:n.sertifisert},
+    });
+    toast("Profil sendt til godkjenning. Lise vil gjennomgå endringene dine.","ok");
+  };
   return(
     <div className="phone fu">
       <ToastContainer/>
-      <PH title="Min profil" onBack={()=>onNav("nurse-hjem")} right={
-        <button type="button" onClick={()=>setEditMode(e=>!e)} style={{fontSize:11,padding:"8px 14px",minHeight:44,background:"rgba(255,255,255,.18)",border:"1px solid rgba(255,255,255,.3)",borderRadius:50,color:"white",cursor:"pointer",fontFamily:"inherit"}}>
-          {editMode?"Lagre":"Rediger"}
-        </button>
-      }/>
+      <PH title="Min profil" onBack={()=>onNav("nurse-hjem")}/>
       <div className="sa" style={{padding:14}}>
-        {/* Profil-header */}
         <div className="card cp" style={{marginBottom:12,textAlign:"center"}}>
           <div style={{position:"relative",display:"inline-block",marginBottom:10}}>
-            <div style={{width:72,height:72,borderRadius:"50%",background:`linear-gradient(135deg,${C.greenDark},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:700,color:"white",margin:"0 auto"}}>
-              {n.av}
+            <div style={{width:72,height:72,borderRadius:"50%",background:profilBildeMock?`linear-gradient(135deg,${C.sky},${C.green})`:`linear-gradient(135deg,${C.greenDark},${C.green})`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,fontWeight:700,color:"white",margin:"0 auto",border:`3px solid ${C.greenBg}`}}>
+              {profilBildeMock?"🖼":n.av}
             </div>
-            {editMode&&<div style={{position:"absolute",bottom:0,right:0,width:22,height:22,borderRadius:"50%",background:C.green,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",border:"2px solid white",fontSize:12}}>📷</div>}
           </div>
           <div className="fr" style={{fontSize:17,fontWeight:600,color:C.navy,marginBottom:2}}>{n.name}</div>
           <div style={{fontSize:11,color:C.green,fontWeight:500,marginBottom:6}}>{n.tittel} · {n.erfaring} erfaring</div>
@@ -3036,26 +3095,58 @@ function NurseProfil({onNav}){
           </div>
         </div>
 
-        {/* Bio */}
         <div className="card cp" style={{marginBottom:10}}>
-          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:6}}>Om meg</div>
-          {editMode
-            ?<textarea className="inp" defaultValue={n.bio} rows={3} style={{resize:"none",lineHeight:1.5}}/>
-            :<div style={{fontSize:11,color:C.navyMid,lineHeight:1.6,fontStyle:"italic"}}>"{n.bio}"</div>
-          }
+          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:6}}>Om meg (slik kunder ser deg nå)</div>
+          <div style={{fontSize:11,color:C.navyMid,lineHeight:1.6,fontStyle:"italic"}}>"{n.bio}"</div>
         </div>
 
-        {/* Spesialiteter */}
         <div className="card cp" style={{marginBottom:10}}>
-          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Spesialiteter</div>
+          <div style={{fontSize:11,fontWeight:700,color:C.navy,marginBottom:12}}>Rediger profil</div>
+          <div style={{marginBottom:14,textAlign:"center"}}>
+            <div style={{fontSize:9,fontWeight:600,color:C.soft,marginBottom:8,textTransform:"uppercase",letterSpacing:.5}}>Profilbilde</div>
+            <button type="button" onClick={()=>setProfilBildeMock(true)} className="btn" style={{padding:"8px 14px",fontSize:10,borderRadius:8,background:C.greenXL,color:C.greenDark,border:`1px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>
+              Last opp bilde
+            </button>
+            <div style={{fontSize:9,color:C.soft,marginTop:6,lineHeight:1.4}}>Mock — bilde lagres ikke. Viser placeholder etter «opplasting».</div>
+          </div>
+          <div style={{marginBottom:12}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Kort beskrivelse <span style={{fontWeight:400,color:C.soft}}>(maks 150 tegn)</span></label>
+            <textarea className="inp" value={bio} maxLength={150} onChange={e=>setBio(e.target.value.slice(0,150))} rows={3} style={{resize:"none",lineHeight:1.5}}/>
+            <div style={{fontSize:9,color:C.soft,textAlign:"right",marginTop:3}}>{bio.length}/150</div>
+          </div>
+          <div style={{marginBottom:12}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Tittel</label>
+            <select className="inp" value={tittel} onChange={e=>setTittel(e.target.value)} style={{fontSize:12,fontFamily:"inherit",width:"100%"}}>
+              {NURSE_TITTEL_OPTIONS.map(t=><option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div style={{marginBottom:12}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Antall års erfaring</label>
+            <input className="inp" type="number" min={0} max={60} value={erfaringAar} onChange={e=>setErfaringAar(Math.min(60,Math.max(0,parseInt(e.target.value,10)||0)))} style={{fontSize:12}}/>
+          </div>
+          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:6}}>Spesialiteter</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:12}}>
+            {NURSE_PROFIL_SPESIALITETER_CHIPS.map(s=>(
+              <button key={s} type="button" onClick={()=>toggle(setSpes,s)} style={{fontSize:10,padding:"5px 10px",borderRadius:50,border:`1.5px solid ${spes.has(s)?C.green:C.border}`,background:spes.has(s)?C.greenBg:"white",color:spes.has(s)?C.greenDark:C.navyMid,fontFamily:"inherit",cursor:"pointer",fontWeight:500}}>{s}</button>
+            ))}
+          </div>
+          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:6}}>Dekningsområde</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+            {NURSE_PROFIL_OMRADE_CHIPS.map(o=>(
+              <button key={o} type="button" onClick={()=>toggle(setOmr,o)} style={{fontSize:10,padding:"5px 10px",borderRadius:50,border:`1.5px solid ${omr.has(o)?C.green:C.border}`,background:omr.has(o)?C.greenBg:"white",color:omr.has(o)?C.greenDark:C.navyMid,fontFamily:"inherit",cursor:"pointer",fontWeight:500}}>{o}</button>
+            ))}
+          </div>
+          <button type="button" onClick={lagre} className="btn bp bf" style={{width:"100%",borderRadius:10,fontSize:12}}>Lagre endringer</button>
+        </div>
+
+        <div className="card cp" style={{marginBottom:10}}>
+          <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Spesialiteter (godkjent)</div>
           <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
             {n.spesialitet.map(s=>(
               <span key={s} style={{fontSize:11,background:C.greenBg,color:C.green,padding:"5px 11px",borderRadius:50,fontWeight:500,border:`1px solid ${C.border}`}}>{s}</span>
             ))}
           </div>
         </div>
-
-        {/* Språk */}
         <div className="card cp" style={{marginBottom:10}}>
           <div style={{fontSize:10,fontWeight:600,color:C.navy,marginBottom:8}}>Språk</div>
           <div style={{display:"flex",gap:6}}>
@@ -3064,14 +3155,11 @@ function NurseProfil({onNav}){
             ))}
           </div>
         </div>
-
-        {/* Offentlig profil-forhåndsvisning */}
         <div style={{background:C.greenXL,borderRadius:10,padding:"10px 13px",border:`1px solid ${C.border}`,marginBottom:10}}>
           <div style={{fontSize:10,fontWeight:600,color:C.green,marginBottom:4}}>👁 Slik ser kunder deg</div>
           <div style={{fontSize:10,color:C.soft,lineHeight:1.55}}>Navn, tittel, erfaring, bio, spesialiteter og rating er synlig for kunder ved bestilling. Kontaktinfo og personopplysninger er aldri synlig.</div>
         </div>
-
-        <button style={{width:"100%",padding:"10px",background:"white",border:`1.5px solid ${C.danger}`,borderRadius:10,fontSize:11,color:C.danger,cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>
+        <button type="button" style={{width:"100%",padding:"10px",background:"white",border:`1.5px solid ${C.danger}`,borderRadius:10,fontSize:11,color:C.danger,cursor:"pointer",fontFamily:"inherit",fontWeight:500}}>
           Meld deg utilgjengelig i dag
         </button>
         <button type="button" onClick={()=>onNav("nurse-login")} className="btn" style={{width:"100%",marginTop:12,padding:"12px 0",fontSize:13,borderRadius:11,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>
@@ -3204,7 +3292,7 @@ function AHeader({onMenuClick,page}){
   );
 }
 
-function ADashboard(){
+function ADashboard({nurses=NURSES}){
   const kpis=[{label:"Oppdrag i dag",value:"12",icon:"📋",delta:"+2 fra i går",pos:true},{label:"Aktive sykepleiere",value:"4/6",icon:"🩺",delta:"2 på pause"},{label:"Omsetning (mtd)",value:"84 350 kr",icon:"💰",delta:"+18%",pos:true},{label:"Kundetilfredsh.",value:"4.9/5",icon:"⭐",delta:"Stabil"}];
   return(
     <div className="fu">
@@ -3230,7 +3318,7 @@ function ADashboard(){
         </div>
         <div className="card">
           <div style={{padding:"12px 14px",borderBottom:`1px solid ${C.border}`,fontFamily:"'Fraunces',serif",fontSize:14,fontWeight:600,color:C.navy}}>Sykepleiere nå</div>
-          {NURSES.map(n=>(
+          {nurses.map(n=>(
             <div key={n.name} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderBottom:`0.5px solid ${C.border}`}}>
               <div style={{width:32,height:32,borderRadius:"50%",background:C.greenDark,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"white",flexShrink:0}}>{n.av}</div>
               <div style={{flex:1,minWidth:0}}><div style={{fontSize:11,fontWeight:600,color:C.navy}}>{n.name}</div><div style={{fontSize:9,color:C.soft,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{n.current}</div></div>
@@ -3423,7 +3511,7 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
   );
 }
 
-function AOppdrag({setDrawer,orders,setOrders}){
+function AOppdrag({setDrawer,orders,setOrders,nurses=NURSES}){
   const{toast,ToastContainer}=useToast();
   const[filter,setFilter]=useState("Alle");
   const[selectedOppdrag,setSelectedOppdrag]=useState(null);
@@ -3451,7 +3539,7 @@ function AOppdrag({setDrawer,orders,setOrders}){
   };
   return(
     <div className="fu">
-      {selectedOppdrag&&<OppdrагModal oppdrag={selectedOppdrag} nurses={NURSES} onClose={()=>setSelectedOppdrag(null)} onSave={handleSave}/>}
+      {selectedOppdrag&&<OppdrагModal oppdrag={selectedOppdrag} nurses={nurses} onClose={()=>setSelectedOppdrag(null)} onSave={handleSave}/>}
       {krediterOppdrag&&<KrediterPrivatModal prefilledOppdrag={krediterOppdrag} ordersCatalog={orders} onClose={()=>setKrediterOppdrag(null)} onSave={(data)=>setKrediterOppdrag(null)}/>}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
@@ -5103,7 +5191,7 @@ function VikarPanel(){
   );
 }
 
-function AAnsatte(){
+function AAnsatte({ventendeProfilendringer=[],onGodkjennNurseProfil,onAvvisNurseProfil}){
   const{toast,ToastContainer}=useToast();
   const[staff,setStaff]=useState(INIT_STAFF);
   const[b2bTilganger,setB2bTilganger]=useState(INIT_B2B_TILGANGER);
@@ -5147,9 +5235,35 @@ function AAnsatte(){
     setB2bTilganger(t=>t.map(x=>x.id===tilgangId?{...x,koordinatorer:x.koordinatorer.filter(k=>k.id!==koordinatorId)}:x));
   };
 
+  const vCount=ventendeProfilendringer.length;
+  const godkjenn=id=>{
+    onGodkjennNurseProfil?.(id);
+    toast("Profilendring godkjent — katalog oppdatert","ok");
+  };
+  const avvis=id=>{
+    onAvvisNurseProfil?.(id);
+    toast("Avvisningsmelding sendt til sykepleier (mock)","info");
+  };
   return(
     <div className="fu">
       <ToastContainer/>
+      <div style={{background:"linear-gradient(135deg,#F3FAF7,#E8F5F0)",border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 16px",marginBottom:16}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:vCount?12:0,flexWrap:"wrap"}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.navy}}>Ventende profilendringer</div>
+          <span style={{fontSize:10,fontWeight:700,background:vCount?C.goldBg:C.softBg,color:vCount?C.goldDark:C.soft,padding:"3px 10px",borderRadius:50,minWidth:22,textAlign:"center"}}>{vCount}</span>
+        </div>
+        {vCount===0&&<div style={{fontSize:11,color:C.soft}}>Ingen endringer venter på godkjenning.</div>}
+        {ventendeProfilendringer.map(p=>(
+          <div key={p.id} style={{background:"white",borderRadius:10,padding:"12px 14px",marginBottom:10,border:`1px solid ${C.border}`}}>
+            <div style={{fontSize:12,fontWeight:600,color:C.navy,marginBottom:4}}>{p.nurseName}</div>
+            <div style={{fontSize:11,color:C.navyMid,lineHeight:1.5,marginBottom:10}}>{p.sammendrag}</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              <button type="button" onClick={()=>godkjenn(p.id)} className="btn bp" style={{padding:"7px 16px",fontSize:11,borderRadius:8,fontWeight:600}}>Godkjenn</button>
+              <button type="button" onClick={()=>avvis(p.id)} style={{padding:"7px 16px",fontSize:11,borderRadius:8,fontWeight:600,background:"white",color:C.danger,border:`1.5px solid ${C.danger}`,cursor:"pointer",fontFamily:"inherit"}}>Avvis</button>
+            </div>
+          </div>
+        ))}
+      </div>
       {/* Tab bar */}
       <div style={{display:"flex",background:"white",borderRadius:10,padding:3,marginBottom:14,border:`1px solid ${C.border}`,width:"fit-content"}}>
         {[["interne","👥 Interne ansatte"],["vikarer","🤝 Tilkallingsvikarer"],["b2b","🏢 B2B-tilganger"],["roller","🔑 Rollematrise"]].map(([t,l])=>(
@@ -8779,17 +8893,37 @@ function TjenesteAdmin({tjenesterCatalog,setTjenesterCatalog}){
 }
 
 
-function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatalog,orders:ordersProp,setOrders:setOrdersProp}){
+function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatalog,orders:ordersProp,setOrders:setOrdersProp,nursesCatalog:nursesProp,setNursesCatalog:setNursesProp,ventendeProfilendringer:ventProp,setVentendeProfilendringer:setVentProp}){
   const[fallbackOrders,setFallbackOrders]=useState(()=>JSON.parse(JSON.stringify(ORDERS)));
   const orders=ordersProp??fallbackOrders;
   const setOrders=setOrdersProp??setFallbackOrders;
+  const[fallbackNurses,setFallbackNurses]=useState(()=>JSON.parse(JSON.stringify(NURSES)));
+  const nurses=nursesProp??fallbackNurses;
+  const setNurses=setNursesProp??setFallbackNurses;
+  const[fallbackVent,setFallbackVent]=useState([]);
+  const ventendeProfil=ventProp??fallbackVent;
+  const setVentendeProfil=setVentProp??setFallbackVent;
+  const onGodkjennNurseProfil=useCallback(id=>{
+    setVentendeProfil(curr=>{
+      const p=curr.find(x=>x.id===id);
+      if(p){
+        setNurses(nc=>nc.map((nu,i)=>{
+          if(i!==p.nurseIndex)return nu;
+          const ekstra=(nu.spesialitet||[]).filter(s=>!NURSE_PROFIL_SPESIALITETER_CHIPS.includes(s));
+          return{...nu,bio:p.apply.bio,tittel:p.apply.tittel,erfaring:p.apply.erfaring,spesialitet:[...new Set([...p.apply.spesialitet,...ekstra])],omrade:p.apply.omrade};
+        }));
+      }
+      return curr.filter(x=>x.id!==id);
+    });
+  },[setNurses,setVentendeProfil]);
+  const onAvvisNurseProfil=useCallback(id=>{setVentendeProfil(c=>c.filter(x=>x.id!==id));},[setVentendeProfil]);
   const[open,setOpen]=useState(false);
   const[page,setPage]=useState(initPage);
   const[drawer,setDrawer]=useState(null);
   const pages={
-    dashboard:<ADashboard/>,oppdrag:<AOppdrag setDrawer={setDrawer} orders={orders} setOrders={setOrders}/>,
+    dashboard:<ADashboard nurses={nurses}/>,oppdrag:<AOppdrag setDrawer={setDrawer} orders={orders} setOrders={setOrders} nurses={nurses}/>,
     betalinger:<ABetalinger/>,b2b:<AB2B setDrawer={setDrawer}/>,
-    ansatte:<AAnsatte/>,
+    ansatte:<AAnsatte ventendeProfilendringer={ventendeProfil} onGodkjennNurseProfil={onGodkjennNurseProfil} onAvvisNurseProfil={onAvvisNurseProfil}/>,
     okonomi:<OkonomiPage/>,
     tjenester:<TjenesteAdmin tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog}/>,
     innstillinger:<InnstillingerPage/>,
@@ -8944,7 +9078,7 @@ const SCREENS={
   "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-onboarding":NurseOnboarding,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
   "nurse-innsjekk":p=><NurseInnsjekk {...p} focusOppdragId={p.focusOppdragId}/>,
   "nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
-  "admin-panel":p=><Admin initPage="dashboard" tjenesterCatalog={p.tjenesterCatalog} setTjenesterCatalog={p.setTjenesterCatalog} orders={p.orders} setOrders={p.setOrders}/>,
+  "admin-panel":p=><Admin initPage="dashboard" tjenesterCatalog={p.tjenesterCatalog} setTjenesterCatalog={p.setTjenesterCatalog} orders={p.orders} setOrders={p.setOrders} nursesCatalog={p.nursesCatalog} setNursesCatalog={p.setNursesCatalog} ventendeProfilendringer={p.ventendeProfilendringer} setVentendeProfilendringer={p.setVentendeProfilendringer}/>,
   "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
@@ -8969,7 +9103,12 @@ export default function App({
   const[kundeOrdreDetaljId,setKundeOrdreDetaljId]=useState(null);
   const[tjenesterCatalog,setTjenesterCatalog]=useState(()=>JSON.parse(JSON.stringify(INIT_TJENESTER_CATALOG)));
   const[mockOrders,setMockOrders]=useState(()=>JSON.parse(JSON.stringify(ORDERS)));
+  const[nursesCatalog,setNursesCatalog]=useState(()=>JSON.parse(JSON.stringify(NURSES)));
+  const[ventendeProfilendringer,setVentendeProfilendringer]=useState([]);
   const customerServices=useMemo(()=>catalogTilKundeServices(tjenesterCatalog),[tjenesterCatalog]);
+  const onNurseProfilTilGodkjenning=useCallback(entry=>{
+    setVentendeProfilendringer(v=>[...v,{...entry,id:`pe_${Date.now()}`}]);
+  },[]);
   const onKundeOrderAvbestill=useCallback(orderId=>{
     // TODO: Resend - send avbestillingsbekreftelse til kunde der e-posten ville blitt sendt i prod.
     setMockOrders(prev=>prev.map(o=>{
@@ -9050,10 +9189,10 @@ export default function App({
         </div>
       )}
       {(isAdmin||isAdminPanel)
-        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} orders={mockOrders} setOrders={setMockOrders}/>
+        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} orders={mockOrders} setOrders={setMockOrders} nursesCatalog={nursesCatalog} setNursesCatalog={setNursesCatalog} ventendeProfilendringer={ventendeProfilendringer} setVentendeProfilendringer={setVentendeProfilendringer}/>
         :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="kunde-oppdrag-detalj"?{orderId:kundeOrdreDetaljId}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})} {...(screen==="hjem"?{orders:mockOrders}:{})} {...(screen==="mine"||screen==="kunde-oppdrag-detalj"?{orders:mockOrders,onKundeOrderAvbestill}:{})} {...(screen==="admin-panel"?{orders:mockOrders,setOrders:setMockOrders}:{})}/>
+            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="landing"?{nurses:nursesCatalog}:{})} {...(screen==="bestill"?{preselectedType:bestillPreselect,nurses:nursesCatalog}:{})} {...(screen==="kunde-oppdrag-detalj"?{orderId:kundeOrdreDetaljId}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="nurse-profil"?{nurses:nursesCatalog,onNurseProfilTilGodkjenning}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})} {...(screen==="hjem"?{orders:mockOrders}:{})} {...(screen==="mine"||screen==="kunde-oppdrag-detalj"?{orders:mockOrders,onKundeOrderAvbestill}:{})} {...(screen==="admin-panel"?{orders:mockOrders,setOrders:setMockOrders,nursesCatalog,setNursesCatalog,ventendeProfilendringer,setVentendeProfilendringer}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
