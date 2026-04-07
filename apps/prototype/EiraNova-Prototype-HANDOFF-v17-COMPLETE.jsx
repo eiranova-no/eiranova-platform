@@ -240,16 +240,19 @@ function catalogTilKundeServices(tjenester){
 
 const DEFAULT_KUNDE_SERVICES=catalogTilKundeServices(INIT_TJENESTER_CATALOG);
 const ORDERS=[
-  {id:"ORD-0091",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"08:00",status:"completed",paid:true,amount:590,cat:"eldre",date:"Man 3. mars",betaltVia:"vipps"},
-  {id:"ORD-0092",service:"🏠 Praktisk bistand",customer:"Olaf Eriksen",nurse:"Sara L.",time:"10:30",status:"active",paid:true,amount:390,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u2"},
-  {id:"ORD-0093",service:"📞 Ringetilsyn",customer:"Kari Olsen",nurse:"Maria K.",time:"13:00",status:"assigned",paid:true,amount:190,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u3"},
-  {id:"ORD-0094",service:"🍃 Trilleturer",customer:"Line Bakke",nurse:"—",time:"15:30",status:"pending",paid:false,amount:390,cat:"barsel",date:"Man 3. mars",betaltVia:"vipps"},
-  {id:"ORD-0095",service:"☕ Besøksvenn",customer:"Ingrid Dahl",nurse:"—",time:"17:00",status:"confirmed",paid:false,amount:390,cat:"eldre",date:"Man 3. mars",betaltVia:"vipps"},
-  {id:"ORD-0096",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"08:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Fre 28. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u1"},
-  {id:"ORD-0097",service:"🏠 Praktisk bistand",customer:"Astrid Hansen",nurse:"Sara L.",time:"11:00",status:"completed",paid:true,amount:390,cat:"eldre",date:"Tor 27. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u1"},
-  {id:"ORD-0098",service:"📞 Ringetilsyn",customer:"Olaf Eriksen",nurse:"Maria K.",time:"13:00",status:"completed",paid:true,amount:190,cat:"eldre",date:"Ons 26. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u2"},
-  {id:"ORD-0099",service:"🏠 Praktisk bistand",customer:"Else Moen",nurse:"Anne S.",time:"09:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Parkveien Borettslag",b2bUserId:"u4"},
-  {id:"ORD-0100",service:"🚗 Transport & ærender",customer:"Harald Dahl",nurse:"Lars B.",time:"14:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Fre 28. feb",betaltVia:"b2b",b2bOrg:"Parkveien Borettslag",b2bUserId:"u5"},
+  {id:"ORD-0091",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"08:00",status:"completed",paid:true,amount:590,cat:"eldre",date:"Man 3. mars",betaltVia:"vipps",oppdragId:"1"},
+  {id:"ORD-0092",service:"🏠 Praktisk bistand",customer:"Olaf Eriksen",nurse:"Sara L.",time:"10:30",status:"active",paid:true,amount:390,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u2",oppdragId:"2"},
+  {id:"ORD-0093",service:"📞 Ringetilsyn",customer:"Kari Olsen",nurse:"Maria K.",time:"13:00",status:"assigned",paid:true,amount:190,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u3",oppdragId:"3"},
+  {id:"ORD-0094",service:"🍃 Trilleturer",customer:"Line Bakke",nurse:"—",time:"15:30",status:"pending",paid:false,amount:390,cat:"barsel",date:"Man 3. mars",betaltVia:"vipps",oppdragId:"4"},
+  {id:"ORD-0095",service:"☕ Besøksvenn",customer:"Ingrid Dahl",nurse:"—",time:"17:00",status:"confirmed",paid:false,amount:390,cat:"eldre",date:"Man 3. mars",betaltVia:"vipps",startIso:"2026-03-03T17:00:00+01:00"},
+  {id:"ORD-0096",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"08:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Fre 28. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u1",startIso:"2026-02-28T08:00:00+01:00"},
+  {id:"ORD-0097",service:"🏠 Praktisk bistand",customer:"Astrid Hansen",nurse:"Sara L.",time:"11:00",status:"completed",paid:true,amount:390,cat:"eldre",date:"Tor 27. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u1",startIso:"2026-02-27T11:00:00+01:00"},
+  {id:"ORD-0098",service:"📞 Ringetilsyn",customer:"Olaf Eriksen",nurse:"Maria K.",time:"13:00",status:"completed",paid:true,amount:190,cat:"eldre",date:"Ons 26. feb",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u2",startIso:"2026-02-26T13:00:00+01:00"},
+  {id:"ORD-0099",service:"🏠 Praktisk bistand",customer:"Else Moen",nurse:"Anne S.",time:"09:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Parkveien Borettslag",b2bUserId:"u4",startIso:"2026-03-03T09:00:00+01:00"},
+  {id:"ORD-0100",service:"🚗 Transport & ærender",customer:"Harald Dahl",nurse:"Lars B.",time:"14:00",status:"completed",paid:true,amount:490,cat:"eldre",date:"Fre 28. feb",betaltVia:"b2b",b2bOrg:"Parkveien Borettslag",b2bUserId:"u5",startIso:"2026-02-28T14:00:00+01:00"},
+  {id:"ORD-0101",service:"☕ Besøksvenn",customer:"Per Nilsen",nurse:"—",time:"12:00",status:"no_show",paid:true,amount:390,cat:"eldre",date:"Tor 27. feb",betaltVia:"vipps",startIso:"2026-02-27T12:00:00+01:00"},
+  {id:"ORD-0102",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"09:00",status:"confirmed",paid:true,amount:590,cat:"eldre",date:"Tir 4. mars",betaltVia:"vipps",oppdragId:"5"},
+  {id:"ORD-0103",service:"🍃 Trilleturer",customer:"Line Bakke",nurse:"Maria K.",time:"10:00",status:"confirmed",paid:true,amount:390,cat:"barsel",date:"Ons 6. mars",betaltVia:"vipps",oppdragId:"6"},
 ];
 const NURSES=[
   {name:"Sara Lindgren",status:"on_assignment",current:"Olaf Eriksen · Praktisk",av:"SL",
@@ -278,24 +281,61 @@ const NURSES=[
    sertifisert:true,omrade:"Moss / Råde"},
 ];
 const OPPDRAG=[
-  {id:"1",time:"08:00",date:"Man 3. mars",customer:"Astrid Hansen",phone:"415 22 334",address:"Konggata 12, Moss",service:"Morgensstell",icon:"🚿",cat:"eldre",status:"completed",nurse:"Sara Lindgren",amount:590,betaltVia:"vipps",opprettet:"2026-02-28",endringer:[
+  {id:"1",time:"08:00",date:"Man 3. mars",customer:"Astrid Hansen",phone:"415 22 334",address:"Konggata 12, Moss",service:"Morgensstell",icon:"🚿",cat:"eldre",status:"completed",nurse:"Sara Lindgren",amount:590,betaltVia:"vipps",opprettet:"2026-02-28",startIso:"2026-03-03T08:00:00+01:00",endringer:[
     {dato:"2026-02-28 09:12",av:"Astrid Hansen (kunde)",handling:"Bestilling opprettet",arsak:null},
   ]},
-  {id:"2",time:"10:30",date:"Man 3. mars",customer:"Olaf Eriksen",phone:"922 11 445",address:"Storgata 45, Moss",service:"Praktisk bistand",icon:"🏠",cat:"eldre",status:"active",nurse:"Sara Lindgren",amount:390,betaltVia:"b2b",opprettet:"2026-02-27",endringer:[
+  {id:"2",time:"10:30",date:"Man 3. mars",customer:"Olaf Eriksen",phone:"922 11 445",address:"Storgata 45, Moss",service:"Praktisk bistand",icon:"🏠",cat:"eldre",status:"active",nurse:"Sara Lindgren",amount:390,betaltVia:"b2b",opprettet:"2026-02-27",startIso:"2026-03-03T10:30:00+01:00",endringer:[
     {dato:"2026-02-27 14:00",av:"Koordinator (Moss Kommune)",handling:"Bestilling opprettet",arsak:null},
     {dato:"2026-03-01 08:30",av:"Lise Andersen (admin)",handling:"Sykepleier endret: Maria K. → Sara L.",arsak:"Maria K. meldte seg syk"},
   ]},
-  {id:"3",time:"13:00",date:"Man 3. mars",customer:"Kari Olsen",phone:"918 77 221",address:"Nygata 8, Moss",service:"Ringetilsyn",icon:"📞",cat:"eldre",status:"upcoming",nurse:"Anne Sørensen",amount:190,betaltVia:"b2b",opprettet:"2026-02-25",endringer:[
+  {id:"3",time:"13:00",date:"Man 3. mars",customer:"Kari Olsen",phone:"918 77 221",address:"Nygata 8, Moss",service:"Ringetilsyn",icon:"📞",cat:"eldre",status:"upcoming",nurse:"Anne Sørensen",amount:190,betaltVia:"b2b",opprettet:"2026-02-25",startIso:"2026-03-03T13:00:00+01:00",endringer:[
     {dato:"2026-02-25 11:00",av:"Koordinator (Moss Kommune)",handling:"Bestilling opprettet",arsak:null},
   ]},
-  {id:"4",time:"15:30",date:"Man 3. mars",customer:"Line Bakke",phone:"476 33 118",address:"Parkveien 3, Moss",service:"Trilleturer",icon:"🍃",cat:"barsel",status:"upcoming",nurse:"Maria Kristiansen",amount:390,betaltVia:"vipps",opprettet:"2026-03-01",endringer:[
+  {id:"4",time:"15:30",date:"Man 3. mars",customer:"Line Bakke",phone:"476 33 118",address:"Parkveien 3, Moss",service:"Trilleturer",icon:"🍃",cat:"barsel",status:"upcoming",nurse:"Maria Kristiansen",amount:390,betaltVia:"vipps",opprettet:"2026-03-01",startIso:"2026-03-03T15:30:00+01:00",endringer:[
     {dato:"2026-03-01 16:45",av:"Line Bakke (kunde)",handling:"Bestilling opprettet",arsak:null},
   ]},
-  {id:"5",time:"09:00",date:"Tir 4. mars",customer:"Astrid Hansen",phone:"415 22 334",address:"Konggata 12, Moss",service:"Morgensstell",icon:"🚿",cat:"eldre",status:"upcoming",nurse:"Sara Lindgren",amount:590,betaltVia:"vipps",opprettet:"2026-02-28",endringer:[
+  {id:"5",time:"09:00",date:"Tir 4. mars",customer:"Astrid Hansen",phone:"415 22 334",address:"Konggata 12, Moss",service:"Morgensstell",icon:"🚿",cat:"eldre",status:"upcoming",nurse:"Sara Lindgren",amount:590,betaltVia:"vipps",opprettet:"2026-02-28",startIso:"2026-03-04T09:00:00+01:00",endringer:[
     {dato:"2026-02-28 09:12",av:"Astrid Hansen (kunde)",handling:"Bestilling opprettet",arsak:null},
     {dato:"2026-03-02 17:00",av:"Astrid Hansen (kunde)",handling:"Tid endret: 08:00 → 09:00",arsak:"Lege-avtale om morgenen"},
   ]},
+  {id:"6",time:"10:00",date:"Ons 6. mars",customer:"Line Bakke",phone:"476 33 118",address:"Parkveien 3, Moss",service:"Trilleturer",icon:"🍃",cat:"barsel",status:"upcoming",nurse:"Maria Kristiansen",amount:390,betaltVia:"vipps",opprettet:"2026-03-02",startIso:"2026-03-06T10:00:00+01:00",endringer:[
+    {dato:"2026-03-02 14:20",av:"Line Bakke (kunde)",handling:"Bestilling opprettet",arsak:null},
+  ]},
 ];
+/** «Nå» i prototypen: mandag 3. mars 2026 kl. 11 — brukes til 48-timers avbestilling */
+const PROTOTYPE_NOW_MS=Date.parse("2026-03-03T11:00:00+01:00");
+function orderStartMsForAvbestilling(o){
+  if(o?.startIso) return Date.parse(o.startIso);
+  const linked=o?.oppdragId!=null?OPPDRAG.find(x=>String(x.id)===String(o.oppdragId)):null;
+  if(linked?.startIso) return Date.parse(linked.startIso);
+  return NaN;
+}
+function prototypeTimerTilOppstart(o){
+  const t=orderStartMsForAvbestilling(o);
+  if(Number.isNaN(t)) return null;
+  return (t-PROTOTYPE_NOW_MS)/3600000;
+}
+function kundeOrdreHistorisk(o){
+  return o.status==="completed"||o.status==="cancelled"||o.status==="no_show";
+}
+function kundeKanAvbestilleSelv(o){
+  if(kundeOrdreHistorisk(o)) return false;
+  const h=prototypeTimerTilOppstart(o);
+  return h!=null&&h>48;
+}
+function kundeMaKontakteForAvbestilling(o){
+  if(kundeOrdreHistorisk(o)) return false;
+  const h=prototypeTimerTilOppstart(o);
+  if(h==null) return false;
+  return h<=48;
+}
+/** Innlogget B2C-kunde (mock) — avbestillings-e-post, profil, osv. */
+const MOCK_KUNDE_INNLOGGET_EPOST="astrid@example.com";
+const TOAST_AVBESTILLING_BEKREFTET="Avbestilling bekreftet. Bekreftelse er sendt til din e-post. Refusjon kommer innen 3–5 virkedager.";
+function kundeAvbestiltRefusjonInfotekst(order){
+  const belop=Number(order?.amount??0).toLocaleString("nb-NO");
+  return `Denne bestillingen er avbestilt. Refusjon på ${belop} kr er på vei til betalingsmetoden du brukte. Forventet: 3–5 virkedager.`;
+}
 /** Kunde-mock: neste avtale i header og KundeAvtaleDetalj (OPPDRAG id «5» som primærkilde) */
 function mockKundeNesteAvtale(){
   return OPPDRAG.find(o=>o.id==="5")||OPPDRAG.find(o=>o.customer==="Astrid Hansen"&&o.status==="upcoming");
@@ -479,6 +519,8 @@ function Bdg({status}){
     upcoming:{l:"Kommende",bg:C.softBg,c:C.soft},on_assignment:{l:"● Aktiv",bg:C.greenBg,c:C.green},
     available:{l:"Ledig",bg:"#F0FDF4",c:"#16A34A"},break:{l:"Pause",bg:C.goldBg,c:C.goldDark},
     settled:{l:"✓ Innbetalt",bg:C.greenBg,c:C.greenDark},in_transit:{l:"→ Overføring",bg:C.skyBg,c:C.sky},
+    cancelled:{l:"Avbestilt",bg:"#FFF1F2",c:"#BE123C"},avlyst:{l:"Avlyst",bg:"#FFF1F2",c:"#BE123C"},
+    no_show:{l:"Uteblitt",bg:C.softBg,c:C.soft},
   };
   const b=M[status]??{l:status,bg:C.softBg,c:C.soft};
   return <span className="badge" style={{background:b.bg,color:b.c}}>{b.l}</span>;
@@ -1863,7 +1905,7 @@ function Login({onNav,onMockKundeLogin}){
 }
 
 
-function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES}){
+function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES,orders=ORDERS}){
   const BN_ITEMS=BN_K;
   const neste=mockKundeNesteAvtale();
   const[merinfo,setMerinfo]=useState(null);
@@ -1932,16 +1974,18 @@ function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES}){
                 <div style={{width:24,height:24,borderRadius:6,background:C.rose,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>🤱</div>
                 <span style={{fontSize:"clamp(11px,1.2vw,13px)",fontWeight:600,color:"#B05C4A",textTransform:"uppercase",letterSpacing:.6}}>Barselstøtte</span>
               </div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)",alignItems:"stretch"}}>
                 {services.filter(s=>s.cat==="barsel").map(sv=>(
-                  <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
+                  <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s",display:"flex",flexDirection:"column",height:"100%",minHeight:0}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,.08)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
-                    <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6}}>{sv.icon}</div>
-                    <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3}}>{sv.name}</div>
-                    {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic"}}>{sv.tagline}</div>:null}
-                    <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,marginBottom:8}}>fra {sv.price} kr · {sv.duration} min</div>
-                    <button type="button" className="btn" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white"}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}}>Bestill</button>
+                    <div style={{padding:"clamp(10px,1.2vw,14px)",paddingBottom:8,display:"flex",flexDirection:"column",flex:1,minHeight:0}}>
+                      <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6,flexShrink:0}}>{sv.icon}</div>
+                      <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3,flexShrink:0}}>{sv.name}</div>
+                      {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic",flexShrink:0}}>{sv.tagline}</div>:null}
+                      <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,flexShrink:0}}>fra {sv.price} kr · {sv.duration} min</div>
+                      <button type="button" className="btn" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white",marginTop:"auto"}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}}>Bestill</button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1952,8 +1996,8 @@ function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES}){
           <div>
             <div className="fr" style={{fontSize:"clamp(14px,1.5vw,18px)",fontWeight:600,color:C.navy,marginBottom:"clamp(8px,1.5vw,14px)"}}>Mine bestillinger</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,340px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
-              {ORDERS.slice(0,4).map(o=>(
-                <div key={o.id} onClick={()=>onNav("mine")} className="card" style={{cursor:"pointer"}}>
+              {orders.slice(0,4).map(o=>(
+                <div key={o.id} onClick={()=>onNav("kunde-oppdrag-detalj",null,{orderId:o.id})} className="card" style={{cursor:"pointer"}}>
                   <div style={{height:3,background:o.cat==="barsel"?C.gold:C.green}}/>
                   <div style={{padding:"clamp(9px,1vw,13px) clamp(11px,1.5vw,16px)",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
                     <div style={{minWidth:0}}>
@@ -2081,12 +2125,12 @@ function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES}){
     <div className="phone fu">
       <PH onBack={()=>onNav("hjem")} backLabel="Hjem"/>
       <div className="sa" style={{padding:"clamp(14px,2vw,28px) clamp(12px,3vw,40px)"}}>
-        <div style={{maxWidth:1100,margin:"0 auto"}}>
+        <div style={{maxWidth:1100,margin:"0 auto",width:"100%"}}>
           <div className="fr" style={{fontSize:"clamp(14px,1.5vw,18px)",fontWeight:600,color:C.navy,marginBottom:"clamp(8px,1.5vw,14px)",textAlign:"center",width:"100%"}}>Hvilken tjeneste ønsker du?</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(8px,1.2vw,14px)",marginBottom:"clamp(12px,1.5vw,20px)"}}>
+          <div style={{display:"grid",width:"100%",alignItems:"stretch",gridTemplateColumns:"repeat(auto-fill, minmax(min(100%,200px), 1fr))",gap:"clamp(8px,1.2vw,14px)",marginBottom:"clamp(12px,1.5vw,20px)"}}>
             {services.filter(s=>s.cat==="eldre").map(sv=>(
               <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card"
-                style={{cursor:"pointer",overflow:"hidden",transition:"all .15s"}}
+                style={{cursor:"pointer",overflow:"hidden",transition:"all .15s",width:"100%",minWidth:0,boxSizing:"border-box"}}
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 18px rgba(0,0,0,.1)"}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                 <div style={{height:"clamp(48px,6vw,64px)",background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(20px,2.5vw,28px)"}}>{sv.icon}</div>
@@ -2104,9 +2148,9 @@ function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES}){
               <div style={{width:24,height:24,borderRadius:6,background:C.rose,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12}}>🤱</div>
               <span style={{fontSize:"clamp(11px,1.2vw,13px)",fontWeight:600,color:"#B05C4A",textTransform:"uppercase",letterSpacing:.6}}>Barselstøtte</span>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
+            <div style={{display:"grid",width:"100%",alignItems:"stretch",gridTemplateColumns:"repeat(auto-fill, minmax(min(100%,200px), 1fr))",gap:"clamp(7px,1vw,12px)"}}>
               {services.filter(s=>s.cat==="barsel").map(sv=>(
-                <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
+                <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s",width:"100%",minWidth:0,boxSizing:"border-box"}}
                   onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,.08)"}}
                   onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6}}>{sv.icon}</div>
@@ -2241,6 +2285,10 @@ function Betaling({onBack,onNav,service,date,time,inBookFlow=false,services:serv
           </div>
         )}
         {method==="vipps"&&<div style={{background:"#FFF5F0",borderRadius:10,padding:"10px 12px",marginBottom:11,border:"1px solid rgba(255,91,36,.2)",fontSize:11,color:"#994020",lineHeight:1.5}}>💜 Du videresendes til Vipps-appen for å fullføre betalingen på <strong>{sv.price} kr</strong></div>}
+        <div style={{background:C.greenXL,borderRadius:10,padding:"10px 12px",marginBottom:11,border:`1px solid rgba(74,124,111,.2)`}}>
+          <div style={{fontSize:10,fontWeight:600,color:C.greenDark,marginBottom:4,lineHeight:1.35}}>🔒 Trygg forskuddsbetaling</div>
+          <div style={{fontSize:9,color:C.navyMid,lineHeight:1.5}}>Du kan avbestille gratis inntil 48 timer før oppdraget og få full refusjon automatisk til betalingsmetoden du brukte.</div>
+        </div>
         <button onClick={pay} disabled={paying} className="btn bf" style={{borderRadius:11,background:paying?"#7FAE96":method==="vipps"?C.vipps:C.green,color:"white",display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
           {paying?<><div className="spin"/><span>Behandler...</span></>:method==="vipps"?`💜 Betal ${sv.price} kr med Vipps`:`💳 Betal ${sv.price} kr`}
         </button>
@@ -2257,7 +2305,11 @@ function Bekreftelse({onNav}){
       <div className="sa" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 18px",textAlign:"center"}}>
         <div style={{width:72,height:72,borderRadius:"50%",background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:36,marginBottom:18}}>✅</div>
         <div className="fr" style={{fontSize:22,fontWeight:600,color:C.navy,marginBottom:6}}>Bestilling bekreftet!</div>
-        <div style={{fontSize:12,color:C.soft,lineHeight:1.6,marginBottom:22}}>Kvittering sendt på e-post. Du får beskjed når sykepleier er tildelt.</div>
+        <div style={{fontSize:12,color:C.soft,lineHeight:1.6,marginBottom:14}}>Kvittering sendt på e-post. Du får beskjed når sykepleier er tildelt.</div>
+        <div style={{width:"100%",maxWidth:400,background:C.greenXL,border:`1px solid ${C.border}`,borderRadius:12,padding:"12px 14px",marginBottom:22,textAlign:"left"}}>
+          <div style={{fontSize:11,fontWeight:600,color:C.navy,marginBottom:4}}>Avbestilling</div>
+          <div style={{fontSize:11,color:C.navyMid,lineHeight:1.55}}>Du kan avbestille gratis inntil 48 timer før oppdraget. Etter dette må du kontakte oss.</div>
+        </div>
         <div className="card cp" style={{width:"100%",marginBottom:16,textAlign:"left"}}>
           {[["Tjeneste","Morgensstell & dusj"],["Dato","Tirsdag 4. mars"],["Tid","09:00"],["Beløp","590 kr (MVA-unntatt)"],["Betaling","Vipps ✓"],["Oppgjør","D+1 virkedag"]].map(([l,v])=>(
             <div key={l} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.border}`,fontSize:11}}>
@@ -2271,9 +2323,100 @@ function Bekreftelse({onNav}){
   );
 }
 
-function Mine({onNav}){
+function KundeAvbestillBekreftModal({order,onLukk,onBekreft}){
+  if(!order)return null;
+  return(
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.45)",padding:16}}>
+      <div style={{background:"white",borderRadius:16,maxWidth:380,width:"100%",padding:"22px 20px",boxShadow:"0 16px 48px rgba(0,0,0,.18)"}}>
+        <div className="fr" style={{fontSize:17,fontWeight:600,color:C.navy,marginBottom:10}}>Avbestille?</div>
+        <p style={{fontSize:12,color:C.navyMid,lineHeight:1.6,margin:0,marginBottom:18}}>
+          Er du sikker? Du vil få full refusjon innen 3–5 virkedager til betalingsmetoden du brukte.
+        </p>
+        <div style={{display:"flex",gap:10}}>
+          <button type="button" onClick={onLukk} className="btn" style={{flex:1,padding:"11px 0",borderRadius:10,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Avbryt</button>
+          <button type="button" onClick={onBekreft} className="btn" style={{flex:1,padding:"11px 0",borderRadius:10,background:C.danger,color:"white",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Bekreft avbestilling</button>
+        </div>
+      </div>
+    </ModalPortal>
+  );
+}
+
+function KundeOppdragDetalj({onNav,orderId,orders=ORDERS,onKundeOrderAvbestill}){
+  const{toast,ToastContainer}=useToast();
+  const[visAvbestill,setVisAvbestill]=useState(false);
+  const o=orders.find(x=>String(x.id)===String(orderId));
+  const betaltTekst=o?(
+    o.paid
+      ?(o.betaltVia==="vipps"?"Betalt med Vipps"
+        :o.betaltVia==="b2b"?`Betalt via organisasjon${o.b2bOrg?` · ${o.b2bOrg}`:""}`
+          :"Betalt")
+      :"Ikke betalt"
+  ):"";
+  return(
+    <div className="phone fu">
+      <ToastContainer/>
+      <PH title="Bestilling" onBack={()=>onNav("mine")} backLabel="Mine bestillinger" centerTitle/>
+      <div className="sa" style={{padding:14}}>
+        {!o?(
+          <div className="card cp"><div style={{fontSize:13,color:C.soft}}>Fant ikke bestillingen.</div></div>
+        ):(
+          <>
+            <div className="card cp" style={{marginBottom:10}}>
+              <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>Tjeneste</div>
+              <div style={{fontSize:15,fontWeight:600,color:C.navy}}>{o.service}</div>
+            </div>
+            <div className="card cp" style={{marginBottom:10}}>
+              <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>Dato og tid</div>
+              <div style={{fontSize:13,fontWeight:600,color:C.navy}}>{o.date} · kl. {o.time}</div>
+            </div>
+            <div className="card cp" style={{marginBottom:10}}>
+              <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>Sykepleier</div>
+              <div style={{fontSize:13,fontWeight:600,color:C.navy}}>{o.nurse}</div>
+            </div>
+            <div className="card cp" style={{marginBottom:10}}>
+              <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>Status</div>
+              <div style={{display:"flex",alignItems:"center",gap:8}}><Bdg status={o.status}/></div>
+            </div>
+            <div className="card cp" style={{marginBottom:10}}>
+              <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:6}}>Beløp</div>
+              <div style={{fontSize:16,fontWeight:700,color:C.green}}>{o.amount.toLocaleString("nb-NO")} kr</div>
+              <div style={{fontSize:11,color:C.navyMid,marginTop:4}}>{betaltTekst}</div>
+              {o.status==="no_show"&&(
+                <div style={{marginTop:10,padding:"9px 11px",background:C.softBg,borderRadius:8,flexShrink:0,fontSize:11,color:C.navyMid,lineHeight:1.5}}>Ved uteblivelse (no-show) gis det ikke refusjon.</div>
+              )}
+              {o.status==="cancelled"&&(
+                <div style={{marginTop:10,padding:"9px 11px",background:C.greenXL,borderRadius:8,border:`1px solid rgba(74,124,111,.22)`,fontSize:11,color:C.navyMid,lineHeight:1.55}}>{kundeAvbestiltRefusjonInfotekst(o)}</div>
+              )}
+            </div>
+            {!kundeOrdreHistorisk(o)&&(
+              <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                {kundeKanAvbestilleSelv(o)&&onKundeOrderAvbestill&&(
+                  <button type="button" onClick={()=>setVisAvbestill(true)} style={{width:"100%",padding:"10px 12px",borderRadius:10,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit",background:"white",color:C.danger,border:`1.5px solid ${C.danger}`}}>Avbestill</button>
+                )}
+                {kundeMaKontakteForAvbestilling(o)&&(
+                  <button type="button" onClick={()=>onNav("chat-kunde")} style={{width:"100%",padding:"10px 12px",borderRadius:10,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"inherit",background:C.greenBg,color:C.greenDark,border:`1.5px solid ${C.border}`}}>Kontakt oss</button>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+      {visAvbestill&&o&&onKundeOrderAvbestill&&(
+        <KundeAvbestillBekreftModal
+          order={o}
+          onLukk={()=>setVisAvbestill(false)}
+          onBekreft={()=>{onKundeOrderAvbestill(o.id);setVisAvbestill(false);toast(TOAST_AVBESTILLING_BEKREFTET,"ok");}}
+        />
+      )}
+    </div>
+  );
+}
+
+function Mine({onNav,orders=ORDERS,onKundeOrderAvbestill}){
   const{toast,ToastContainer}=useToast();
   const[tab,setTab]=useState("kommende");
+  const[avbestillFor,setAvbestillFor]=useState(null);
+  const avbestillOrder=avbestillFor?orders.find(x=>String(x.id)===String(avbestillFor)):null;
   return(
     <div className="phone fu">
       <ToastContainer/>
@@ -2282,8 +2425,8 @@ function Mine({onNav}){
         {["kommende","tidligere"].map(t=><button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"6px 0",borderRadius:7,fontSize:11,fontWeight:500,cursor:"pointer",border:"none",background:tab===t?"white":"transparent",color:tab===t?C.green:C.soft,fontFamily:"inherit"}}>{t==="kommende"?"Kommende":"Tidligere"}</button>)}
       </div>
       <div className="sa" style={{padding:"0 11px"}}>
-        {ORDERS.filter(o=>tab==="kommende"?o.status!=="completed":o.status==="completed").map(o=>(
-          <div key={o.id} className="card" style={{marginBottom:8}}>
+        {orders.filter(o=>tab==="kommende"?!kundeOrdreHistorisk(o):kundeOrdreHistorisk(o)).map(o=>(
+          <div key={o.id} role="button" tabIndex={0} onKeyDown={e=>{(e.key==="Enter"||e.key===" ")&&(e.preventDefault(),onNav("kunde-oppdrag-detalj",null,{orderId:o.id}));}} onClick={()=>onNav("kunde-oppdrag-detalj",null,{orderId:o.id})} className="card" style={{marginBottom:8,cursor:"pointer"}}>
             <div style={{height:2.5,background:o.cat==="barsel"?C.gold:C.green}}/>
             <div style={{padding:"10px 12px"}}>
               <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:5}}>
@@ -2294,13 +2437,35 @@ function Mine({onNav}){
                 <span>Sykepleier: {o.nurse}</span>
                 <span style={{fontWeight:600,color:o.paid?C.green:C.goldDark}}>{o.paid?"✓ Betalt":"⏳ Ubetalt"} · {o.amount} kr</span>
               </div>
-              {!o.paid&&<button style={{marginTop:8,width:"100%",padding:"7px",background:C.vipps,color:"white",border:"none",borderRadius:7,fontSize:10,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}}>Betal nå</button>}
+              {o.status==="cancelled"&&(
+                <div style={{marginTop:8,padding:"8px 10px",background:C.greenXL,borderRadius:8,border:`1px solid rgba(74,124,111,.2)`,fontSize:10,color:C.navyMid,lineHeight:1.45}}>{kundeAvbestiltRefusjonInfotekst(o)}</div>
+              )}
+              {o.status==="no_show"&&(
+                <div style={{marginTop:8,fontSize:10,color:C.soft,lineHeight:1.45}}>Ingen refusjon ved uteblivelse.</div>
+              )}
+              {!o.paid&&<button type="button" onClick={e=>{e.stopPropagation();toast("Går til betaling (prototyp)","info");}} style={{marginTop:8,width:"100%",padding:"7px",background:C.vipps,color:"white",border:"none",borderRadius:7,fontSize:10,fontWeight:500,cursor:"pointer",fontFamily:"inherit"}}>Betal nå</button>}
+              {tab==="kommende"&&!kundeOrdreHistorisk(o)&&(
+                <div style={{display:"flex",flexDirection:"column",gap:6,marginTop:8}} onClick={e=>e.stopPropagation()}>
+                  {kundeKanAvbestilleSelv(o)&&onKundeOrderAvbestill&&(
+                    <button type="button" onClick={()=>setAvbestillFor(o.id)} style={{width:"100%",padding:"8px 10px",borderRadius:8,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit",background:"white",color:C.danger,border:`1.5px solid ${C.danger}`}}>Avbestill</button>
+                  )}
+                  {kundeMaKontakteForAvbestilling(o)&&(
+                    <button type="button" onClick={()=>onNav("chat-kunde")} style={{width:"100%",padding:"8px 10px",borderRadius:8,fontSize:10,fontWeight:600,cursor:"pointer",fontFamily:"inherit",background:C.greenBg,color:C.greenDark,border:`1.5px solid ${C.border}`}}>Kontakt oss</button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         ))}
       </div>
-      <BNav active="mine" onNav={onNav} items={BN_K}/>
-      <DeskNav active="mine" onNav={onNav} items={BN_K} title="EiraNova"/>
+      {avbestillOrder&&onKundeOrderAvbestill&&(
+        <KundeAvbestillBekreftModal
+          order={avbestillOrder}
+          onLukk={()=>setAvbestillFor(null)}
+          onBekreft={()=>{onKundeOrderAvbestill(avbestillOrder.id);setAvbestillFor(null);toast(TOAST_AVBESTILLING_BEKREFTET,"ok");}}
+        />
+      )}
+      <KundeNavShell active="mine" onNav={onNav}/>
     </div>
   );
 }
@@ -3258,23 +3423,22 @@ function OppdrагModal({oppdrag,nurses,onClose,onSave}){
   );
 }
 
-function AOppdrag({setDrawer}){
+function AOppdrag({setDrawer,orders,setOrders}){
   const{toast,ToastContainer}=useToast();
   const[filter,setFilter]=useState("Alle");
   const[selectedOppdrag,setSelectedOppdrag]=useState(null);
-  const[oppdragState,setOppdragState]=useState(ORDERS);
   const[krediterOppdrag,setKrediterOppdrag]=useState(null);
   const filters=["Alle","I dag","Kommende","Fullført","Avlyst"];
-  const filteredOrders=oppdragState.filter(o=>{
+  const filteredOrders=orders.filter(o=>{
     if(filter==="Alle")return true;
     if(filter==="I dag")return o.date?.includes("Man 3");
     if(filter==="Kommende")return o.status==="upcoming"||o.status==="tildelt";
     if(filter==="Fullført")return o.status==="completed";
-    if(filter==="Avlyst")return o.status==="avlyst";
+    if(filter==="Avlyst")return o.status==="avlyst"||o.status==="cancelled";
     return true;
   });
   const handleSave=(updated,arsak,arsakType)=>{
-    setOppdragState(prev=>prev.map(o=>o.id===updated.id?{
+    setOrders(prev=>prev.map(o=>o.id===updated.id?{
       ...updated,
       status:arsakType==="sykepleier_syk"||arsakType==="kunde_syk"?"avlyst":o.status,
       endringer:[...(updated.endringer||[]),{dato:new Date().toLocaleString("nb-NO"),av:"Lise Andersen (admin)",handling:
@@ -3288,7 +3452,7 @@ function AOppdrag({setDrawer}){
   return(
     <div className="fu">
       {selectedOppdrag&&<OppdrагModal oppdrag={selectedOppdrag} nurses={NURSES} onClose={()=>setSelectedOppdrag(null)} onSave={handleSave}/>}
-      {krediterOppdrag&&<KrediterPrivatModal prefilledOppdrag={krediterOppdrag} onClose={()=>setKrediterOppdrag(null)} onSave={(data)=>setKrediterOppdrag(null)}/>}
+      {krediterOppdrag&&<KrediterPrivatModal prefilledOppdrag={krediterOppdrag} ordersCatalog={orders} onClose={()=>setKrediterOppdrag(null)} onSave={(data)=>setKrediterOppdrag(null)}/>}
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
         <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
           {filters.map(f=>(
@@ -3301,7 +3465,7 @@ function AOppdrag({setDrawer}){
         <table className="tbl">
           <thead><tr><th>ID</th><th>Tjeneste</th><th>Kunde</th><th>Sykepleier</th><th>Tid</th><th>Status</th><th>Beløp</th><th>Handling</th></tr></thead>
           <tbody>{filteredOrders.map(o=>(
-            <tr key={o.id} style={{cursor:"pointer",background:o.status==="avlyst"?"#FFFBFB":"white"}}>
+            <tr key={o.id} style={{cursor:"pointer",background:o.status==="avlyst"||o.status==="cancelled"?"#FFFBFB":"white"}}>
               <td style={{fontFamily:"monospace",fontSize:10,color:C.soft}}>{o.id}</td>
               <td style={{fontWeight:500}}>{o.service}</td>
               <td>{o.customer}</td>
@@ -3320,7 +3484,7 @@ function AOppdrag({setDrawer}){
                       🚫 Avlys
                     </button>
                   )}
-                  {o.status!=="avlyst"&&(
+                  {o.status!=="avlyst"&&o.status!=="cancelled"&&(
                     <button onClick={e=>{e.stopPropagation();setKrediterOppdrag(o);}}
                       style={{fontSize:10,padding:"3px 9px",background:"#F5F3FF",color:"#6D28D9",border:"1px solid #C4B5FD",borderRadius:6,cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
                       ↩️ Krediter
@@ -3349,7 +3513,7 @@ function AOppdrag({setDrawer}){
   );
 }
 
-function KrediterPrivatModal({onClose,onSave,prefilledOppdrag=null}){
+function KrediterPrivatModal({onClose,onSave,prefilledOppdrag=null,ordersCatalog=ORDERS}){
   // Hvis kalt fra oppdragstabellen er bestilling forhåndsutfylt
   const isPrefilled=!!prefilledOppdrag;
   const[modus,setModus]=useState(isPrefilled?"knyttet":null); // null=velg | "knyttet" | "fri"
@@ -3375,7 +3539,7 @@ function KrediterPrivatModal({onClose,onSave,prefilledOppdrag=null}){
     {key:"stripe",label:"💳 Kort (Stripe)",sub:"Tilbake på kort innen 5-10 virkedager",color:C.sky},
   ];
 
-  const filteredOrders=ORDERS.filter(o=>
+  const filteredOrders=ordersCatalog.filter(o=>
     o.betaltVia!=="b2b"&&
     (sokTekst===""||o.customer.toLowerCase().includes(sokTekst.toLowerCase())||o.service.toLowerCase().includes(sokTekst.toLowerCase()))
   );
@@ -8615,12 +8779,15 @@ function TjenesteAdmin({tjenesterCatalog,setTjenesterCatalog}){
 }
 
 
-function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatalog}){
+function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatalog,orders:ordersProp,setOrders:setOrdersProp}){
+  const[fallbackOrders,setFallbackOrders]=useState(()=>JSON.parse(JSON.stringify(ORDERS)));
+  const orders=ordersProp??fallbackOrders;
+  const setOrders=setOrdersProp??setFallbackOrders;
   const[open,setOpen]=useState(false);
   const[page,setPage]=useState(initPage);
   const[drawer,setDrawer]=useState(null);
   const pages={
-    dashboard:<ADashboard/>,oppdrag:<AOppdrag setDrawer={setDrawer}/>,
+    dashboard:<ADashboard/>,oppdrag:<AOppdrag setDrawer={setDrawer} orders={orders} setOrders={setOrders}/>,
     betalinger:<ABetalinger/>,b2b:<AB2B setDrawer={setDrawer}/>,
     ansatte:<AAnsatte/>,
     okonomi:<OkonomiPage/>,
@@ -8766,18 +8933,18 @@ const KANSELLERING_REGLER={
 };
 
 const SC={
-  kunde:[["landing","Start"],["login","Login"],["push-tillatelse","Push"],["samtykke","Samtykke"],["epost-bekreftelse","E-post"],["onboarding","Onboarding"],["glemt-passord","Glemt pw"],["hjem","Hjem"],["bestill","Bestill"],["betaling","Betaling"],["bekreftelse","OK"],["mine","Mine"],["kunde-profil","Profil"],["kunde-avtale-detalj","Avtale"],["oppdrag-i-gang","Pågår"],["chat-kunde","Chat"],["b2b-dashboard","B2B koordinator"],["b2b-onboarding","B2B ny"],["b2b-bestill","B2B bestill"],["b2b-bruker","B2B bruker"],["b2b-bruker-aktivering","B2B aktiver"]],
+  kunde:[["landing","Start"],["login","Login"],["push-tillatelse","Push"],["samtykke","Samtykke"],["epost-bekreftelse","E-post"],["onboarding","Onboarding"],["glemt-passord","Glemt pw"],["hjem","Hjem"],["bestill","Bestill"],["betaling","Betaling"],["bekreftelse","OK"],["mine","Mine"],["kunde-oppdrag-detalj","Ordre"],["kunde-profil","Profil"],["kunde-avtale-detalj","Avtale"],["oppdrag-i-gang","Pågår"],["chat-kunde","Chat"],["b2b-dashboard","B2B koordinator"],["b2b-onboarding","B2B ny"],["b2b-bestill","B2B bestill"],["b2b-bruker","B2B bruker"],["b2b-bruker-aktivering","B2B aktiver"]],
   nurse:[["nurse-login","Login"],["nurse-rolle","Rolle"],["nurse-onboarding","SP onboard"],["nurse-hjem","Hjem"],["nurse-oppdrag","Oppdrag"],["nurse-innsjekk","Innsjekk"],["nurse-rapport","Rapport"],["nurse-profil","Profil"]],
   b2b:[["b2b-login","B2B intro"],["login","Kunde-login"],["b2b-onboarding","Koord. onboard"],["b2b-dashboard","Dashboard"],["b2b-bestill","Bestill"],["b2b-bruker","Bruker"],["b2b-bruker-aktivering","Aktivering"]],
 };
 const SCREENS={
   landing:Landing,login:Login,"push-tillatelse":PushTillatelse,samtykke:Samtykke,"epost-bekreftelse":EpostBekreftelse,onboarding:Onboarding,"glemt-passord":GlemtPassord,"kunde-profil":KundeProfil,"kunde-avtale-detalj":KundeAvtaleDetalj,"oppdrag-i-gang":OppdragIGang,hjem:Hjem,bestill:Bestill,
   betaling:p=><Betaling {...p} date="Tirsdag 4. mars" time="09:00"/>,
-  bekreftelse:Bekreftelse,mine:Mine,"chat-kunde":ChatKunde,
+  bekreftelse:Bekreftelse,mine:Mine,"kunde-oppdrag-detalj":KundeOppdragDetalj,"chat-kunde":ChatKunde,
   "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-onboarding":NurseOnboarding,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
   "nurse-innsjekk":p=><NurseInnsjekk {...p} focusOppdragId={p.focusOppdragId}/>,
   "nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
-  "admin-panel":p=><Admin initPage="dashboard" tjenesterCatalog={p.tjenesterCatalog} setTjenesterCatalog={p.setTjenesterCatalog}/>,
+  "admin-panel":p=><Admin initPage="dashboard" tjenesterCatalog={p.tjenesterCatalog} setTjenesterCatalog={p.setTjenesterCatalog} orders={p.orders} setOrders={p.setOrders}/>,
   "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
@@ -8799,8 +8966,27 @@ export default function App({
   const[kundeRegEpost,setKundeRegEpost]=useState("");
   const[isNyKoordinator,setIsNyKoordinator]=useState(true);
   const[glemtPassordNurseMode,setGlemtPassordNurseMode]=useState(false);
+  const[kundeOrdreDetaljId,setKundeOrdreDetaljId]=useState(null);
   const[tjenesterCatalog,setTjenesterCatalog]=useState(()=>JSON.parse(JSON.stringify(INIT_TJENESTER_CATALOG)));
+  const[mockOrders,setMockOrders]=useState(()=>JSON.parse(JSON.stringify(ORDERS)));
   const customerServices=useMemo(()=>catalogTilKundeServices(tjenesterCatalog),[tjenesterCatalog]);
+  const onKundeOrderAvbestill=useCallback(orderId=>{
+    // TODO: Resend - send avbestillingsbekreftelse til kunde der e-posten ville blitt sendt i prod.
+    setMockOrders(prev=>prev.map(o=>{
+      if(String(o.id)!==String(orderId))return o;
+      const baseEndringer=Array.isArray(o.endringer)?o.endringer:[];
+      const dato=new Date().toLocaleString("nb-NO");
+      return{
+        ...o,
+        status:"cancelled",
+        endringer:[
+          ...baseEndringer,
+          {dato,av:"Kunde (app)",handling:"Avbestilt — selvbetjening innen frist",arsak:null},
+          {dato,av:"System",handling:`Avbestillingsbekreftelse sendt til ${MOCK_KUNDE_INNLOGGET_EPOST}`,arsak:null},
+        ],
+      };
+    }));
+  },[]);
   const mockKundeLogin=useCallback(()=>{setLoggedIn(true);setScreen("hjem");},[]);
   const mockNurseLogin=useCallback(()=>{setNurseLoggedIn(true);setScreen("nurse-rolle");},[]);
   const isTabLocked=Boolean(forcedTab);
@@ -8810,15 +8996,17 @@ export default function App({
   const navTo=(s,serviceType,opts)=>{
     const o=opts&&typeof opts==="object"?opts:null;
     if(o?.kundeRegEpost!=null)setKundeRegEpost(String(o.kundeRegEpost));
-    if(s==="logout"){setLoggedIn(false);setBestillPreselect(null);setScreen("login");return;}
+    if(s==="logout"){setLoggedIn(false);setBestillPreselect(null);setKundeOrdreDetaljId(null);setScreen("login");return;}
     if(s==="glemt-passord")setGlemtPassordNurseMode(false);
-    const krevInnlogging=["bestill","mine","kunde-profil","kunde-avtale-detalj","oppdrag-i-gang","chat-kunde"];
+    const krevInnlogging=["bestill","mine","kunde-profil","kunde-avtale-detalj","kunde-oppdrag-detalj","oppdrag-i-gang","chat-kunde"];
     if(krevInnlogging.includes(s)&&!loggedIn){setScreen("login-gate");return;}
     if(o?.b2bOnboardingDone)setIsNyKoordinator(false);
     let dest=s;
     if(s==="b2b-dashboard"&&isNyKoordinator&&!o?.b2bOnboardingDone)dest="b2b-onboarding";
     if(dest==="bestill")setBestillPreselect(serviceType??null);
     else setBestillPreselect(null);
+    if(dest==="kunde-oppdrag-detalj"&&o?.orderId!=null)setKundeOrdreDetaljId(String(o.orderId));
+    else if(dest!=="kunde-oppdrag-detalj")setKundeOrdreDetaljId(null);
     setScreen(dest);
     if(dest==="hjem"||dest==="onboarding")setLoggedIn(true);
   };
@@ -8862,10 +9050,10 @@ export default function App({
         </div>
       )}
       {(isAdmin||isAdminPanel)
-        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog}/>
+        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} orders={mockOrders} setOrders={setMockOrders}/>
         :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})}/>
+            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="kunde-oppdrag-detalj"?{orderId:kundeOrdreDetaljId}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})} {...(screen==="hjem"?{orders:mockOrders}:{})} {...(screen==="mine"||screen==="kunde-oppdrag-detalj"?{orders:mockOrders,onKundeOrderAvbestill}:{})} {...(screen==="admin-panel"?{orders:mockOrders,setOrders:setMockOrders}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
