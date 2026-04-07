@@ -1,0 +1,11 @@
+---
+description: Richard's local dev workflow and prototype editing constraints
+alwaysApply: true
+---
+
+# Lokal utvikling (Richard)
+
+- **Ikke start** `pnpm dev` / Next dev-servere. Richard kjører selv fra iTerm: `pnpm --filter kunde-app dev`, `pnpm --filter nurse-app dev`, `pnpm --filter admin-app dev`.
+- **Prototype-kilde:** Ved endringer i monolitten-prototypen, rediger kun `apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx` (med mindre annet er avtalt).
+- **Effektivitet:** Unngå å lese hele den filen uten behov; bruk målrettet søk (`Grep`) og punktvise endringer (`StrReplace`). Man skal ikke sløse kontekst.
+- **Bygg/verifikasjon:** Ikke kjør `pnpm build` eller lignende automatisk — Richard bekrefter manuelt i nettleser.
