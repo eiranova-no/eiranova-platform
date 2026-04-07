@@ -55,7 +55,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 @media(max-width:480px){.g2{grid-template-columns:1fr!important}}
 @media(min-width:601px){.hd{display:none!important}}
 .login-stack{position:relative;z-index:1;width:100%;max-width:420px;margin:0 auto;box-sizing:border-box}
-.sidebar{width:220px;flex-shrink:0;background:#1E3A2F;display:flex;flex-direction:column;min-height:100vh;transition:transform .22s cubic-bezier(.4,0,.2,1)}
+.sidebar{width:220px;flex-shrink:0;align-self:stretch;background:#1E3A2F;display:flex;flex-direction:column;height:100%;min-height:100vh;transition:transform .22s cubic-bezier(.4,0,.2,1)}
 .sidebar.closed{transform:translateX(-100%)}
 @media(min-width:769px){.sidebar{transform:none!important;position:sticky;height:100vh;top:0}.overlay{display:none!important}.hbg{display:none!important}}
 @media(max-width:768px){.sidebar{position:fixed;top:0;left:0;z-index:50;height:100vh;max-height:100dvh}}
@@ -115,7 +115,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 .inp:focus{border-color:#4A7C6F}
 textarea.inp{min-height:88px;padding-top:10px}
 .badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:50px;white-space:nowrap}
-.al{display:flex;min-height:100vh;overflow-x:clip}
+.al{display:flex;align-items:stretch;min-height:100vh;overflow-x:clip}
 .am{flex:1;min-width:0;display:flex;flex-direction:column;overflow-x:clip}
 .hbg{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ah{min-height:56px;height:auto;background:white;border-bottom:1px solid #E4EDE9;display:flex;align-items:center;padding:0 clamp(12px,3vw,20px);gap:12px;position:sticky;top:0;z-index:30;flex-shrink:0}
@@ -2978,16 +2978,7 @@ function ASidebar({current,open,onClose,onNav,onLogout}){
           <div><div className="fr" style={{fontSize:15,fontWeight:600,color:"white"}}>Eira<span style={{color:"#E8C4A4"}}>Nova</span></div><div style={{fontSize:9,color:"rgba(255,255,255,.4)"}}>Adminpanel</div></div>
           <button onClick={onClose} className="hd" style={{marginLeft:"auto",background:"none",border:"none",color:"rgba(255,255,255,.5)",fontSize:20,cursor:"pointer"}}>✕</button>
         </div>
-        <div style={{padding:"12px 18px",borderBottom:"1px solid rgba(255,255,255,.08)",flexShrink:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:36,height:36,borderRadius:"50%",background:C.sidebarAccent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"white",flexShrink:0}}>LA</div>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:13,fontWeight:600,color:"white"}}>Lise Andersen</div>
-              <div style={{fontSize:10,color:C.sidebarMuted}}>Administrator</div>
-            </div>
-          </div>
-        </div>
-        <nav style={{flex:1,overflowY:"auto",padding:"8px 0"}}>
+        <nav style={{flex:1,minHeight:0,overflowY:"auto",padding:"8px 0"}}>
           <div style={{fontSize:9,fontWeight:600,color:"rgba(255,255,255,.3)",textTransform:"uppercase",letterSpacing:1,padding:"10px 18px 4px"}}>Oversikt</div>
           {ANAV.map(item=>{
             const a=current===item.id;
@@ -2999,7 +2990,14 @@ function ASidebar({current,open,onClose,onNav,onLogout}){
             );
           })}
         </nav>
-        <div style={{marginTop:"auto",padding:"12px 18px 24px",flexShrink:0,borderTop:"1px solid rgba(255,255,255,.08)"}}>
+        <div style={{marginTop:"auto",flexShrink:0,borderTop:"1px solid rgba(255,255,255,.08)",padding:"12px 18px",paddingBottom:24}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+            <div style={{width:36,height:36,borderRadius:"50%",background:C.sidebarAccent,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:700,color:"white",flexShrink:0}}>LA</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:13,fontWeight:600,color:"white"}}>Lise Andersen</div>
+              <div style={{fontSize:10,color:C.sidebarMuted}}>Administrator</div>
+            </div>
+          </div>
           <button type="button" onClick={()=>{onLogout?.();onClose();}} style={{width:"100%",padding:"10px 12px",background:"rgba(255,255,255,.12)",color:"white",border:"1px solid rgba(255,255,255,.22)",borderRadius:8,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"inherit"}}>Logg ut</button>
         </div>
       </aside>
