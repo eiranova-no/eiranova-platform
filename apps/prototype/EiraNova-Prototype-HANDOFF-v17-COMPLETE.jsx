@@ -1,4 +1,4 @@
-import { useCallback,useEffect,useState,useSyncExternalStore } from "react";
+import { useCallback,useEffect,useMemo,useState,useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 function klikkRegistrert(){
@@ -179,17 +179,66 @@ textarea.inp{min-height:88px;padding-top:10px}
 `;
 
 // ── DATA ──────────────────────────────────────────────────────
-const SERVICES=[
-  {type:"morgensstell",name:"Morgensstell & dusj",detail:"Stell i ro – den tiden det tar",icon:"🚿",price:590,duration:75,cat:"eldre"},
-  {type:"praktisk",name:"Praktisk bistand",detail:"Rengjøring · Matlaging · Handling",icon:"🏠",price:490,duration:60,cat:"eldre"},
-  {type:"besok",name:"Besøksvenn",detail:"Samtale · Tur · Tilstedeværelse",icon:"☕",price:390,duration:60,cat:"eldre"},
-  {type:"transport",name:"Transport & ærender",detail:"Lege · Butikk · Gravlund",icon:"🚗",price:490,duration:90,cat:"eldre"},
-  {type:"avlastning",name:"Avlastning pårørende",detail:"Tilsyn · Trygghet",icon:"🤝",price:490,duration:60,cat:"eldre"},
-  {type:"ringetilsyn",name:"Ringetilsyn",detail:"Oppfølging og påminnelser",icon:"📞",price:190,duration:15,cat:"eldre"},
-  {type:"barsel_bistand",name:"Praktisk bistand",detail:"Praktisk hjelp i hjemmet",icon:"🍼",price:490,duration:60,cat:"barsel"},
-  {type:"barsel_tur",name:"Trilleturer",detail:"Trilleturer og avlastning",icon:"🍃",price:390,duration:60,cat:"barsel"},
-  {type:"barsel_samtale",name:"Samtale & støtte",detail:"Samtale og støtte",icon:"💬",price:390,duration:60,cat:"barsel"},
+/** Admin master catalog; App state is initialized from this. Customer list = catalogTilKundeServices(catalog). */
+const INIT_TJENESTER_CATALOG=[
+  {id:"t1",kundeType:"morgensstell",navn:"Morgensstell & dusj",ikon:"🚿",kategori:"eldre",beskrivelse:"Stell i ro – den tiden det tar",pris:590,b2bPris:490,varighet:75,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",
+    tagline:"En god start på dagen — med ro og verdighet",kundeInkluderer:["Dusj eller kroppsvask","Hjelp til påkledning","Hårstell og munnhygiene","Frokostforberedelse ved behov"],
+    instruks:{
+      kundeversjon:"Du mottar hjelp til morgenstell og dusj i ditt eget tempo. Sykepleieren er der for deg — ikke for å stresse deg. Du bestemmer rekkefølge og tempo. Stellet avsluttes når du er klar og komfortabel.",
+      sykepleiersjon:"Gjennomfør fullt morgenstell inkl. dusj/vask, tannpuss, hårpleie og påkledning. Dokumenter hudtilstand ved avvik. Respekter brukerens tempo og selvbestemmelse. Bruk heis/hjelpemidler etter brukerens plan. Meld fra ved bekymringer i rapport.",
+      inkluderer:["Dusj eller vask","Tannpuss","Hårpleie","Påkledning","Enkel frokosttilberedning"],
+      inkludererIkke:["Rengjøring av bad","Klesvask","Matlaging utover enkel frokost"],
+      endretAv:"Lise Andersen",endretDato:"2026-02-15",versjon:2
+    }},
+  {id:"t2",kundeType:"praktisk",navn:"Praktisk bistand",ikon:"🏠",kategori:"eldre",beskrivelse:"Rengjøring · Matlaging · Handling",pris:490,b2bPris:390,varighet:60,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",
+    tagline:"Hverdagen på stell — så du kan bruke energien på det som betyr mest",
+    kundeInkluderer:["Rengjøring og støvtørking","Klesvask og opprydding","Matlaging eller oppvarming","Handling ved behov"],
+    instruks:{
+      kundeversjon:"Vi hjelper deg med praktiske gjøremål i hjemmet — rengjøring, matlaging eller handling. Fortell oss hva som er viktigst for deg denne gangen. Vi er her for å gjøre hverdagen enklere.",
+      sykepleiersjon:"Avtal med bruker hvilke oppgaver som prioriteres. Utfør rengjøring av kjøkken, bad og stue etter avtale. Matlaging: tilbered angitt måltid. Handling: bruk utlevert liste og kvitter for alle kjøp. Dokumenter utført arbeid i rapport.",
+      inkluderer:["Rengjøring av angitte rom","Matlaging etter avtale","Handling med kvittering","Avfallshåndtering"],
+      inkludererIkke:["Vindusvask","Hagearbeid","Større vask som gardiner"],
+      endretAv:"Lise Andersen",endretDato:"2026-02-15",versjon:1
+    }},
+  {id:"t3",kundeType:"besok",navn:"Besøksvenn",ikon:"☕",kategori:"eldre",beskrivelse:"Samtale · Tur · Tilstedeværelse",pris:390,b2bPris:320,varighet:60,mva:"avklares",mvaRisiko:"høy",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",
+    tagline:"Godt selskap — en samtale, en kopp kaffe, en som er til stede",
+    kundeInkluderer:["Sosialt samvær hjemme","Gåtur eller frisk luft sammen","Samtale og aktivitet","Tilstedeværelse og trygghet"],
+    instruks:{
+      kundeversjon:"En besøksvenn er en hyggelig person som kommer for å snakke, gå en tur eller bare være tilstede. Dette er din tid — dere gjør det du har lyst til innenfor timen. Det kreves ikke at du gjør noe bestemt.",
+      sykepleiersjon:"Vær til stede, lyttende og engasjert. Følg brukerens ønsker for timen — samtale, tur eller aktivitet. Ikke utfør helsefaglige oppgaver under besøksvenn-tjenesten. Observér brukerens velvære og meld fra ved bekymringer. Dokumenter timen kort i rapport.",
+      inkluderer:["Samtale og sosialt samvær","Kortere tur i nærområdet","Lesing/aktivitet etter ønske","Kaffeselskap"],
+      inkludererIkke:["Helsefaglig pleie","Handling","Rengjøring","Transport med bil"],
+      endretAv:"Lise Andersen",endretDato:"2026-03-01",versjon:1
+    }},
+  {id:"t4",kundeType:"transport",navn:"Transport & ærender",ikon:"🚗",kategori:"eldre",beskrivelse:"Lege · Butikk · Gravlund",pris:490,b2bPris:390,varighet:90,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",instruks:null,
+    tagline:"Kom deg dit du skal — trygt og uten stress",kundeInkluderer:["Kjøring til lege, butikk eller apotek","Følge til avtaler","Hjelp med handling","Assistanse inn og ut av bil"]},
+  {id:"t5",kundeType:"avlastning",navn:"Avlastning pårørende",ikon:"🤝",kategori:"eldre",beskrivelse:"Tilsyn · Trygghet",pris:490,b2bPris:390,varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",instruks:null,
+    tagline:"Pusterom for deg som stiller opp — vi tar over mens du lader batteriene",kundeInkluderer:["Tilsyn og omsorg for din nærstående","Sosialt samvær og aktivitet","Enkel praktisk hjelp","Trygg og kjent sykepleier"]},
+  {id:"t6",kundeType:"ringetilsyn",navn:"Ringetilsyn",ikon:"📞",kategori:"eldre",beskrivelse:"Oppfølging og påminnelser",pris:190,b2bPris:150,varighet:15,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",instruks:null,
+    tagline:"En stemme som sjekker at alt er bra — hver dag, til fast tid",kundeInkluderer:["Daglig telefonsamtale til avtalt tid","Sjekk av dagsform og velvære","Påminnelse om medisiner ved behov","Rapport til pårørende ved ønske"]},
+  {id:"t7",kundeType:"barsel_bistand",navn:"Barselstøtte Praktisk bistand",ikon:"🍼",kategori:"barsel",beskrivelse:"Praktisk hjelp i hjemmet",pris:490,b2bPris:null,varighet:60,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier"],opprettet:"2025-09-01",instruks:null,
+    tagline:"Hjelp i hjemmet når nyfødt-livet er nytt og krevende",kundeInkluderer:["Rengjøring og klesvask","Matlaging og oppvask","Handling og ærender","Støtte til hverdagsmestring"]},
+  {id:"t8",kundeType:"barsel_tur",navn:"Barselstøtte Trilleturer",ikon:"🍃",kategori:"barsel",beskrivelse:"Trilleturer og avlastning",pris:390,b2bPris:null,varighet:60,mva:"avklares",mvaRisiko:"høy",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-09-01",instruks:null,
+    tagline:"Frisk luft og en ekstra hånd — for deg og din nyfødte",kundeInkluderer:["Tur med barnevogn i nærområdet","Selskap og samtale underveis","Trygghet for nye foreldre","Tilpasset tempo og rute"]},
+  {id:"t9",kundeType:"barsel_samtale",navn:"Barselstøtte Samtale & støtte",ikon:"💬",kategori:"barsel",beskrivelse:"Samtale og støtte",pris:390,b2bPris:null,varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["sykepleier"],opprettet:"2025-09-01",instruks:null,
+    tagline:"Noen å snakke med — uten å måtte ha alt under kontroll",kundeInkluderer:["Lyttende samtale om barseltiden","Støtte ved bekymringer og usikkerhet","Veiledning fra erfaren sykepleier","Ingen journalføring — bare nærvær"]},
 ];
+
+function catalogTilKundeServices(tjenester){
+  return tjenester.filter(t=>t.aktiv&&t.kundeType).map(t=>({
+    type:t.kundeType,
+    name:t.navn,
+    detail:t.beskrivelse,
+    icon:t.ikon,
+    price:t.pris,
+    duration:t.varighet,
+    cat:t.kategori,
+    tagline:String(t.tagline||"").trim(),
+    inkluderer:(Array.isArray(t.kundeInkluderer)?t.kundeInkluderer:[]).map(x=>String(x||"").trim()).filter(Boolean),
+  }));
+}
+
+const DEFAULT_KUNDE_SERVICES=catalogTilKundeServices(INIT_TJENESTER_CATALOG);
 const ORDERS=[
   {id:"ORD-0091",service:"🚿 Morgensstell",customer:"Astrid Hansen",nurse:"Sara L.",time:"08:00",status:"completed",paid:true,amount:590,cat:"eldre",date:"Man 3. mars",betaltVia:"vipps"},
   {id:"ORD-0092",service:"🏠 Praktisk bistand",customer:"Olaf Eriksen",nurse:"Sara L.",time:"10:30",status:"active",paid:true,amount:390,cat:"eldre",date:"Man 3. mars",betaltVia:"b2b",b2bOrg:"Moss Kommune",b2bUserId:"u2"},
@@ -434,19 +483,37 @@ function Bdg({status}){
   const b=M[status]??{l:status,bg:C.softBg,c:C.soft};
   return <span className="badge" style={{background:b.bg,color:b.c}}>{b.l}</span>;
 }
-function PH({title,onBack,bg,slim,rightAction,right}){
+function PH({title,onBack,backLabel,bg,slim,rightAction,right,centerTitle=false}){
   const titleStr=title==null?"":String(title);
   const showTitle=titleStr.trim().length>0;
+  const backLabelTrim=backLabel==null?"":String(backLabel).trim();
+  const showBackLabel=backLabelTrim.length>0;
+  const titleStyle={fontSize:15,fontWeight:600,color:"white",lineHeight:1.25,overflowWrap:"anywhere"};
+  const rightCell=(right||rightAction)&&(
+    <div style={{marginLeft:"auto",display:"flex",alignItems:"center",gap:9,flexShrink:0,zIndex:1}}>
+      {right&&<div style={{flexShrink:0}}>{right}</div>}
+      {rightAction&&<button type="button" onClick={rightAction.fn} style={{background:"rgba(255,255,255,.18)",border:"none",color:"white",borderRadius:8,padding:"8px 12px",fontSize:12,cursor:"pointer",fontFamily:"inherit",fontWeight:600,flexShrink:0,minHeight:44}}>{rightAction.label}</button>}
+    </div>
+  );
   return(
-    <div style={{padding:slim?"10px 14px":"12px 14px",display:"flex",alignItems:"center",gap:9,background:bg||`linear-gradient(135deg,${C.navy},${C.greenDark})`,flexShrink:0}}>
-      {onBack&&<button type="button" onClick={onBack} style={{width:44,height:44,borderRadius:10,background:"rgba(255,255,255,.18)",border:"none",color:"white",fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} aria-label="Tilbake">‹</button>}
-      {showTitle?(
-        <span className="fr" style={{fontSize:15,fontWeight:600,color:"white",flex:1,minWidth:0,lineHeight:1.25,overflowWrap:"anywhere"}}>{titleStr}</span>
+    <div style={{padding:slim?"10px 14px":"12px 14px",display:"flex",alignItems:"center",gap:9,background:bg||`linear-gradient(135deg,${C.navy},${C.greenDark})`,flexShrink:0,position:"relative"}}>
+      <div style={{display:"flex",alignItems:"center",gap:9,flexShrink:0,zIndex:1}}>
+        {onBack&&<button type="button" onClick={onBack} style={{width:44,height:44,borderRadius:10,background:"rgba(255,255,255,.18)",border:"none",color:"white",fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} aria-label="Tilbake">‹</button>}
+        {showBackLabel&&<span className="fr" style={{...titleStyle,flexShrink:0}}>{backLabelTrim}</span>}
+      </div>
+      {centerTitle&&showTitle?(
+        <span className="fr" style={{
+          ...titleStyle,
+          position:"absolute",left:0,right:0,textAlign:"center",pointerEvents:"none",boxSizing:"border-box",
+          paddingLeft:showBackLabel?200:(onBack?52:16),
+          paddingRight:(right||rightAction)?125:52,
+        }}>{titleStr}</span>
+      ):showTitle?(
+        <span className="fr" style={{...titleStyle,flex:1,minWidth:0}}>{titleStr}</span>
       ):(
         <span style={{flex:1,minWidth:0}} aria-hidden="true"/>
       )}
-      {right&&<div style={{flexShrink:0}}>{right}</div>}
-      {rightAction&&<button type="button" onClick={rightAction.fn} style={{background:"rgba(255,255,255,.18)",border:"none",color:"white",borderRadius:8,padding:"8px 12px",fontSize:12,cursor:"pointer",fontFamily:"inherit",fontWeight:600,flexShrink:0,minHeight:44}}>{rightAction.label}</button>}
+      {rightCell}
     </div>
   );
 }
@@ -493,11 +560,62 @@ function ModalPortal({ children, overlayStyle }) {
     document.body
   );
 }
+
+/** Kort modal: tagline + «Hva inngår» for tjenestekort (hjem, landing, bestill steg 0). */
+function TjenesteMerinfoModal({ service, accent, onClose, onFortsett, fortsettLabel }){
+  if(!service) return null;
+  const ac=accent||(service.cat==="barsel"?C.gold:C.green);
+  return(
+    <ModalPortal overlayStyle={{background:"rgba(0,0,0,.48)",padding:20}}>
+      <div style={{background:"white",borderRadius:18,width:"100%",maxWidth:400,maxHeight:"90vh",overflow:"auto",boxShadow:"0 20px 60px rgba(0,0,0,.22)",border:`1px solid ${C.border}`}}>
+        <div style={{padding:"16px 18px",background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:"18px 18px 0 0",display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:10}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:12,minWidth:0}}>
+            <div style={{width:44,height:44,borderRadius:11,background:"rgba(255,255,255,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{service.icon}</div>
+            <div style={{minWidth:0}}>
+              <div style={{fontSize:15,fontWeight:700,color:"white",lineHeight:1.25}}>{service.name}</div>
+              {service.tagline?(
+                <div style={{fontSize:11,color:"rgba(255,255,255,.72)",fontStyle:"italic",marginTop:6,lineHeight:1.45}}>{service.tagline}</div>
+              ):null}
+            </div>
+          </div>
+          <button type="button" onClick={onClose} style={{background:"rgba(255,255,255,.15)",border:"none",color:"white",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,lineHeight:1,flexShrink:0}} aria-label="Lukk">×</button>
+        </div>
+        <div style={{padding:"16px 18px 18px"}}>
+          <div style={{fontSize:10,fontWeight:700,color:C.soft,textTransform:"uppercase",letterSpacing:.6,marginBottom:8}}>Hva inngår</div>
+          {(service.inkluderer&&service.inkluderer.length)?(
+            <ul style={{margin:0,paddingLeft:18,fontSize:12,color:C.navyMid,lineHeight:1.55}}>
+              {service.inkluderer.map((punkt,i)=><li key={i} style={{marginBottom:4}}>{punkt}</li>)}
+            </ul>
+          ):(
+            <div style={{fontSize:12,color:C.soft,fontStyle:"italic"}}>Ingen punkter lagt inn ennå.</div>
+          )}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16,paddingTop:12,borderTop:`1px solid ${C.border}`}}>
+            <div>
+              <div style={{fontSize:10,color:C.soft}}>Pris · varighet</div>
+              <div style={{fontSize:14,fontWeight:700,color:ac}}>fra {service.price} kr · {service.duration} min</div>
+            </div>
+          </div>
+          <div style={{display:"flex",gap:10,marginTop:16}}>
+            <button type="button" onClick={onClose} style={{flex:1,padding:"10px 0",fontSize:12,borderRadius:10,background:"white",color:C.navy,border:`1.5px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Lukk</button>
+            <button type="button" onClick={()=>{onFortsett?.(service);onClose?.();}} className="btn bp" style={{flex:1,padding:"10px 0",fontSize:12,borderRadius:10,fontFamily:"inherit",fontWeight:600,background:ac,border:`1px solid ${ac}`}}>
+              {fortsettLabel||"Fortsett"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ModalPortal>
+  );
+}
 const BN_K=[{id:"hjem",icon:"🏠",label:"Hjem"},{id:"bestill",icon:"➕",label:"Bestill"},{id:"mine",icon:"📋",label:"Mine"},{id:"chat-kunde",icon:"💬",label:"Chat"},{id:"kunde-profil",icon:"👤",label:"Profil"}];
-/** Tab-id'er som skal vise kunde-bunnnav (BN_K); inkl. bestill (alle steg i bestillingsflyten) */
+/** Gyldige `active`-id'er for BN_K (alle faner) */
 const KUNDE_NAV_TAB_IDS=new Set(BN_K.map(t=>t.id));
+/**
+ * Skjermer som skal vise kunde-bunnnav (+ DeskNav): hovedfaner og kun bestill steg 0.
+ * Ikke: bestill steg 1–3, avtaledetaljer, øvrige dybdeskjermer med tilbake-pil.
+ */
+const KUNDE_NAV_SHELL_ROOT_IDS=new Set(["hjem","bestill","mine","chat-kunde","kunde-profil"]);
 function KundeNavShell({active,onNav}){
-  if(!KUNDE_NAV_TAB_IDS.has(active))return null;
+  if(!KUNDE_NAV_SHELL_ROOT_IDS.has(active)||!KUNDE_NAV_TAB_IDS.has(active))return null;
   return(<>
     <BNav active={active} onNav={onNav} items={BN_K}/>
     <DeskNav active={active} onNav={onNav} items={BN_K} title="EiraNova"/>
@@ -573,7 +691,7 @@ function Samtykke({onNav}){
 
   if(visGdpr)return(
     <div className="phone fu">
-      <PH title="Personvernerklæring" onBack={()=>setVisGdpr(false)}/>
+      <PH title="Personvernerklæring" onBack={()=>setVisGdpr(false)} backLabel="Samtykke" centerTitle/>
       <div className="sa" style={{padding:"16px 18px"}}>
         <div style={{fontSize:13,fontWeight:700,color:C.navy,marginBottom:12}}>EiraNova Personvernerklæring</div>
         {[
@@ -597,7 +715,7 @@ function Samtykke({onNav}){
 
   if(visVilkaar)return(
     <div className="phone fu">
-      <PH title="Vilkår for bruk" onBack={()=>setVisVilkaar(false)}/>
+      <PH title="Vilkår for bruk" onBack={()=>setVisVilkaar(false)} backLabel="Samtykke" centerTitle/>
       <div className="sa" style={{padding:"16px 18px"}}>
         <div style={{fontSize:13,fontWeight:700,color:C.navy,marginBottom:12}}>Vilkår for bruk — EiraNova</div>
         {[
@@ -876,7 +994,7 @@ function KundeProfil({onNav}){
   return(
     <div className="phone fu">
       <ToastContainer/>
-      <PH title="Min profil" onBack={()=>onNav("hjem")}/>
+      <PH title="Min profil" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle/>
 
       {/* Slette-bekreftelse */}
       {slettBekreft&&(
@@ -1049,7 +1167,7 @@ function OppdragIGang({onNav}){
   return(
     <div className="phone fu" style={{background:C.greenXL}}>
       <ToastContainer/>
-      <PH title="Oppdrag pågår" onBack={()=>onNav("hjem")} slim/>
+      <PH title="Oppdrag pågår" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle slim/>
       <div className="sa" style={{padding:"14px 16px"}}>
         {/* Status-kort */}
         <div style={{background:`linear-gradient(135deg,${C.navy},${C.greenDark})`,borderRadius:18,padding:"20px",marginBottom:14,textAlign:"center",color:"white"}}>
@@ -1126,17 +1244,14 @@ function KundeAvtaleDetalj({onNav}){
   const o=mockKundeNesteAvtale();
   if(!o)return(
     <div className="phone fu">
-      <PH title="Avtaledetaljer" onBack={()=>onNav("hjem")}/>
+      <PH title="Avtaledetaljer" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle/>
       <div className="sa" style={{padding:20,textAlign:"center",color:C.soft}}>Ingen kommende avtale funnet.</div>
-      <BNav active="hjem" onNav={onNav} items={BN_K}/>
-      <DeskNav active="hjem" onNav={onNav} items={BN_K} title="EiraNova"/>
     </div>
   );
   const betalt=o.betaltVia==="b2b"?"B2B faktura":o.betaltVia==="vipps"?"Vipps":"Kort";
   return(
     <div className="phone fu">
-      <DeskNav active="hjem" onNav={onNav} items={BN_K} title="EiraNova"/>
-      <PH title="Avtaledetaljer" onBack={()=>onNav("hjem")}/>
+      <PH title="Avtaledetaljer" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle/>
       <div className="sa" style={{padding:14}}>
         <div className="card cp" style={{marginBottom:12}}>
           <div style={{display:"flex",alignItems:"center",gap:14}}>
@@ -1170,12 +1285,12 @@ function KundeAvtaleDetalj({onNav}){
           ))}
         </div>
       </div>
-      <BNav active="hjem" onNav={onNav} items={BN_K}/>
     </div>
   );
 }
 
-function LandKundeMobile({onNav}){
+function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES}){
+  const[merinfo,setMerinfo]=useState(null);
   return(
       <div className="land-mobile phone fu">
         <div style={{padding:"32px 18px 28px",background:"linear-gradient(160deg,#1E3A2F 0%,#2C5C52 60%,#1E3A2F 100%)"}}>
@@ -1203,11 +1318,14 @@ function LandKundeMobile({onNav}){
               <div style={{width:26,height:26,borderRadius:7,background:C.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13}}>🏡</div>
               <span className="fr" style={{fontSize:15,fontWeight:600,color:C.navy}}>Eldre & Pårørende</span>
             </div>
-            {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-              <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card" style={{marginBottom:6,padding:"10px 12px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
+            {services.filter(s=>s.cat==="eldre").map(sv=>(
+              <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card" style={{marginBottom:6,padding:"10px 12px",display:"flex",alignItems:"center",gap:10,cursor:"pointer"}}>
                 <div style={{width:36,height:36,borderRadius:9,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{sv.icon}</div>
-                <div style={{flex:1}}><div style={{fontSize:12,fontWeight:600,color:C.navy}}>{sv.name}</div><div style={{fontSize:10,color:C.soft}}>{sv.detail}</div></div>
-                <div style={{fontSize:10,fontWeight:500,color:C.green}}>fra {sv.price} kr</div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:600,color:C.navy}}>{sv.name}</div>
+                  {sv.tagline?<div style={{fontSize:10,color:C.soft,fontStyle:"italic",lineHeight:1.35,marginTop:2}}>{sv.tagline}</div>:null}
+                </div>
+                <div style={{fontSize:10,fontWeight:500,color:C.green,flexShrink:0}}>fra {sv.price} kr</div>
               </div>
             ))}
           </div>
@@ -1216,10 +1334,14 @@ function LandKundeMobile({onNav}){
               <div style={{width:28,height:28,borderRadius:7,background:C.rose,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🤱</div>
               <span className="fr" style={{fontSize:15,fontWeight:600,color:C.navy}}>Barselstøtte</span>
             </div>
-            {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-              <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} style={{background:"white",borderRadius:8,padding:"8px 10px",display:"flex",alignItems:"center",gap:8,marginBottom:5,cursor:"pointer",border:`0.5px solid ${C.border}`}}>
-                <span style={{fontSize:14}}>{sv.icon}</span><span style={{fontSize:12,fontWeight:500,color:C.navy}}>{sv.name}</span>
-                <span style={{marginLeft:"auto",fontSize:10,color:C.gold,fontWeight:500}}>fra {sv.price} kr</span>
+            {services.filter(s=>s.cat==="barsel").map(sv=>(
+              <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:8,padding:"8px 10px",display:"flex",alignItems:"center",gap:8,marginBottom:5,cursor:"pointer",border:`0.5px solid ${C.border}`}}>
+                <span style={{fontSize:14}}>{sv.icon}</span>
+                <span style={{fontSize:12,fontWeight:500,color:C.navy,flex:1,minWidth:0}}>
+                  {sv.name}
+                  {sv.tagline?<span style={{display:"block",fontSize:9,color:C.soft,fontStyle:"italic",fontWeight:400,marginTop:2,lineHeight:1.35}}>{sv.tagline}</span>:null}
+                </span>
+                <span style={{marginLeft:"auto",fontSize:10,color:C.gold,fontWeight:500,flexShrink:0}}>fra {sv.price} kr</span>
               </div>
             ))}
           </div>
@@ -1283,11 +1405,21 @@ function LandKundeMobile({onNav}){
             </div>
           </div>
         </div>
+      {merinfo&&(
+        <TjenesteMerinfoModal
+          service={merinfo}
+          accent={merinfo.cat==="barsel"?C.gold:C.green}
+          onClose={()=>setMerinfo(null)}
+          onFortsett={s=>onNav("bestill",s.type)}
+          fortsettLabel="Bestill denne tjenesten"
+        />
+      )}
       </div>
   );
 }
 
-function LandKundeDesktop({onNav}){
+function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES}){
+  const[merinfo,setMerinfo]=useState(null);
   return(
       <div className="land-desktop">
 
@@ -1358,7 +1490,7 @@ function LandKundeDesktop({onNav}){
           <div style={{maxWidth:1200,margin:"0 auto"}}>
             <div style={{textAlign:"center",marginBottom:40}}>
               <div className="fr" style={{fontSize:32,fontWeight:600,color:C.navy,marginBottom:8}}>Våre tjenester</div>
-              <div style={{fontSize:16,color:C.soft}}>Klikk på en tjeneste for å bestille</div>
+              <div style={{fontSize:16,color:C.soft}}>Klikk på en tjeneste for detaljer og bestilling</div>
             </div>
 
             {/* Eldre */}
@@ -1368,8 +1500,8 @@ function LandKundeDesktop({onNav}){
                 <span className="fr" style={{fontSize:20,fontWeight:600,color:C.navy}}>Eldre & Pårørende</span>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
-                {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
+                {services.filter(s=>s.cat==="eldre").map(sv=>(
+                  <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card"
                     style={{cursor:"pointer",overflow:"hidden",transition:"all .18s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
@@ -1377,7 +1509,7 @@ function LandKundeDesktop({onNav}){
                     <div style={{padding:18}}>
                       <div style={{fontSize:28,marginBottom:10}}>{sv.icon}</div>
                       <div style={{fontSize:14,fontWeight:700,color:C.navy,marginBottom:4}}>{sv.name}</div>
-                      <div style={{fontSize:12,color:C.soft,marginBottom:14,lineHeight:1.45}}>{sv.detail}</div>
+                      {sv.tagline?<div style={{fontSize:12,color:C.soft,marginBottom:14,lineHeight:1.45,fontStyle:"italic"}}>{sv.tagline}</div>:<div style={{marginBottom:14}}/>}
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:10,borderTop:`1px solid ${C.border}`}}>
                         <span style={{fontSize:15,fontWeight:700,color:C.green}}>fra {sv.price} kr</span>
                         <span style={{fontSize:11,color:C.soft,background:C.softBg,padding:"2px 8px",borderRadius:50}}>{sv.duration} min</span>
@@ -1395,8 +1527,8 @@ function LandKundeDesktop({onNav}){
                 <span className="fr" style={{fontSize:20,fontWeight:600,color:C.navy}}>Barselstøtte</span>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:14}}>
-                {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
+                {services.filter(s=>s.cat==="barsel").map(sv=>(
+                  <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card"
                     style={{cursor:"pointer",overflow:"hidden",transition:"all .18s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-3px)";e.currentTarget.style.boxShadow="0 8px 24px rgba(0,0,0,.12)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
@@ -1404,7 +1536,7 @@ function LandKundeDesktop({onNav}){
                     <div style={{padding:18}}>
                       <div style={{fontSize:28,marginBottom:10}}>{sv.icon}</div>
                       <div style={{fontSize:14,fontWeight:700,color:C.navy,marginBottom:4}}>{sv.name}</div>
-                      <div style={{fontSize:12,color:C.soft,marginBottom:14,lineHeight:1.45}}>{sv.detail}</div>
+                      {sv.tagline?<div style={{fontSize:12,color:C.soft,marginBottom:14,lineHeight:1.45,fontStyle:"italic"}}>{sv.tagline}</div>:<div style={{marginBottom:14}}/>}
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingTop:10,borderTop:`1px solid ${C.border}`}}>
                         <span style={{fontSize:15,fontWeight:700,color:C.gold}}>fra {sv.price} kr</span>
                         <span style={{fontSize:11,color:C.soft,background:C.softBg,padding:"2px 8px",borderRadius:50}}>{sv.duration} min</span>
@@ -1482,13 +1614,22 @@ function LandKundeDesktop({onNav}){
             <div style={{fontSize:12,color:"rgba(255,255,255,.4)"}}>Powered by CoreX · EiraNova AS</div>
           </div>
         </div>
+      {merinfo&&(
+        <TjenesteMerinfoModal
+          service={merinfo}
+          accent={merinfo.cat==="barsel"?C.gold:C.green}
+          onClose={()=>setMerinfo(null)}
+          onFortsett={s=>onNav("bestill",s.type)}
+          fortsettLabel="Bestill denne tjenesten"
+        />
+      )}
       </div>
   );
 }
 
-function Landing({onNav}){
+function Landing({onNav,services=DEFAULT_KUNDE_SERVICES}){
   const desktop=useViewportMin768();
-  return desktop?<LandKundeDesktop onNav={onNav}/>:<LandKundeMobile onNav={onNav}/>;
+  return desktop?<LandKundeDesktop onNav={onNav} services={services}/>:<LandKundeMobile onNav={onNav} services={services}/>;
 }
 
 function Login({onNav,onMockKundeLogin}){
@@ -1722,9 +1863,10 @@ function Login({onNav,onMockKundeLogin}){
 }
 
 
-function Hjem({onNav}){
+function Hjem({onNav,services=DEFAULT_KUNDE_SERVICES}){
   const BN_ITEMS=BN_K;
   const neste=mockKundeNesteAvtale();
+  const[merinfo,setMerinfo]=useState(null);
   return(
     <div className="phone fu">
       {/* Desktop top nav */}
@@ -1769,16 +1911,17 @@ function Hjem({onNav}){
             <div className="fr" style={{fontSize:"clamp(14px,1.5vw,18px)",fontWeight:600,color:C.navy,marginBottom:"clamp(8px,1.5vw,14px)"}}>Bestill ny tjeneste</div>
             {/* Eldre */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(8px,1.2vw,14px)",marginBottom:"clamp(12px,1.5vw,20px)"}}>
-              {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-                <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} className="card"
+              {services.filter(s=>s.cat==="eldre").map(sv=>(
+                <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card"
                   style={{cursor:"pointer",overflow:"hidden",transition:"all .15s"}}
                   onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 18px rgba(0,0,0,.1)"}}
                   onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{height:"clamp(48px,6vw,64px)",background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(20px,2.5vw,28px)"}}>{sv.icon}</div>
                   <div style={{padding:"clamp(8px,1vw,12px)"}}>
                     <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3,lineHeight:1.3}}>{sv.name}</div>
+                    {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic"}}>{sv.tagline}</div>:null}
                     <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,marginBottom:6}}>fra {sv.price} kr · {sv.duration} min</div>
-                    <button className="btn bp" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7}}>Bestill</button>
+                    <button type="button" className="btn bp" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}}>Bestill</button>
                   </div>
                 </div>
               ))}
@@ -1790,14 +1933,15 @@ function Hjem({onNav}){
                 <span style={{fontSize:"clamp(11px,1.2vw,13px)",fontWeight:600,color:"#B05C4A",textTransform:"uppercase",letterSpacing:.6}}>Barselstøtte</span>
               </div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
-                {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-                  <div key={sv.type} onClick={()=>onNav("bestill",sv.type)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
+                {services.filter(s=>s.cat==="barsel").map(sv=>(
+                  <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
                     onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,.08)"}}
                     onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                     <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6}}>{sv.icon}</div>
                     <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3}}>{sv.name}</div>
+                    {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic"}}>{sv.tagline}</div>:null}
                     <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,marginBottom:8}}>fra {sv.price} kr · {sv.duration} min</div>
-                    <button className="btn" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white"}}>Bestill</button>
+                    <button type="button" className="btn" style={{width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white"}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}}>Bestill</button>
                   </div>
                 ))}
               </div>
@@ -1825,14 +1969,23 @@ function Hjem({onNav}){
         </div>
       </div>
 
+      {merinfo&&(
+        <TjenesteMerinfoModal
+          service={merinfo}
+          accent={merinfo.cat==="barsel"?C.gold:C.green}
+          onClose={()=>setMerinfo(null)}
+          onFortsett={s=>onNav("bestill",s.type)}
+          fortsettLabel="Gå til bestilling"
+        />
+      )}
       <BNav active="hjem" onNav={onNav} items={BN_ITEMS}/>
     </div>
   );
 }
 
-function Bestill({onNav,preselectedType=null}){
-  const defaultService=SERVICES.find(s=>s.type==="morgensstell")||SERVICES[0];
-  const fromType=t=>SERVICES.find(s=>s.type===t)||defaultService;
+function Bestill({onNav,preselectedType=null,services=DEFAULT_KUNDE_SERVICES}){
+  const defaultService=services.find(s=>s.type==="morgensstell")||services[0];
+  const fromType=t=>services.find(s=>s.type===t)||defaultService;
   // 0=tjenesteliste (kun uten forhåndsvalg), 1=dato/tid, 2=sykepleier, 3=betaling
   const[step,setStep]=useState(()=>preselectedType?1:0);
   const[sel,setSel]=useState(()=>(preselectedType?fromType(preselectedType):null));
@@ -1840,20 +1993,27 @@ function Bestill({onNav,preselectedType=null}){
   const[time,setTime]=useState("09:00");
   const[chosenNurse,setChosenNurse]=useState(null); // null = EiraNova velger
 
+  const[merinfo,setMerinfo]=useState(null);
   useEffect(()=>{
-    if(preselectedType){setSel(fromType(preselectedType));setStep(1);}
-    else{setSel(null);setStep(0);}
-  },[preselectedType]);
+    if(preselectedType){
+      const next=fromType(preselectedType);
+      setSel(next);
+      setStep(1);
+    }else{
+      setSel(null);
+      setStep(0);
+    }
+  },[preselectedType,services]);
 
   const velgTjeneste=sv=>{setSel(sv);setChosenNurse(null);setStep(1);};
 
   // Steg 3: betaling
-  if(step===3)return <Betaling inBookFlow onBack={()=>setStep(2)} onNav={onNav} service={sel??defaultService} date={date} time={time}/>;
+  if(step===3)return <Betaling inBookFlow onBack={()=>setStep(2)} onNav={onNav} service={sel??defaultService} services={services} date={date} time={time}/>;
 
   // Steg 2: velg sykepleier
   if(step===2)return(
     <div className="phone fu">
-      <PH title="Velg sykepleier" onBack={()=>setStep(1)}/>
+      <PH title="Velg sykepleier" onBack={()=>setStep(1)} backLabel="Dato og tid" centerTitle/>
       <div className="sa" style={{padding:13}}>
         {/* La EiraNova velge */}
         <div onClick={()=>{setChosenNurse(null);setStep(3);}} className="card" style={{padding:"12px 14px",marginBottom:12,cursor:"pointer",border:`2px solid ${chosenNurse===null?C.green:C.border}`,background:chosenNurse===null?C.greenBg:"white"}}>
@@ -1913,28 +2073,28 @@ function Bestill({onNav,preselectedType=null}){
           {chosenNurse?`Fortsett med ${chosenNurse.split(" ")[0]} →`:"Gå til betaling →"}
         </button>
       </div>
-      <KundeNavShell active="bestill" onNav={onNav}/>
     </div>
   );
 
   // Steg 0: velg tjeneste (fanen «Bestill» m.m. uten forhåndsvalg)
   if(step===0)return(
     <div className="phone fu">
-      <PH onBack={()=>onNav("hjem")}/>
+      <PH onBack={()=>onNav("hjem")} backLabel="Hjem"/>
       <div className="sa" style={{padding:"clamp(14px,2vw,28px) clamp(12px,3vw,40px)"}}>
         <div style={{maxWidth:1100,margin:"0 auto"}}>
-          <div className="fr" style={{fontSize:"clamp(14px,1.5vw,18px)",fontWeight:600,color:C.navy,marginBottom:"clamp(8px,1.5vw,14px)"}}>Hvilken tjeneste ønsker du?</div>
+          <div className="fr" style={{fontSize:"clamp(14px,1.5vw,18px)",fontWeight:600,color:C.navy,marginBottom:"clamp(8px,1.5vw,14px)",textAlign:"center",width:"100%"}}>Hvilken tjeneste ønsker du?</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(8px,1.2vw,14px)",marginBottom:"clamp(12px,1.5vw,20px)"}}>
-            {SERVICES.filter(s=>s.cat==="eldre").map(sv=>(
-              <div key={sv.type} onClick={()=>velgTjeneste(sv)} className="card"
+            {services.filter(s=>s.cat==="eldre").map(sv=>(
+              <div key={sv.type} onClick={()=>setMerinfo(sv)} className="card"
                 style={{cursor:"pointer",overflow:"hidden",transition:"all .15s"}}
                 onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 6px 18px rgba(0,0,0,.1)"}}
                 onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                 <div style={{height:"clamp(48px,6vw,64px)",background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"clamp(20px,2.5vw,28px)"}}>{sv.icon}</div>
                 <div style={{padding:"clamp(8px,1vw,12px)"}}>
                   <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3,lineHeight:1.3}}>{sv.name}</div>
+                  {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic"}}>{sv.tagline}</div>:null}
                   <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,marginBottom:6}}>fra {sv.price} kr · {sv.duration} min</div>
-                  <span className="btn bp" style={{display:"block",width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,textAlign:"center"}}>Velg</span>
+                  <span className="btn bp" role="button" tabIndex={0} style={{display:"block",width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,textAlign:"center"}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();setMerinfo(sv);}}}>Velg</span>
                 </div>
               </div>
             ))}
@@ -1945,20 +2105,30 @@ function Bestill({onNav,preselectedType=null}){
               <span style={{fontSize:"clamp(11px,1.2vw,13px)",fontWeight:600,color:"#B05C4A",textTransform:"uppercase",letterSpacing:.6}}>Barselstøtte</span>
             </div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(min(100%,180px),1fr))",gap:"clamp(7px,1vw,12px)"}}>
-              {SERVICES.filter(s=>s.cat==="barsel").map(sv=>(
-                <div key={sv.type} onClick={()=>velgTjeneste(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
+              {services.filter(s=>s.cat==="barsel").map(sv=>(
+                <div key={sv.type} onClick={()=>setMerinfo(sv)} style={{background:"white",borderRadius:10,padding:"clamp(10px,1.2vw,14px)",cursor:"pointer",border:`0.5px solid ${C.border}`,transition:"all .15s"}}
                   onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-2px)";e.currentTarget.style.boxShadow="0 4px 14px rgba(0,0,0,.08)"}}
                   onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=""}}>
                   <div style={{fontSize:"clamp(18px,2vw,24px)",marginBottom:6}}>{sv.icon}</div>
                   <div style={{fontSize:"clamp(11px,1.1vw,13px)",fontWeight:600,color:C.navy,marginBottom:3}}>{sv.name}</div>
+                  {sv.tagline?<div style={{fontSize:"clamp(8px,.85vw,10px)",color:C.soft,marginBottom:5,lineHeight:1.35,fontStyle:"italic"}}>{sv.tagline}</div>:null}
                   <div style={{fontSize:"clamp(9px,.9vw,11px)",color:C.soft,marginBottom:8}}>fra {sv.price} kr · {sv.duration} min</div>
-                  <span className="btn" style={{display:"block",width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white",textAlign:"center"}}>Velg</span>
+                  <span className="btn" role="button" tabIndex={0} style={{display:"block",width:"100%",fontSize:"clamp(9px,.9vw,11px)",padding:"5px 0",borderRadius:7,background:C.gold,color:"white",textAlign:"center"}} onClick={e=>{e.stopPropagation();setMerinfo(sv);}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();setMerinfo(sv);}}}>Velg</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
+      {merinfo&&(
+        <TjenesteMerinfoModal
+          service={merinfo}
+          accent={merinfo.cat==="barsel"?C.gold:C.green}
+          onClose={()=>setMerinfo(null)}
+          onFortsett={s=>{velgTjeneste(s);}}
+          fortsettLabel="Velg denne tjenesten"
+        />
+      )}
       <KundeNavShell active="bestill" onNav={onNav}/>
     </div>
   );
@@ -1966,13 +2136,14 @@ function Bestill({onNav,preselectedType=null}){
   // Steg 1: dato og tid (tjeneste valgt fra steg 0 eller forhåndsvalg fra hjem)
   if(step===1)return(
     <div className="phone fu">
-      <PH title="Dato og tid" onBack={()=>preselectedType?onNav("hjem"):setStep(0)}/>
+      <PH title="Dato og tid" onBack={()=>preselectedType?onNav("hjem"):setStep(0)} backLabel={preselectedType?"Hjem":"Velg tjeneste"} centerTitle/>
       <div className="sa" style={{padding:13}}>
         <div className="card cp" style={{marginBottom:10,display:"flex",alignItems:"center",gap:12}}>
           <div style={{width:44,height:44,borderRadius:10,background:sel?.cat==="barsel"?C.goldBg:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>{sel?.icon}</div>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:10,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5}}>Valgt tjeneste</div>
             <div style={{fontSize:14,fontWeight:600,color:C.navy}}>{sel?.name}</div>
+            {sel?.tagline?<div style={{fontSize:11,color:C.soft,fontStyle:"italic",lineHeight:1.4,marginTop:3}}>{sel.tagline}</div>:null}
             <div style={{fontSize:12,color:C.soft}}>fra {sel?.price} kr · {sel?.duration} min</div>
           </div>
         </div>
@@ -2006,18 +2177,17 @@ function Bestill({onNav,preselectedType=null}){
         </div>
         <button type="button" onClick={()=>setStep(2)} className="btn bp bf" style={{borderRadius:11}}>Velg sykepleier →</button>
       </div>
-      <KundeNavShell active="bestill" onNav={onNav}/>
     </div>
   );
 
   return null;
 }
 
-function Betaling({onBack,onNav,service,date,time,inBookFlow=false}){
+function Betaling({onBack,onNav,service,date,time,inBookFlow=false,services:serviceCatalog=DEFAULT_KUNDE_SERVICES}){
   const[method,setMethod]=useState("vipps");
   const[paying,setPaying]=useState(false);
   const[card,setCard]=useState("");const[exp,setExp]=useState("");const[cvv,setCvv]=useState("");
-  const sv=service??SERVICES[0];
+  const sv=service??serviceCatalog.find(s=>s.type==="morgensstell")??serviceCatalog[0];
   function pay(){setPaying(true);setTimeout(()=>{setPaying(false);onNav("bekreftelse");},1800);}
   function fC(v){return v.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();}
   function fE(v){let d=v.replace(/\D/g,"");return d.length>=2?d.slice(0,2)+"/"+d.slice(2,4):d;}
@@ -2032,7 +2202,7 @@ function Betaling({onBack,onNav,service,date,time,inBookFlow=false}){
   );
   return(
     <div className="phone fu">
-      <PH title="Betaling" onBack={onBack}/>
+      <PH title="Betaling" onBack={onBack} backLabel={onBack?(inBookFlow?"Velg sykepleier":"Tilbake"):undefined} centerTitle={Boolean(onBack)}/>
       <div className="sa" style={{padding:13}}>
         <div className="card cp" style={{marginBottom:11}}>
           <div style={{fontSize:9,fontWeight:600,color:C.soft,textTransform:"uppercase",letterSpacing:.5,marginBottom:8}}>Sammendrag</div>
@@ -2076,7 +2246,6 @@ function Betaling({onBack,onNav,service,date,time,inBookFlow=false}){
         </button>
         <p style={{textAlign:"center",fontSize:9,color:C.soft,marginTop:9}}>🔒 Sikker betaling · Kryptert · MVA-unntatt helsetjeneste</p>
       </div>
-      {inBookFlow&&<KundeNavShell active="bestill" onNav={onNav}/>}
     </div>
   );
 }
@@ -2084,7 +2253,7 @@ function Betaling({onBack,onNav,service,date,time,inBookFlow=false}){
 function Bekreftelse({onNav}){
   return(
     <div className="phone fu">
-      <PH title="Bekreftelse"/>
+      <PH title="Bekreftelse" centerTitle/>
       <div className="sa" style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 18px",textAlign:"center"}}>
         <div style={{width:72,height:72,borderRadius:"50%",background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:36,marginBottom:18}}>✅</div>
         <div className="fr" style={{fontSize:22,fontWeight:600,color:C.navy,marginBottom:6}}>Bestilling bekreftet!</div>
@@ -2108,7 +2277,7 @@ function Mine({onNav}){
   return(
     <div className="phone fu">
       <ToastContainer/>
-      <PH title="Mine bestillinger" onBack={()=>onNav("hjem")} rightAction={{label:"👤 Profil",fn:()=>onNav("kunde-profil")}}/>
+      <PH title="Mine bestillinger" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle/>
       <div style={{display:"flex",margin:"10px 11px",background:C.greenXL,borderRadius:9,padding:3,flexShrink:0}}>
         {["kommende","tidligere"].map(t=><button key={t} onClick={()=>setTab(t)} style={{flex:1,padding:"6px 0",borderRadius:7,fontSize:11,fontWeight:500,cursor:"pointer",border:"none",background:tab===t?"white":"transparent",color:tab===t?C.green:C.soft,fontFamily:"inherit"}}>{t==="kommende"?"Kommende":"Tidligere"}</button>)}
       </div>
@@ -2142,7 +2311,7 @@ function ChatKunde({onNav}){
   const send=()=>{if(msg.trim()){setMsgs([...msgs,{from:"customer",text:msg,time:"nå"}]);setMsg("");}};
   return(
     <div className="phone fu">
-      <PH title="Sara Lindgren · Sykepleier" onBack={()=>onNav("hjem")} slim/>
+      <PH title="Sara Lindgren · Sykepleier" onBack={()=>onNav("hjem")} backLabel="Hjem" centerTitle slim/>
       <div className="sa" style={{padding:"10px 11px",display:"flex",flexDirection:"column",gap:8,background:C.greenXL}}>
         {msgs.map((m,i)=>(
           <div key={i} style={{display:"flex",justifyContent:m.from==="customer"?"flex-end":"flex-start"}}>
@@ -2157,6 +2326,8 @@ function ChatKunde({onNav}){
         <input value={msg} onChange={e=>setMsg(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Skriv en melding..." style={{flex:1,padding:"8px 11px",border:`1.5px solid ${C.border}`,borderRadius:18,fontSize:12,outline:"none",background:C.greenXL,fontFamily:"inherit"}}/>
         <button onClick={send} style={{width:34,height:34,borderRadius:"50%",background:C.green,color:"white",border:"none",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>↑</button>
       </div>
+      <BNav active="chat-kunde" onNav={onNav} items={BN_K}/>
+      <DeskNav active="chat-kunde" onNav={onNav} items={BN_K} title="EiraNova"/>
     </div>
   );
 }
@@ -5561,7 +5732,7 @@ function B2BBestill({onNav}){
 
   if(step===3)return(
     <div className="phone fu">
-      <PH title="Bekreft bestilling" onBack={()=>setStep(2)}/>
+      <PH title="Bekreft bestilling" onBack={()=>setStep(2)} backLabel="Velg tjeneste" centerTitle/>
       <div className="sa" style={{padding:14}}>
         <div style={{textAlign:"center",padding:"20px 0 16px"}}>
           <div style={{fontSize:48,marginBottom:10}}>✅</div>
@@ -5582,7 +5753,7 @@ function B2BBestill({onNav}){
 
   if(step===2)return(
     <div className="phone fu">
-      <PH title={`Velg tjeneste — ${valgtBruker?.name}`} onBack={()=>setStep(1)}/>
+      <PH title={`Velg tjeneste — ${valgtBruker?.name}`} onBack={()=>setStep(1)} backLabel="Velg bruker" centerTitle/>
       <div className="sa" style={{padding:13}}>
         <div style={{background:C.greenXL,borderRadius:9,padding:"9px 12px",marginBottom:12,border:`1px solid ${C.border}`,fontSize:10,color:C.navyMid}}>
           Priser er basert på <strong>rammeavtalen</strong> med Moss Kommune
@@ -5616,7 +5787,7 @@ function B2BBestill({onNav}){
 
   return(
     <div className="phone fu">
-      <PH title="Bestill på vegne av bruker" onBack={()=>onNav("b2b-dashboard")}/>
+      <PH title="Bestill på vegne av bruker" onBack={()=>onNav("b2b-dashboard")} backLabel="Dashboard" centerTitle/>
       <div className="sa" style={{padding:13}}>
         <div style={{fontSize:10,color:C.soft,marginBottom:10,lineHeight:1.5}}>Velg hvilken bruker du vil bestille for. Fakturaen legges automatisk til kommunens samlefaktura.</div>
         {B2B_COORD_BRUKERE.filter(b=>b.aktiv).map(b=>(
@@ -7991,40 +8162,7 @@ function TjenesteKalkulator({varighet,navnTjeneste}){
   );
 }
 
-function TjenesteAdmin(){
-  const initTjenester=[
-    {id:"t1",navn:"Morgensstell & dusj",ikon:"🚿",kategori:"eldre",beskrivelse:"Stell i ro – den tiden det tar",pris:590,b2bPris:490,varighet:75,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",
-     instruks:{
-       kundeversjon:"Du mottar hjelp til morgenstell og dusj i ditt eget tempo. Sykepleieren er der for deg — ikke for å stresse deg. Du bestemmer rekkefølge og tempo. Stellet avsluttes når du er klar og komfortabel.",
-       sykepleiersjon:"Gjennomfør fullt morgenstell inkl. dusj/vask, tannpuss, hårpleie og påkledning. Dokumenter hudtilstand ved avvik. Respekter brukerens tempo og selvbestemmelse. Bruk heis/hjelpemidler etter brukerens plan. Meld fra ved bekymringer i rapport.",
-       inkluderer:["Dusj eller vask","Tannpuss","Hårpleie","Påkledning","Enkel frokosttilberedning"],
-       inkludererIkke:["Rengjøring av bad","Klesvask","Matlaging utover enkel frokost"],
-       endretAv:"Lise Andersen",endretDato:"2026-02-15",versjon:2
-     }},
-    {id:"t2",navn:"Praktisk bistand",ikon:"🏠",kategori:"eldre",beskrivelse:"Rengjøring · Matlaging · Handling",pris:490,b2bPris:390,varighet:60,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",
-     instruks:{
-       kundeversjon:"Vi hjelper deg med praktiske gjøremål i hjemmet — rengjøring, matlaging eller handling. Fortell oss hva som er viktigst for deg denne gangen. Vi er her for å gjøre hverdagen enklere.",
-       sykepleiersjon:"Avtal med bruker hvilke oppgaver som prioriteres. Utfør rengjøring av kjøkken, bad og stue etter avtale. Matlaging: tilbered angitt måltid. Handling: bruk utlevert liste og kvitter for alle kjøp. Dokumenter utført arbeid i rapport.",
-       inkluderer:["Rengjøring av angitte rom","Matlaging etter avtale","Handling med kvittering","Avfallshåndtering"],
-       inkludererIkke:["Vindusvask","Hagearbeid","Større vask som gardiner"],
-       endretAv:"Lise Andersen",endretDato:"2026-02-15",versjon:1
-     }},
-    {id:"t3",navn:"Besøksvenn",ikon:"☕",kategori:"eldre",beskrivelse:"Samtale · Tur · Tilstedeværelse",pris:390,b2bPris:320,varighet:60,mva:"avklares",mvaRisiko:"høy",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",
-     instruks:{
-       kundeversjon:"En besøksvenn er en hyggelig person som kommer for å snakke, gå en tur eller bare være tilstede. Dette er din tid — dere gjør det du har lyst til innenfor timen. Det kreves ikke at du gjør noe bestemt.",
-       sykepleiersjon:"Vær til stede, lyttende og engasjert. Følg brukerens ønsker for timen — samtale, tur eller aktivitet. Ikke utfør helsefaglige oppgaver under besøksvenn-tjenesten. Observér brukerens velvære og meld fra ved bekymringer. Dokumenter timen kort i rapport.",
-       inkluderer:["Samtale og sosialt samvær","Kortere tur i nærområdet","Lesing/aktivitet etter ønske","Kaffeselskap"],
-       inkludererIkke:["Helsefaglig pleie","Handling","Rengjøring","Transport med bil"],
-       endretAv:"Lise Andersen",endretDato:"2026-03-01",versjon:1
-     }},
-    {id:"t4",navn:"Transport & ærender",ikon:"🚗",kategori:"eldre",beskrivelse:"Lege · Butikk · Gravlund",pris:490,b2bPris:390,varighet:90,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",instruks:null},
-    {id:"t5",navn:"Avlastning pårørende",ikon:"🤝",kategori:"eldre",beskrivelse:"Tilsyn · Trygghet",pris:490,b2bPris:390,varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["sykepleier","hjelpepleier"],opprettet:"2025-08-01",instruks:null},
-    {id:"t6",navn:"Ringetilsyn",ikon:"📞",kategori:"eldre",beskrivelse:"Oppfølging og påminnelser",pris:190,b2bPris:150,varighet:15,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-08-01",instruks:null},
-    {id:"t7",navn:"Barsel — Praktisk bistand",ikon:"🤱",kategori:"barsel",beskrivelse:"Praktisk hjelp i hjemmet",pris:490,b2bPris:null,varighet:60,mva:"0%",mvaRisiko:"lav",aktiv:true,utfoertAv:["sykepleier"],opprettet:"2025-09-01",instruks:null},
-    {id:"t8",navn:"Barsel — Trilleturer",ikon:"🍃",kategori:"barsel",beskrivelse:"Trilleturer og avlastning",pris:390,b2bPris:null,varighet:60,mva:"avklares",mvaRisiko:"høy",aktiv:true,utfoertAv:["hjelpepleier"],opprettet:"2025-09-01",instruks:null},
-    {id:"t9",navn:"Barsel — Samtale & støtte",ikon:"💬",kategori:"barsel",beskrivelse:"Samtale og støtte",pris:390,b2bPris:null,varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["sykepleier"],opprettet:"2025-09-01",instruks:null},
-  ];
-  const[tjenester,setTjenester]=useState(initTjenester);
+function TjenesteAdmin({tjenesterCatalog,setTjenesterCatalog}){
   const[modal,setModal]=useState(null);      // null | "ny" | tjeneste-objekt
   const[slettModal,setSlettModal]=useState(null);
   const[filter,setFilter]=useState("alle");  // alle | eldre | barsel | inaktiv
@@ -8037,10 +8175,11 @@ function TjenesteAdmin(){
   const[katModal,setKatModal]=useState(null); // null | "ny" | kategori-obj
   const[katForm,setKatForm]=useState({id:"",label:"",ikon:"📋",farge:C.sky});
 
-  const initForm={id:null,navn:"",ikon:"🏥",kategori:kategorier[0]?.id||"eldre",beskrivelse:"",pris:"",b2bPris:"",varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["hjelpepleier"],instruks:{kundeversjon:"",sykepleiersjon:"",inkluderer:[],inkludererIkke:[],endretAv:"Lise Andersen",endretDato:new Date().toISOString().slice(0,10),versjon:1}};
+  const initInstruks={kundeversjon:"",sykepleiersjon:"",inkluderer:[],inkludererIkke:[],endretAv:"Lise Andersen",endretDato:new Date().toISOString().slice(0,10),versjon:1};
+  const initForm={id:null,navn:"",ikon:"🏥",kategori:kategorier[0]?.id||"eldre",beskrivelse:"",pris:"",b2bPris:"",varighet:60,mva:"avklares",mvaRisiko:"medium",aktiv:true,utfoertAv:["hjelpepleier"],tagline:"",kundeInkluderer:["","","",""],kundeType:"",instruks:{kundeversjon:"",sykepleiersjon:"",inkluderer:[],inkludererIkke:[],endretAv:"Lise Andersen",endretDato:new Date().toISOString().slice(0,10),versjon:1}};
   const[form,setForm]=useState(initForm);
 
-  const filterte=tjenester.filter(t=>{
+  const filterte=tjenesterCatalog.filter(t=>{
     if(filter==="inaktiv") return !t.aktiv;
     if(filter==="eldre")   return t.kategori==="eldre"&&t.aktiv;
     if(filter==="barsel")  return t.kategori==="barsel"&&t.aktiv;
@@ -8048,21 +8187,34 @@ function TjenesteAdmin(){
   });
 
   const apneModal=(t)=>{
-    setForm(t?{...t,instruks:t.instruks||{...initInstruks}}:{...initForm,id:"t"+(tjenester.length+1)});
+    if(t){
+      const ink=Array.isArray(t.kundeInkluderer)&&t.kundeInkluderer.length?t.kundeInkluderer.map(x=>String(x??"")):["","","",""];
+      while(ink.length<4) ink.push("");
+      setForm({...t,instruks:t.instruks||{...initInstruks},tagline:t.tagline||"",kundeInkluderer:ink.slice(0,6),kundeType:t.kundeType||""});
+    }else{
+      setForm({...initForm,id:"t"+(tjenesterCatalog.length+1),tagline:"",kundeInkluderer:["","","",""],kundeType:""});
+    }
     setModal(t||"ny");
   };
 
-  const initInstruks={kundeversjon:"",sykepleiersjon:"",inkluderer:[],inkludererIkke:[],endretAv:"Lise Andersen",endretDato:new Date().toISOString().slice(0,10),versjon:1};
   const lagreTjeneste=()=>{
+    const trimmedTag=String(form.tagline||"").trim().slice(0,80);
+    const inkRå=Array.isArray(form.kundeInkluderer)?form.kundeInkluderer.map(x=>String(x??"").trim()):[];
+    let kt=String(form.kundeType||"").trim();
+    if(!kt){
+      const fraNavn=String(form.navn||"").toLowerCase().replace(/[^a-z0-9æøå]+/gi,"_").replace(/^_|_$/g,"").slice(0,48);
+      kt=fraNavn||String(form.id||"tjeneste");
+    }
+    const payload={...form,tagline:trimmedTag,kundeInkluderer:inkRå,kundeType:kt};
     if(modal==="ny"){
-      setTjenester(p=>[...p,{...form}]);
+      setTjenesterCatalog(p=>[...p,{...payload,opprettet:new Date().toISOString().slice(0,10)}]);
     } else {
-      setTjenester(p=>p.map(t=>t.id===form.id?{...form}:t));
+      setTjenesterCatalog(p=>p.map(t=>t.id===form.id?{...payload}:t));
     }
     setModal(null);
   };
 
-  const toggleAktiv=(id)=>setTjenester(p=>p.map(t=>t.id===id?{...t,aktiv:!t.aktiv}:t));
+  const toggleAktiv=(id)=>setTjenesterCatalog(p=>p.map(t=>t.id===id?{...t,aktiv:!t.aktiv}:t));
 
   const Toggle=({on,onToggle})=>(
     <div onClick={onToggle} style={{width:38,height:22,borderRadius:11,background:on?C.green:"#D1D5DB",cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
@@ -8106,6 +8258,41 @@ function TjenesteAdmin(){
                 <input value={form.beskrivelse} onChange={e=>setForm(f=>({...f,beskrivelse:e.target.value}))}
                   style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:12,fontFamily:"inherit",background:C.greenXL}}
                   placeholder="Kort beskrivelse som vises til kunden"/>
+              </div>
+              <div style={{marginBottom:12}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                  <label style={{fontSize:10,fontWeight:600,color:C.navy}}>Tagline (kundeside)</label>
+                  <span style={{fontSize:9,color:C.soft}}>{String(form.tagline||"").length}/80</span>
+                </div>
+                <input value={form.tagline||""} onChange={e=>setForm(f=>({...f,tagline:e.target.value.slice(0,80)}))}
+                  style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:12,fontFamily:"inherit",background:C.greenXL}}
+                  placeholder="Kort setning under tjenestenavnet"/>
+              </div>
+              <div style={{marginBottom:12}}>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Kundetype (slug)</label>
+                <input value={form.kundeType||""} onChange={e=>setForm(f=>({...f,kundeType:e.target.value.replace(/\s+/g,"_").slice(0,48)}))}
+                  style={{width:"100%",padding:"9px 12px",border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:12,fontFamily:"monospace",background:C.softBg}}
+                  placeholder="Tom = genereres fra tjenestenavn ved lagring"/>
+              </div>
+              <div style={{marginBottom:14}}>
+                <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:6}}>Hva inngår (kundeside)</label>
+                {(form.kundeInkluderer||[]).map((linje,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                    <input value={linje} onChange={e=>setForm(f=>{
+                      const k=[...(f.kundeInkluderer||[])];
+                      k[i]=e.target.value;
+                      return {...f,kundeInkluderer:k};
+                    })}
+                      style={{flex:1,padding:"8px 11px",border:`1.5px solid ${C.border}`,borderRadius:8,fontSize:12,fontFamily:"inherit",background:C.greenXL}}
+                      placeholder={`Punkt ${i+1}`}/>
+                    <button type="button" aria-label={`Slett punkt ${i+1}`} onClick={()=>setForm(f=>({...f,kundeInkluderer:(f.kundeInkluderer||[]).filter((_,j)=>j!==i)}))}
+                      style={{flexShrink:0,width:36,height:36,borderRadius:8,border:`1px solid ${C.border}`,background:"white",cursor:"pointer",fontSize:16}}>🗑</button>
+                  </div>
+                ))}
+                <button type="button" disabled={(form.kundeInkluderer||[]).length>=6} onClick={()=>setForm(f=>({...f,kundeInkluderer:[...(f.kundeInkluderer||[]),""]}))}
+                  style={{fontSize:11,padding:"6px 12px",borderRadius:8,background:(form.kundeInkluderer||[]).length>=6?C.softBg:C.greenBg,color:(form.kundeInkluderer||[]).length>=6?C.soft:C.green,border:`1px solid ${C.border}`,cursor:(form.kundeInkluderer||[]).length>=6?"not-allowed":"pointer",fontFamily:"inherit",fontWeight:600}}>
+                  + Legg til punkt
+                </button>
               </div>
               {/* Kategori — dynamisk */}
               <div style={{marginBottom:14}}>
@@ -8272,7 +8459,7 @@ function TjenesteAdmin(){
               <div style={{display:"flex",gap:8}}>
                 {katModal!=="ny"&&(
                   <button onClick={()=>{
-                    if(tjenester.some(t=>t.kategori===katForm.id)){
+                    if(tjenesterCatalog.some(t=>t.kategori===katForm.id)){
                       alert("Kan ikke slette — kategorien har aktive tjenester.");return;
                     }
                     setKategorier(p=>p.filter(k=>k.id!==katForm.id));setKatModal(null);
@@ -8311,7 +8498,7 @@ function TjenesteAdmin(){
               <span style={{fontSize:16}}>{k.ikon}</span>
               <div>
                 <div style={{fontSize:11,fontWeight:600,color:C.navy}}>{k.label}</div>
-                <div style={{fontSize:9,color:C.soft}}>{tjenester.filter(t=>t.kategori===k.id&&t.aktiv).length} tjenester</div>
+                <div style={{fontSize:9,color:C.soft}}>{tjenesterCatalog.filter(t=>t.kategori===k.id&&t.aktiv).length} tjenester</div>
               </div>
               <span style={{fontSize:10,color:k.farge,marginLeft:4}}>✏️</span>
             </div>
@@ -8323,7 +8510,7 @@ function TjenesteAdmin(){
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
         <div>
           <div className="fr" style={{fontSize:16,fontWeight:600,color:C.navy,marginBottom:2}}>Tjenester & priser</div>
-          <div style={{fontSize:11,color:C.soft}}>{tjenester.filter(t=>t.aktiv).length} aktive · {tjenester.filter(t=>!t.aktiv).length} inaktive</div>
+          <div style={{fontSize:11,color:C.soft}}>{tjenesterCatalog.filter(t=>t.aktiv).length} aktive · {tjenesterCatalog.filter(t=>!t.aktiv).length} inaktive</div>
         </div>
         <button onClick={()=>apneModal(null)} className="btn bp" style={{fontSize:12,padding:"9px 18px",borderRadius:10}}>
           + Legg til tjeneste
@@ -8349,6 +8536,7 @@ function TjenesteAdmin(){
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:13,fontWeight:700,color:C.navy,marginBottom:2}}>{t.navn}</div>
                   <div style={{fontSize:10,color:C.soft,marginBottom:4}}>{t.beskrivelse}</div>
+                  {t.tagline?<div style={{fontSize:9,color:C.navyMid,marginBottom:4,lineHeight:1.35,fontStyle:"italic"}}>{t.tagline}</div>:null}
                   <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
                     {t.utfoertAv.map(u=>(
                       <span key={u} style={{fontSize:9,background:C.softBg,color:C.navyMid,padding:"1px 7px",borderRadius:50,fontWeight:500}}>
@@ -8413,13 +8601,13 @@ function TjenesteAdmin(){
       </div>
 
       {/* MVA-advarsel-boks */}
-      {tjenester.filter(t=>t.aktiv&&t.mvaRisiko==="høy").length>0&&(
+      {tjenesterCatalog.filter(t=>t.aktiv&&t.mvaRisiko==="høy").length>0&&(
         <div style={{background:C.dangerBg,borderRadius:12,padding:"13px 16px",border:`1px solid rgba(225,29,72,.2)`,display:"flex",gap:12,alignItems:"flex-start"}}>
           <span style={{fontSize:20,flexShrink:0}}>⚖️</span>
           <div>
-            <div style={{fontSize:12,fontWeight:700,color:C.danger,marginBottom:4}}>MVA-advarsel — {tjenester.filter(t=>t.aktiv&&t.mvaRisiko==="høy").length} tjenester med høy risiko</div>
+            <div style={{fontSize:12,fontWeight:700,color:C.danger,marginBottom:4}}>MVA-advarsel — {tjenesterCatalog.filter(t=>t.aktiv&&t.mvaRisiko==="høy").length} tjenester med høy risiko</div>
             <div style={{fontSize:11,color:C.navyMid,lineHeight:1.6}}>
-              {tjenester.filter(t=>t.aktiv&&t.mvaRisiko==="høy").map(t=>t.navn).join(", ")} — Skatteetaten har i tidligere saker krevd etterbetaling av 25% MVA for disse tjenestetypene. <strong>Avklar med revisor før lansering.</strong>
+              {tjenesterCatalog.filter(t=>t.aktiv&&t.mvaRisiko==="høy").map(t=>t.navn).join(", ")} — Skatteetaten har i tidligere saker krevd etterbetaling av 25% MVA for disse tjenestetypene. <strong>Avklar med revisor før lansering.</strong>
             </div>
           </div>
         </div>
@@ -8429,7 +8617,7 @@ function TjenesteAdmin(){
 }
 
 
-function Admin({initPage="dashboard",onLogout}){
+function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatalog}){
   const[open,setOpen]=useState(false);
   const[page,setPage]=useState(initPage);
   const[drawer,setDrawer]=useState(null);
@@ -8438,7 +8626,7 @@ function Admin({initPage="dashboard",onLogout}){
     betalinger:<ABetalinger/>,b2b:<AB2B setDrawer={setDrawer}/>,
     ansatte:<AAnsatte/>,
     okonomi:<OkonomiPage/>,
-    tjenester:<TjenesteAdmin/>,
+    tjenester:<TjenesteAdmin tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog}/>,
     innstillinger:<InnstillingerPage/>,
   };
   return(
@@ -8586,12 +8774,12 @@ const SC={
 };
 const SCREENS={
   landing:Landing,login:Login,"push-tillatelse":PushTillatelse,samtykke:Samtykke,"epost-bekreftelse":EpostBekreftelse,onboarding:Onboarding,"glemt-passord":GlemtPassord,"kunde-profil":KundeProfil,"kunde-avtale-detalj":KundeAvtaleDetalj,"oppdrag-i-gang":OppdragIGang,hjem:Hjem,bestill:Bestill,
-  betaling:p=><Betaling {...p} service={SERVICES[0]} date="Tirsdag 4. mars" time="09:00"/>,
+  betaling:p=><Betaling {...p} date="Tirsdag 4. mars" time="09:00"/>,
   bekreftelse:Bekreftelse,mine:Mine,"chat-kunde":ChatKunde,
   "nurse-login":NurseLogin,"nurse-rolle":NurseRolle,"nurse-onboarding":NurseOnboarding,"nurse-hjem":NurseHjem,"nurse-oppdrag":NurseOppdrag,
   "nurse-innsjekk":p=><NurseInnsjekk {...p} focusOppdragId={p.focusOppdragId}/>,
   "nurse-rapport":NurseRapport,"nurse-profil":NurseProfil,
-  "admin-panel":()=><Admin initPage="dashboard"/>,
+  "admin-panel":p=><Admin initPage="dashboard" tjenesterCatalog={p.tjenesterCatalog} setTjenesterCatalog={p.setTjenesterCatalog}/>,
   "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
@@ -8613,6 +8801,8 @@ export default function App({
   const[kundeRegEpost,setKundeRegEpost]=useState("");
   const[isNyKoordinator,setIsNyKoordinator]=useState(true);
   const[glemtPassordNurseMode,setGlemtPassordNurseMode]=useState(false);
+  const[tjenesterCatalog,setTjenesterCatalog]=useState(()=>JSON.parse(JSON.stringify(INIT_TJENESTER_CATALOG)));
+  const customerServices=useMemo(()=>catalogTilKundeServices(tjenesterCatalog),[tjenesterCatalog]);
   const mockKundeLogin=useCallback(()=>{setLoggedIn(true);setScreen("hjem");},[]);
   const mockNurseLogin=useCallback(()=>{setNurseLoggedIn(true);setScreen("nurse-rolle");},[]);
   const isTabLocked=Boolean(forcedTab);
@@ -8674,10 +8864,10 @@ export default function App({
         </div>
       )}
       {(isAdmin||isAdminPanel)
-        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}}/>
+        ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog}/>
         :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})}/>
+            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="bestill"?{preselectedType:bestillPreselect}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
