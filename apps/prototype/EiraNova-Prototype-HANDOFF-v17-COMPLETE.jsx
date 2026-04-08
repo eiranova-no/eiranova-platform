@@ -1,4 +1,4 @@
-import { useCallback,useEffect,useMemo,useState,useSyncExternalStore } from "react";
+import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 
 function klikkRegistrert(){
@@ -12,18 +12,23 @@ function fulltNavnMinToOrd(navn){
   return ord.length>=2;
 }
 
-function subscribeViewportMin768(cb){
-  if(typeof window==="undefined")return()=>{};
-  const mq=window.matchMedia("(min-width:768px)");
-  mq.addEventListener("change",cb);
-  return()=>mq.removeEventListener("change",cb);
-}
+/**
+ * Desktop vs. mobil for kunde-landing. SSR og første klientside må begge bruke «mobil»
+ * (false), ellers kan hydrering feile. Mobil-layout bruker klassen .land-kunde-mobile (ikke .land-mobile)
+ * slik at Next SSR ikke skjules av display:none på bred skjerm før klient bytter til desktop-layout.
+ */
 function useViewportMin768(){
-  return useSyncExternalStore(
-    subscribeViewportMin768,
-    ()=>window.matchMedia("(min-width:768px)").matches,
-    ()=>false
-  );
+  const[desktop,setDesktop]=useState(false);
+  // useEffect (ikke useLayoutEffect): trygg ved SSR/pre-render i Next — unngår dev/500-problemer
+  // knyttet til layout effects. Første paint er mobil; desktop aktiveres umiddelbart etter mount.
+  useEffect(()=>{
+    const mq=window.matchMedia("(min-width:768px)");
+    setDesktop(mq.matches);
+    const cb=()=>setDesktop(mq.matches);
+    mq.addEventListener("change",cb);
+    return()=>mq.removeEventListener("change",cb);
+  },[]);
+  return desktop;
 }
 
 const C = {
@@ -68,6 +73,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
 .pw-app .phone{position:relative;z-index:0;min-height:100svh!important}
 /* Flex scroll: uten min-height:0 kan .sa «vise» feil høyde og i enkelte nettlesere blokkere klikk under */
 .pw-app .phone .sa{min-height:0}
+/* Sykepleier innlogging (Next uten verktøylinje): sikre fleks-sone og klikkflate */
+.pw-app .nurse-login-shell{flex:1 1 auto;min-height:0;width:100%;display:flex;flex-direction:column}
+.pw-app .nurse-login-shell .sa{flex:1 1 auto;min-height:0;position:relative;z-index:2}
 @media(min-width:768px){
   .pw-app{min-height:100vh!important}
   .pw-app .phone{min-height:100vh!important}
@@ -87,11 +95,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#F0F5F2;color:#2C3E35
   .pw{padding:0;background:#FAF6F1;min-height:calc(100svh - 42px);display:flex;flex-direction:column}
   .phone{max-width:100%;width:100%;min-height:calc(100svh - 42px)}
   .desk-nav{display:none!important}
-  .land-mobile{display:flex!important}
+  .land-kunde-mobile{display:flex!important}
   .land-desktop{display:none!important}
 }
 @media(min-width:768px){
-  .land-mobile{display:none!important}
   .land-desktop{display:block!important;width:100%;overflow-x:clip;overflow-y:auto;height:calc(100vh - 42px)}
 }
 @media(min-width:768px) and (max-width:1100px){
@@ -309,7 +316,7 @@ const OPPDRAG=[
   ]},
   {id:"2",time:"10:30",date:"Man 3. mars",customer:"Olaf Eriksen",phone:"922 11 445",address:"Storgata 45, Moss",service:"Praktisk bistand",icon:"🏠",cat:"eldre",status:"active",nurse:"Sara Lindgren",amount:390,betaltVia:"b2b",opprettet:"2026-02-27",startIso:"2026-03-03T10:30:00+01:00",endringer:[
     {dato:"2026-02-27 14:00",av:"Koordinator (Moss Kommune)",handling:"Bestilling opprettet",arsak:null},
-    {dato:"2026-03-01 08:30",av:"Lise Andersen (admin)",handling:"Sykepleier endret: Maria K. → Sara L.",arsak:"Maria K. meldte seg syk"},
+    {dato:"2026-03-01 08:30",av:"Vi (admin)",handling:"Sykepleier endret: Maria K. → Sara L.",arsak:"Maria K. meldte seg syk"},
   ]},
   {id:"3",time:"13:00",date:"Man 3. mars",customer:"Kari Olsen",phone:"918 77 221",address:"Nygata 8, Moss",service:"Ringetilsyn",icon:"📞",cat:"eldre",status:"upcoming",nurse:"Anne Sørensen",amount:190,betaltVia:"b2b",opprettet:"2026-02-25",startIso:"2026-03-03T13:00:00+01:00",endringer:[
     {dato:"2026-02-25 11:00",av:"Koordinator (Moss Kommune)",handling:"Bestilling opprettet",arsak:null},
@@ -409,6 +416,12 @@ const B2B_INV=[
   {id:"EIR-2026-0042",customer:"Moss Kommune",amount:18750,due:"2026-04-02",status:"sent",ehf:true},
   {id:"EIR-2026-0041",customer:"Parkveien Borettslag",amount:6000,due:"2026-03-25",status:"overdue",ehf:false},
   {id:"EIR-2026-0040",customer:"Moss Kommune",amount:12500,due:"2026-03-15",status:"paid",ehf:true},
+];
+/** Nye B2B-henvendelser fra landingsskjema (mock) */
+const MOCK_B2B_HENVENDELSER=[
+  {id:"bh1",navn:"Kari Nordmann",organisasjon:"Råde kommune",epost:"kari.nordmann@rade.kommune.no",telefon:"+47 900 11 223",antallBrukere:12,tidspunkt:"2026-04-06 14"},
+  {id:"bh2",navn:"Per Hansen",organisasjon:"Soleng Borettslag",epost:"per.hansen@soleng.no",telefon:"901 55 882",antallBrukere:8,tidspunkt:"2026-04-05 09"},
+  {id:"bh3",navn:"Linnea Berg",organisasjon:"Østfold Omsorg AS",epost:"linnea@oostfoldomsorg.no",telefon:"+47999 00 441",antallBrukere:45,tidspunkt:"2026-04-03 16"},
 ];
 const VIPPS_P=[
   {id:"VP-20260303",date:"2026-03-03",amount:4720,status:"settled",orders:8},
@@ -764,7 +777,7 @@ function Samtykke({onNav}){
           {t:"Grunnlaget for behandlingen",txt:"Behandling av helsedata skjer med ditt eksplisitte samtykke (GDPR art. 9(2)(a)) og for å oppfylle avtalen om helsetjenester (art. 6(1)(b))."},
           {t:"Dine rettigheter",txt:"Du har rett til innsyn, retting, sletting (art. 17), begrensning og dataportabilitet. Du kan trekke samtykket når som helst. Se Profil → Personvern for å utøve dine rettigheter."},
           {t:"Lagringstid",txt:"Data slettes 3 år etter siste oppdrag, med unntak av det vi er lovpålagt å beholde (regnskapsdata 5 år). Anonymiserte statistikkdata beholdes uten tidsbegrensning."},
-          {t:"Kontakt",txt:"Personvernansvarlig: Lise Andersen, lise@eiranova.no · Datatilsynet: datatilsynet.no"},
+          {t:"Kontakt",txt:"Vi er personvernansvarlig. Kontakt: lise@eiranova.no · Datatilsynet: datatilsynet.no"},
         ].map(s=>(
           <div key={s.t} style={{marginBottom:16}}>
             <div style={{fontSize:11,fontWeight:700,color:C.navy,marginBottom:4}}>{s.t}</div>
@@ -1354,10 +1367,73 @@ function KundeAvtaleDetalj({onNav}){
   );
 }
 
+function LandB2BKontaktSeksjon({variant="mobile"}){
+  const{toast,ToastContainer}=useToast();
+  const[navn,setNavn]=useState("");
+  const[organisasjon,setOrganisasjon]=useState("");
+  const[epost,setEpost]=useState("");
+  const[telefon,setTelefon]=useState("");
+  const[antall,setAntall]=useState("");
+  const desktop=variant==="desktop";
+  const onSubmit=e=>{
+    e.preventDefault();
+    toast("Takk! Vi tar kontakt med deg innen 1 virkedag.","ok");
+    // TODO: Resend - varsle oss om ny B2B-henvendelse
+    setNavn("");setOrganisasjon("");setEpost("");setTelefon("");setAntall("");
+  };
+  const fordel=(ikon,tekst)=>(
+    <div key={tekst} style={{display:"flex",alignItems:"flex-start",gap:desktop?12:10,flex:desktop?1:undefined,minWidth:desktop?0:"100%"}}>
+      <div style={{width:desktop?40:36,height:desktop?40:36,borderRadius:10,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:desktop?18:16,flexShrink:0}}>{ikon}</div>
+      <div style={{fontSize:desktop?13:12,fontWeight:600,color:C.navy,lineHeight:1.45,paddingTop:desktop?2:0}}>{tekst}</div>
+    </div>
+  );
+  return(
+    <section id="b2b-kontakt" style={{background:desktop?"linear-gradient(180deg,#F6FAF8 0%,#EDF5F1 100%)":"linear-gradient(160deg,#F4FAF7,#EEF6F1)",padding:desktop?"56px 40px":"28px 14px 32px",borderTop:desktop?`1px solid ${C.border}`:undefined}}>
+      <ToastContainer/>
+      <div style={desktop?{maxWidth:1200,margin:"0 auto"}:undefined}>
+        <div style={{textAlign:desktop?"center":"left",marginBottom:desktop?36:18}}>
+          <div className="fr" style={{fontSize:desktop?30:20,fontWeight:600,color:C.navy,marginBottom:desktop?10:6,lineHeight:1.2}}>Er dere en kommune, borettslag eller bedrift?</div>
+          <div style={{fontSize:desktop?16:13,color:C.soft,maxWidth:560,margin:desktop?"0 auto":undefined,lineHeight:1.55}}>
+            Vi tar oss av alt det praktiske — dere fokuserer på menneskene.
+          </div>
+        </div>
+        <div style={{display:"flex",flexDirection:desktop?"row":"column",gap:desktop?20:16,marginBottom:desktop?32:20,justifyContent:"center"}}>
+          {fordel("🧾","Samlefaktura (EHF)")}
+          {fordel("🤝","Dedikert koordinator")}
+          {fordel("👥","Fleksibelt antall brukere")}
+        </div>
+        <form onSubmit={onSubmit} className="card" style={{maxWidth:desktop?480:"100%",margin:desktop?"0 auto":undefined,padding:desktop?26:18,borderRadius:16,boxShadow:desktop?"0 8px 32px rgba(30,58,47,.08)":undefined}}>
+          <div style={{fontSize:11,fontWeight:600,color:C.navy,marginBottom:14,lineHeight:1.5}}>
+            Legg igjen et par detaljer — ingen forpliktelser. Vi tar en kort prat for å forstå behovene deres.
+          </div>
+          {[
+            ["Navn",navn,setNavn,"text","Ola Nordmann"],
+            ["Organisasjon",organisasjon,setOrganisasjon,"text","F.eks. kommunenavn eller AS"],
+            ["E-post",epost,setEpost,"email","kontakt@organisasjon.no"],
+            ["Telefon",telefon,setTelefon,"tel","900 00 000"],
+          ].map(([label,val,setV,type,ph])=>(
+            <div key={label} style={{marginBottom:12}}>
+              <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>{label}</label>
+              <input className="inp" type={type} placeholder={ph} value={val} onChange={e=>setV(e.target.value)}/>
+            </div>
+          ))}
+          <div style={{marginBottom:16}}>
+            <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:4}}>Antall brukere (ca.)</label>
+            <input className="inp" type="text" inputMode="numeric" placeholder="F.eks. 10" value={antall} onChange={e=>setAntall(e.target.value)}/>
+          </div>
+          <button type="submit" className="btn bp bf" style={{width:"100%",padding:desktop?14:12,borderRadius:12,fontSize:desktop?14:13,fontWeight:600}}>
+            Ta kontakt — vi ringer deg innen 1 virkedag
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
+
 function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   const[merinfo,setMerinfo]=useState(null);
   return(
-      <div className="land-mobile phone fu">
+      <div className="land-kunde-mobile phone fu">
         <div style={{padding:"32px 18px 28px",background:"linear-gradient(160deg,#1E3A2F 0%,#2C5C52 60%,#1E3A2F 100%)"}}>
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:22}}>
             <div style={{width:38,height:38,borderRadius:10,background:"rgba(255,255,255,.14)",border:"1px solid rgba(255,255,255,.24)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>🤲</div>
@@ -1469,6 +1545,7 @@ function LandKundeMobile({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
               </button>
             </div>
           </div>
+          <LandB2BKontaktSeksjon variant="mobile"/>
         </div>
       {merinfo&&(
         <TjenesteMerinfoModal
@@ -1667,6 +1744,8 @@ function LandKundeDesktop({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES})
           </div>
         </div>
 
+        <LandB2BKontaktSeksjon variant="desktop"/>
+
         {/* ── FOOTER STRIP ── */}
         <div style={{background:C.navy,padding:"28px 40px"}}>
           <div style={{maxWidth:1200,margin:"0 auto",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16}}>
@@ -1813,8 +1892,19 @@ function Login({onNav,onMockKundeLogin}){
           <>
             <div style={{background:"#1A2E24",borderRadius:12,padding:"14px 15px",marginBottom:16,color:"white"}}>
               <div style={{fontSize:13,fontWeight:700,marginBottom:10}}>Slik får du tilgang</div>
+              <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:9}}>
+                <div style={{width:22,height:22,borderRadius:"50%",background:"rgba(74,188,158,.25)",border:"1px solid rgba(74,188,158,.4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:"#4ABC9E",flexShrink:0}}>1</div>
+                <div style={{display:"flex",alignItems:"flex-start",gap:7,flex:1}}>
+                  <span style={{fontSize:14,lineHeight:1.4}}>🤝</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,.8)",lineHeight:1.45,marginBottom:6}}>Dere fyller ut kontaktskjema — vi ringer dere innen 1 virkedag</div>
+                    <button type="button" onClick={()=>onNav("landing",undefined,{scrollTo:"b2b-kontakt"})} style={{fontSize:10,color:"#4ABC9E",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit",fontWeight:600,padding:0,display:"inline-flex",alignItems:"center",gap:5}}>
+                      Gå til kontaktskjema <span aria-hidden>↓</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
               {[
-                {n:"1",t:"EiraNova setter opp avtale med din organisasjon",i:"🤝"},
                 {n:"2",t:"Admin registrerer deg som koordinator i systemet",i:"👤"},
                 {n:"3",t:"Du mottar en personlig invitasjon på jobb-e-post",i:"📧"},
                 {n:"4",t:"Klikk lenken og logg inn — tilgang er klar",i:"✅"},
@@ -2570,7 +2660,7 @@ function NurseLogin({onNav,onMockNurseLogin}){
     setFeil("");
   };
   return(
-    <div className="phone fu">
+    <div className="phone nurse-login-shell">
       <div style={{padding:"30px 18px 28px",background:`linear-gradient(160deg,${C.navy},${C.greenDark})`,textAlign:"center",flexShrink:0}}>
         <div style={{fontSize:36,marginBottom:10}}>🩺</div>
         <div className="fr" style={{fontSize:21,fontWeight:600,color:"white",marginBottom:4}}>Logg inn som ansatt</div>
@@ -3061,14 +3151,14 @@ function NurseProfil({onNav,nurses=NURSES,onNurseProfilTilGodkjenning}){
     const apply={bio:bio.trim().slice(0,150),tittel,erfaring:erfaringStr,spesialitet:spesArr,omrade:omrStr||n.omrade};
     const sammendrag=profilEndringSammendrag(n,apply);
     // TODO: Supabase - lagre profilendring, send til godkjenning
-    // TODO: Resend - varsle Lise om ny profilendring til godkjenning
+    // TODO: Resend - varsle om ny profilendring til godkjenning
     onNurseProfilTilGodkjenning({
       nurseIndex:idx,
       nurseName:n.name,
       sammendrag,
       apply:{...apply,språk:n.språk,av:n.av,status:n.status,current:n.current,rating:n.rating,antallOppdrag:n.antallOppdrag,sertifisert:n.sertifisert},
     });
-    toast("Profil sendt til godkjenning. Lise vil gjennomgå endringene dine.","ok");
+    toast("Profil sendt til godkjenning. Vi vil gjennomgå endringene dine.","ok");
   };
   return(
     <div className="phone fu">
@@ -4483,7 +4573,8 @@ const INIT_AVTALEMODELLER=[
 ];
 
 
-function AB2B({setDrawer}){
+function AB2B({setDrawer,onOpprettKoordinator=()=>{}}){
+  const{toast,ToastContainer}=useToast();
   const[expanded,setExpanded]=useState(null);
   const[activeTab,setActiveTab]=useState("kunder"); // kunder | fakturaer | avtalemodeller
   const[avtalemodeller,setAvtalemodeller]=useState(INIT_AVTALEMODELLER);
@@ -4494,8 +4585,39 @@ function AB2B({setDrawer}){
   const prisColor=(p)=>{const m=avtalemodeller.find(a=>a.id===p);return m?{bg:`${m.farge}18`,c:m.farge}:{bg:C.softBg,c:C.soft};};
   const tjenesteNavn=(t)=>({morgensstell:"Morgensstell",praktisk:"Praktisk bistand",ringetilsyn:"Ringetilsyn",besok:"Besøksvenn",transport:"Transport",avlastning:"Avlastning"})[t]??t;
 
+  const kopierTelefon=(raw)=>{
+    const num=String(raw||"").replace(/\s/g,"");
+    const done=()=>toast("Telefonnummer kopiert","ok");
+    if(typeof navigator!=="undefined"&&navigator.clipboard?.writeText){
+      navigator.clipboard.writeText(num).then(done).catch(()=>toast("Kunne ikke kopiere — marker nummeret manuelt","warn"));
+    }else done();
+  };
+
   return(
     <div className="fu">
+      <ToastContainer/>
+      <div className="card" style={{marginBottom:16,padding:"14px 16px",border:`1px solid ${C.border}`,background:"linear-gradient(135deg,#F3FAF7,#E8F5F0)"}}>
+        <div className="fr" style={{fontSize:13,fontWeight:600,color:C.navy,marginBottom:4}}>Nye henvendelser</div>
+        <div style={{fontSize:10,color:C.soft,marginBottom:12,lineHeight:1.5}}>Fra kontaktskjemaet på kunde-landing (mock). Lise varsles på e-post når dette er koblet til Resend.</div>
+        {MOCK_B2B_HENVENDELSER.map(h=>(
+          <div key={h.id} style={{background:"white",borderRadius:10,padding:"12px 13px",marginBottom:10,border:`0.5px solid ${C.border}`}}>
+            <div style={{fontSize:12,fontWeight:600,color:C.navy,marginBottom:6}}>{h.navn} · {h.organisasjon}</div>
+            <div style={{fontSize:10,color:C.soft,lineHeight:1.55,marginBottom:4}}>
+              <span style={{color:C.navyMid}}>{h.epost}</span>
+              {" · "}
+              <span style={{fontWeight:500,color:C.navy}}>{h.telefon}</span>
+              {" · "}
+              <span>ca. {h.antallBrukere} brukere</span>
+            </div>
+            <div style={{fontSize:9,color:C.soft,marginBottom:10}}>Mottatt {h.tidspunkt}</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              <button type="button" onClick={()=>kopierTelefon(h.telefon)} className="btn bp" style={{fontSize:10,padding:"6px 12px",borderRadius:8}}>Ring nå</button>
+              <button type="button" onClick={()=>onOpprettKoordinator(h.epost)} className="btn" style={{fontSize:10,padding:"6px 12px",borderRadius:8,background:"white",color:C.navy,border:`1px solid ${C.border}`,cursor:"pointer",fontFamily:"inherit",fontWeight:600}}>Opprett koordinator</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* KPI strip */}
       <div className="g3" style={{marginBottom:16}}>
         {[["3","B2B-kunder"],["33 240 kr","Utestående"],["6","Tilknyttede brukere"]].map(([v,l])=>(
@@ -5191,7 +5313,7 @@ function VikarPanel(){
   );
 }
 
-function AAnsatte({ventendeProfilendringer=[],onGodkjennNurseProfil,onAvvisNurseProfil}){
+function AAnsatte({ventendeProfilendringer=[],onGodkjennNurseProfil,onAvvisNurseProfil,koordinatorPrefillEmail=null,onKoordinatorPrefillConsumed}){
   const{toast,ToastContainer}=useToast();
   const[staff,setStaff]=useState(INIT_STAFF);
   const[b2bTilganger,setB2bTilganger]=useState(INIT_B2B_TILGANGER);
@@ -5204,6 +5326,14 @@ function AAnsatte({ventendeProfilendringer=[],onGodkjennNurseProfil,onAvvisNurse
   const[revisjonModal,setRevisjonModal]=useState(null);
   const[inviteEmail,setInviteEmail]=useState("");
   const[inviteDomene,setInviteDomene]=useState("");
+
+  useEffect(()=>{
+    if(!koordinatorPrefillEmail)return;
+    setActiveTab("interne");
+    setForm(f=>({...f,name:"",email:koordinatorPrefillEmail,role:"koordinator",scope:"intern"}));
+    setModal("ny");
+    onKoordinatorPrefillConsumed?.();
+  },[koordinatorPrefillEmail,onKoordinatorPrefillConsumed]);
 
   const sync=(id)=>{
     setWs(s=>({...s,[id]:"syncing"}));
@@ -8920,10 +9050,12 @@ function Admin({initPage="dashboard",onLogout,tjenesterCatalog,setTjenesterCatal
   const[open,setOpen]=useState(false);
   const[page,setPage]=useState(initPage);
   const[drawer,setDrawer]=useState(null);
+  const[koordinatorPrefillEmail,setKoordinatorPrefillEmail]=useState(null);
+  const onKoordinatorPrefillConsumed=useCallback(()=>setKoordinatorPrefillEmail(null),[]);
   const pages={
     dashboard:<ADashboard nurses={nurses}/>,oppdrag:<AOppdrag setDrawer={setDrawer} orders={orders} setOrders={setOrders} nurses={nurses}/>,
-    betalinger:<ABetalinger/>,b2b:<AB2B setDrawer={setDrawer}/>,
-    ansatte:<AAnsatte ventendeProfilendringer={ventendeProfil} onGodkjennNurseProfil={onGodkjennNurseProfil} onAvvisNurseProfil={onAvvisNurseProfil}/>,
+    betalinger:<ABetalinger/>,b2b:<AB2B setDrawer={setDrawer} onOpprettKoordinator={email=>{setKoordinatorPrefillEmail(String(email||"").trim());setPage("ansatte");}}/>,
+    ansatte:<AAnsatte ventendeProfilendringer={ventendeProfil} onGodkjennNurseProfil={onGodkjennNurseProfil} onAvvisNurseProfil={onAvvisNurseProfil} koordinatorPrefillEmail={koordinatorPrefillEmail} onKoordinatorPrefillConsumed={onKoordinatorPrefillConsumed}/>,
     okonomi:<OkonomiPage/>,
     tjenester:<TjenesteAdmin tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog}/>,
     innstillinger:<InnstillingerPage/>,
@@ -9148,6 +9280,10 @@ export default function App({
     else if(dest!=="kunde-oppdrag-detalj")setKundeOrdreDetaljId(null);
     setScreen(dest);
     if(dest==="hjem"||dest==="onboarding")setLoggedIn(true);
+    if(dest==="landing"&&o?.scrollTo){
+      const sid=String(o.scrollTo).replace(/^#/,"");
+      setTimeout(()=>document.getElementById(sid)?.scrollIntoView({behavior:"smooth",block:"start"}),200);
+    }
   };
   const nurseNav=(s,meta)=>{
     if(s==="nurse-login"){
@@ -9172,6 +9308,9 @@ export default function App({
     else if(s!=="nurse-innsjekk")setNurseFocusOppdragId(null);
     setScreen(s);
   };
+  /** Sykepleierflyt må alltid bruke nurseNav + mock når innloggingsskjerm vises — ellers hopper nurseNav tilbake til login. */
+  const sykepleierSkjerm=(screen==="glemt-passord"&&glemtPassordNurseMode)||/^nurse-/.test(String(screen||""));
+  const prototypeOnNav=sykepleierSkjerm?nurseNav:activeTab==="kunde"?navTo:setScreen;
   const Comp=SCREENS[screen];
   return(
     <>
@@ -9192,7 +9331,7 @@ export default function App({
         ?<Admin initPage={isAdminPanel?"dashboard":ap} key={ap} onLogout={()=>{if(!isTabLocked){setTab("kunde");setScreen("landing");}}} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} orders={mockOrders} setOrders={setMockOrders} nursesCatalog={nursesCatalog} setNursesCatalog={setNursesCatalog} ventendeProfilendringer={ventendeProfilendringer} setVentendeProfilendringer={setVentendeProfilendringer}/>
         :<div className={`pw${showPrototypeToolbar?"":" pw-app"}`}>
           {Comp
-            ?<Comp onNav={activeTab==="kunde"?navTo:activeTab==="nurse"?nurseNav:setScreen} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={activeTab==="nurse"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="landing"?{nurses:nursesCatalog}:{})} {...(screen==="bestill"?{preselectedType:bestillPreselect,nurses:nursesCatalog}:{})} {...(screen==="kunde-oppdrag-detalj"?{orderId:kundeOrdreDetaljId}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="nurse-profil"?{nurses:nursesCatalog,onNurseProfilTilGodkjenning}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})} {...(screen==="hjem"?{orders:mockOrders}:{})} {...(screen==="mine"||screen==="kunde-oppdrag-detalj"?{orders:mockOrders,onKundeOrderAvbestill}:{})} {...(screen==="admin-panel"?{orders:mockOrders,setOrders:setMockOrders,nursesCatalog,setNursesCatalog,ventendeProfilendringer,setVentendeProfilendringer}:{})}/>
+            ?<Comp onNav={prototypeOnNav} onBack={()=>{}} onMockKundeLogin={activeTab==="kunde"?mockKundeLogin:undefined} onMockNurseLogin={screen==="nurse-login"?mockNurseLogin:undefined} services={customerServices} tjenesterCatalog={tjenesterCatalog} setTjenesterCatalog={setTjenesterCatalog} {...(screen==="landing"?{nurses:nursesCatalog}:{})} {...(screen==="bestill"?{preselectedType:bestillPreselect,nurses:nursesCatalog}:{})} {...(screen==="kunde-oppdrag-detalj"?{orderId:kundeOrdreDetaljId}:{})} {...(screen==="nurse-innsjekk"?{focusOppdragId:nurseFocusOppdragId}:{})} {...(screen==="nurse-profil"?{nurses:nursesCatalog,onNurseProfilTilGodkjenning}:{})} {...(screen==="epost-bekreftelse"?{regEpost:kundeRegEpost}:{})} {...(screen==="glemt-passord"?{nurseMode:glemtPassordNurseMode}:{})} {...(screen==="hjem"?{orders:mockOrders}:{})} {...(screen==="mine"||screen==="kunde-oppdrag-detalj"?{orders:mockOrders,onKundeOrderAvbestill}:{})} {...(screen==="admin-panel"?{orders:mockOrders,setOrders:setMockOrders,nursesCatalog,setNursesCatalog,ventendeProfilendringer,setVentendeProfilendringer}:{})}/>
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
