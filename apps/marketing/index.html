@@ -28,13 +28,13 @@
     overflow-x: hidden;
   }
 
-  /* NAV */
+  /* ── NAV ── */
   nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     display: flex; justify-content: space-between; align-items: center;
-    padding: 1.2rem 3rem;
-    background: rgba(250,248,244,0.92);
-    backdrop-filter: blur(12px);
+    padding: 1.1rem 3rem;
+    background: rgba(250,248,244,0.95);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(107,143,113,0.12);
   }
   .nav-logo {
@@ -54,38 +54,71 @@
     background: var(--sage); color: white;
     border: none; padding: 0.6rem 1.4rem;
     border-radius: 2rem; font-size: 0.82rem;
-    font-weight: 500; letter-spacing: 0.06em;
-    cursor: pointer; transition: all 0.25s;
-    font-family: 'DM Sans', sans-serif;
-    text-transform: uppercase;
+    font-weight: 500; cursor: pointer; transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif; text-transform: uppercase;
   }
-  .nav-cta:hover { background: var(--ink); transform: translateY(-1px); }
+  .nav-cta:hover { background: var(--ink); }
 
-  /* HERO */
+  /* Hamburger */
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--ink); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile menu drawer */
+  .mobile-menu {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    background: rgba(250,248,244,0.98); backdrop-filter: blur(14px);
+    z-index: 199; padding: 1.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(107,143,113,0.15);
+    flex-direction: column; gap: 1rem;
+    transform: translateY(-10px); opacity: 0;
+    transition: all 0.25s ease;
+  }
+  .mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+  .mobile-menu a {
+    font-size: 1rem; font-weight: 500; color: var(--ink-soft);
+    text-decoration: none; padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(107,143,113,0.1);
+    letter-spacing: 0.04em;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu .mob-cta {
+    margin-top: 0.5rem;
+    background: var(--sage); color: white;
+    text-align: center; padding: 0.9rem;
+    border-radius: 2rem; font-weight: 500;
+    border-bottom: none;
+  }
+
+  /* ── HERO ── */
   .hero {
     min-height: 100vh;
     display: grid; grid-template-columns: 1fr 1fr;
     align-items: center;
-    padding: 8rem 5rem 4rem;
+    padding: 8rem 5rem 5rem;
     gap: 4rem;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
   .hero::before {
-    content: '';
-    position: absolute; top: -20%; right: -10%;
+    content: ''; position: absolute; top: -20%; right: -10%;
     width: 700px; height: 700px;
     background: radial-gradient(circle, rgba(168,197,173,0.25) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+    border-radius: 50%; pointer-events: none;
   }
   .hero::after {
-    content: '';
-    position: absolute; bottom: -10%; left: -5%;
+    content: ''; position: absolute; bottom: -10%; left: -5%;
     width: 400px; height: 400px;
     background: radial-gradient(circle, rgba(196,149,106,0.12) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
+    border-radius: 50%; pointer-events: none;
   }
   .hero-text { position: relative; z-index: 2; }
   .hero-badge {
@@ -100,51 +133,43 @@
   }
   .hero h1 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
     font-weight: 300; line-height: 1.12;
     color: var(--ink); margin-bottom: 1.6rem;
     animation: fadeUp 0.8s 0.1s ease both;
   }
   .hero h1 em { font-style: italic; color: var(--sage); }
   .hero-sub {
-    font-size: 1.05rem; line-height: 1.7;
+    font-size: clamp(0.95rem, 2vw, 1.05rem); line-height: 1.75;
     color: var(--ink-soft); font-weight: 300;
     max-width: 480px; margin-bottom: 2.5rem;
     animation: fadeUp 0.8s 0.2s ease both;
   }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
   .btn-primary {
-    background: var(--sage); color: white;
-    border: none; padding: 0.9rem 2rem;
-    border-radius: 3rem; font-size: 0.9rem;
-    font-weight: 500; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.25s; text-decoration: none;
-    display: inline-block;
+    background: var(--sage); color: white; border: none;
+    padding: 0.9rem 2rem; border-radius: 3rem; font-size: 0.9rem;
+    font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s; text-decoration: none; display: inline-block;
   }
   .btn-primary:hover { background: var(--ink); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,30,0.2); }
   .btn-outline {
     background: transparent; color: var(--ink);
     border: 1.5px solid rgba(28,43,30,0.2); padding: 0.9rem 2rem;
-    border-radius: 3rem; font-size: 0.9rem;
-    font-weight: 500; cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.25s; text-decoration: none;
-    display: inline-block;
+    border-radius: 3rem; font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.25s; text-decoration: none; display: inline-block;
   }
   .btn-outline:hover { border-color: var(--sage); color: var(--sage); }
 
-  /* HERO VISUAL */
+  /* Hero card */
   .hero-visual { position: relative; z-index: 2; animation: fadeUp 0.8s 0.15s ease both; }
   .hero-card {
-    background: white; border-radius: 24px;
-    padding: 2.5rem;
-    box-shadow: 0 20px 60px rgba(28,43,30,0.1);
-    position: relative;
+    background: white; border-radius: 24px; padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(28,43,30,0.1); position: relative;
   }
   .hero-card::before {
-    content: '';
-    position: absolute; inset: -2px; border-radius: 26px;
+    content: ''; position: absolute; inset: -2px; border-radius: 26px;
     background: linear-gradient(135deg, rgba(107,143,113,0.3), rgba(196,149,106,0.15), transparent);
     z-index: -1;
   }
@@ -152,54 +177,56 @@
   .card-icon {
     width: 48px; height: 48px; border-radius: 50%;
     background: var(--sage-pale);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
   }
   .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; }
   .card-sub { font-size: 0.8rem; color: var(--stone); }
   .service-list { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 2rem; }
   .service-item {
     display: flex; align-items: center; gap: 0.8rem;
-    padding: 0.75rem 1rem;
-    background: var(--cream); border-radius: 12px;
-    font-size: 0.88rem; color: var(--ink-soft);
-    transition: all 0.2s;
+    padding: 0.75rem 1rem; background: var(--cream); border-radius: 12px;
+    font-size: 0.88rem; color: var(--ink-soft); transition: all 0.2s;
   }
   .service-item:hover { background: var(--sage-pale); color: var(--ink); }
   .service-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sage); flex-shrink: 0; }
-  .card-footer {
-    display: flex; justify-content: space-between;
-    padding-top: 1.5rem; border-top: 1px solid var(--sage-pale);
-  }
+  .card-footer { display: flex; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid var(--sage-pale); }
   .stat { text-align: center; }
   .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--sage); display: block; }
   .stat-label { font-size: 0.72rem; color: var(--stone); text-transform: uppercase; letter-spacing: 0.06em; }
 
-  /* MUNICIPALITIES */
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--stone); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--sage), transparent); animation: scrollPulse 2s infinite; }
+
+  /* ── MUNICIPALITIES ── */
   .municipalities {
-    padding: 3rem 5rem;
+    padding: 2.5rem 5rem;
     border-top: 1px solid rgba(107,143,113,0.12);
     border-bottom: 1px solid rgba(107,143,113,0.12);
   }
   .muni-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone); text-align: center; margin-bottom: 1.5rem; }
-  .muni-logos { display: flex; justify-content: center; gap: 3rem; align-items: center; flex-wrap: wrap; }
+  .muni-logos { display: flex; justify-content: center; gap: 1.5rem; align-items: center; flex-wrap: wrap; }
   .muni-item {
     display: flex; align-items: center; gap: 0.6rem;
-    font-size: 0.9rem; font-weight: 500; color: var(--ink-soft);
+    font-size: 0.88rem; font-weight: 500; color: var(--ink-soft);
     padding: 0.5rem 1.2rem;
     border: 1px solid rgba(107,143,113,0.2); border-radius: 2rem;
     transition: all 0.2s;
   }
   .muni-item:hover { border-color: var(--sage); color: var(--sage); background: var(--sage-pale); }
-  .muni-icon { font-size: 1.1rem; }
 
-  /* SECTION BASE */
+  /* ── SECTION BASE ── */
   section { padding: 6rem 5rem; }
   .section-tag { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm); margin-bottom: 0.8rem; display: block; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; line-height: 1.2; color: var(--ink); margin-bottom: 1.2rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.9rem, 3.5vw, 3rem); font-weight: 300; line-height: 1.2; color: var(--ink); margin-bottom: 1.2rem; }
   .section-body { font-size: 1rem; line-height: 1.75; color: var(--ink-soft); max-width: 540px; font-weight: 300; }
 
-  /* SERVICES */
+  /* ── SERVICES ── */
   .services { background: white; }
   .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
   .services-list { display: flex; flex-direction: column; gap: 1.2rem; margin-top: 2.5rem; }
@@ -218,11 +245,9 @@
   .service-card:hover .service-icon-wrap { background: var(--sage); }
   .service-card-title { font-weight: 500; margin-bottom: 0.3rem; font-size: 0.95rem; }
   .service-card-desc { font-size: 0.85rem; color: var(--stone); line-height: 1.6; }
-
   .visual-panel {
     background: linear-gradient(145deg, var(--sage) 0%, #4A6E50 100%);
-    border-radius: 28px; padding: 3rem;
-    color: white; position: relative; overflow: hidden;
+    border-radius: 28px; padding: 3rem; color: white; position: relative; overflow: hidden;
   }
   .visual-panel::before { content: '🌿'; position: absolute; top: -20px; right: -20px; font-size: 8rem; opacity: 0.08; transform: rotate(20deg); }
   .visual-panel h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: 1rem; }
@@ -232,8 +257,9 @@
   .impact-emoji { font-size: 1.5rem; margin-bottom: 0.3rem; }
   .impact-text { font-size: 0.8rem; opacity: 0.85; line-height: 1.4; }
 
-  /* TEAM */
+  /* ── TEAM ── */
   .team { background: var(--cream); }
+  .team-intro { text-align: center; max-width: 600px; margin: 0 auto; }
   .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 3rem; }
   .team-card {
     background: white; border-radius: 20px; padding: 2rem; text-align: center;
@@ -251,8 +277,9 @@
   .team-role { font-size: 0.82rem; color: var(--sage); font-weight: 500; margin-bottom: 0.8rem; }
   .team-desc { font-size: 0.82rem; color: var(--stone); line-height: 1.6; }
   .team-tag { display: inline-block; margin-top: 0.8rem; background: var(--sage-pale); color: var(--sage); font-size: 0.7rem; padding: 0.25rem 0.7rem; border-radius: 1rem; font-weight: 500; }
+  .team-note { text-align: center; margin-top: 2.5rem; font-size: 0.9rem; color: var(--stone); font-style: italic; }
 
-  /* EFFECT */
+  /* ── EFFECT ── */
   .effect { background: white; }
   .effect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
   .effect-items { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2.5rem; }
@@ -261,12 +288,12 @@
   .effect-item-icon { font-size: 1.4rem; flex-shrink: 0; }
   .effect-item-title { font-weight: 500; margin-bottom: 0.25rem; font-size: 0.95rem; }
   .effect-item-desc { font-size: 0.84rem; color: var(--stone); line-height: 1.6; }
-  .quote-box { background: linear-gradient(135deg, var(--warm-light), var(--sage-pale)); border-radius: 24px; padding: 3rem; position: relative; }
+  .quote-box { background: linear-gradient(135deg, var(--warm-light), var(--sage-pale)); border-radius: 24px; padding: 3rem; }
   .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 6rem; line-height: 0.5; color: var(--sage-light); opacity: 0.5; margin-bottom: 1.5rem; display: block; }
   .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; font-style: italic; line-height: 1.5; color: var(--ink); margin-bottom: 1.5rem; }
   .quote-source { font-size: 0.82rem; color: var(--stone); font-weight: 500; }
 
-  /* SUPPORT */
+  /* ── SUPPORT ── */
   .support { background: var(--cream); }
   .support-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; margin-top: 2.5rem; }
   .support-card { background: white; border-radius: 16px; padding: 1.8rem; border: 1px solid rgba(107,143,113,0.12); display: flex; gap: 1rem; align-items: flex-start; transition: all 0.25s; }
@@ -275,7 +302,7 @@
   .support-title { font-weight: 500; margin-bottom: 0.3rem; font-size: 0.95rem; }
   .support-desc { font-size: 0.83rem; color: var(--stone); line-height: 1.6; }
 
-  /* AMBITION */
+  /* ── AMBITION ── */
   .ambition { background: linear-gradient(160deg, var(--ink) 0%, #2A3E2C 100%); color: white; text-align: center; }
   .ambition .section-tag { color: var(--sage-light); }
   .ambition .section-title { color: white; max-width: 700px; margin: 0 auto 1.5rem; }
@@ -285,10 +312,11 @@
   .ambition-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--sage-light); display: block; }
   .ambition-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; }
 
-  /* CONTACT */
+  /* ── CONTACT ── */
   .contact { background: white; }
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
   .contact-form { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .form-label { font-size: 0.8rem; font-weight: 500; color: var(--ink-soft); letter-spacing: 0.04em; }
   .form-input, .form-select, .form-textarea {
@@ -303,7 +331,7 @@
     background: var(--sage); color: white; border: none;
     padding: 1rem 2rem; border-radius: 3rem; font-size: 0.95rem;
     font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif;
-    transition: all 0.25s; margin-top: 0.5rem; letter-spacing: 0.02em;
+    transition: all 0.25s; margin-top: 0.5rem;
   }
   .form-submit:hover { background: var(--ink); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,30,0.2); }
   .contact-info { padding-top: 2rem; }
@@ -312,39 +340,95 @@
   .contact-details { display: flex; flex-direction: column; gap: 1rem; }
   .contact-detail { display: flex; align-items: center; gap: 0.8rem; font-size: 0.88rem; color: var(--ink-soft); }
   .contact-detail-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--sage-pale); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .pilot-box { margin-top: 2.5rem; padding: 1.5rem; background: var(--sage-pale); border-radius: 16px; }
+  .pilot-box p { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.7; margin: 0; }
 
-  /* FOOTER */
+  /* ── FOOTER ── */
   footer { background: var(--ink); color: rgba(255,255,255,0.5); padding: 2rem 5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; flex-wrap: wrap; gap: 1rem; }
   .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: white; font-weight: 600; }
   .footer-logo span { color: var(--sage-light); }
 
-  /* ANIMATIONS */
+  /* ── ANIMATIONS ── */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scrollPulse { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.6); opacity: 0.4; } }
   .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .fade-in.visible { opacity: 1; transform: translateY(0); }
 
-  /* TOAST */
+  /* ── TOAST ── */
   .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--sage); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-size: 0.9rem; font-weight: 500; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1000; box-shadow: 0 8px 32px rgba(107,143,113,0.4); }
   .toast.show { transform: translateY(0); opacity: 1; }
 
-  /* SCROLL INDICATOR */
-  .scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--stone); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; animation: fadeUp 1s 0.6s ease both; }
-  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--sage), transparent); animation: scrollPulse 2s infinite; }
-  @keyframes scrollPulse { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.6); opacity: 0.4; } }
+  /* ════════════════════════════════
+     RESPONSIVE BREAKPOINTS
+  ════════════════════════════════ */
 
-  /* RESPONSIVE */
+  /* Tablet (600–900px) */
   @media (max-width: 900px) {
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; padding: 7rem 1.5rem 3rem; }
+    .nav-cta { display: none; }
+    .hamburger { display: flex; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 6.5rem 1.5rem 4rem;
+      min-height: auto;
+    }
     .hero-visual { display: none; }
+    .scroll-indicator { display: none; }
+
     section { padding: 4rem 1.5rem; }
-    .services-grid, .effect-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-    .team-grid { grid-template-columns: 1fr 1fr; }
-    .support-grid { grid-template-columns: 1fr; }
     .municipalities { padding: 2rem 1.5rem; }
+
+    .services-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .effect-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+    .team-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+    .support-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+    .ambition-stats { gap: 2.5rem; }
     footer { padding: 1.5rem; flex-direction: column; text-align: center; }
-    .ambition-stats { gap: 2rem; }
+  }
+
+  /* Mobile (under 600px) */
+  @media (max-width: 600px) {
+    .hero { padding: 5.5rem 1.2rem 3rem; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero-sub { font-size: 0.95rem; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-outline { text-align: center; width: 100%; }
+
+    .muni-logos { gap: 0.7rem; }
+    .muni-item { font-size: 0.8rem; padding: 0.4rem 0.9rem; }
+
+    section { padding: 3.5rem 1.2rem; }
+    .municipalities { padding: 1.8rem 1.2rem; }
+
+    .team-grid { grid-template-columns: 1fr; }
+    .support-grid { grid-template-columns: 1fr; }
+
+    .form-row { grid-template-columns: 1fr; }
+
+    .quote-box { padding: 2rem 1.5rem; }
+    .quote-text { font-size: 1.25rem; }
+
+    .visual-panel { padding: 2rem 1.5rem; }
+    .impact-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+    .ambition-stats { gap: 1.5rem; }
+    .ambition-num { font-size: 2.2rem; }
+
+    footer { padding: 1.2rem; font-size: 0.75rem; }
+
+    .toast { left: 1rem; right: 1rem; bottom: 1rem; text-align: center; }
+  }
+
+  /* Very small (under 380px) */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 1.9rem; }
+    .impact-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -360,7 +444,19 @@
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
   <button class="nav-cta" onclick="document.getElementById('kontakt').scrollIntoView({behavior:'smooth'})">Ta kontakt</button>
+  <button class="hamburger" id="hamburger" aria-label="Meny" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#tjenester" onclick="closeMenu()">Tjenester</a>
+  <a href="#team" onclick="closeMenu()">Team</a>
+  <a href="#effekt" onclick="closeMenu()">Samfunnseffekt</a>
+  <a href="#stotte" onclick="closeMenu()">Vi søker støtte</a>
+  <a href="#kontakt" class="mob-cta" onclick="closeMenu()">Ta kontakt →</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -406,9 +502,9 @@
 <div class="municipalities fade-in">
   <div class="muni-label">Fokusområder – kommuner vi retter oss mot</div>
   <div class="muni-logos">
-    <div class="muni-item"><span class="muni-icon">🏙️</span> Moss kommune</div>
-    <div class="muni-item"><span class="muni-icon">🌊</span> Fredrikstad kommune</div>
-    <div class="muni-item"><span class="muni-icon">🌲</span> Sarpsborg kommune</div>
+    <div class="muni-item"><span>🏙️</span> Moss kommune</div>
+    <div class="muni-item"><span>🌊</span> Fredrikstad kommune</div>
+    <div class="muni-item"><span>🌲</span> Sarpsborg kommune</div>
   </div>
 </div>
 
@@ -450,7 +546,7 @@
         </div>
       </div>
     </div>
-    <div class="visual-panel">
+    <div class="visual-panel fade-in">
       <h3>Hvorfor dette<br>gjør en forskjell</h3>
       <p>Kommunal hjemmetjeneste er under press. EiraNova fyller gapet mellom medisinsk behov og hverdagslig støtte – og bygger bro mellom bruker, familie og det offentlige.</p>
       <div class="impact-grid">
@@ -465,7 +561,7 @@
 
 <!-- TEAM -->
 <section class="team" id="team">
-  <div style="text-align:center; max-width:600px; margin:0 auto;">
+  <div class="team-intro">
     <span class="section-tag">Menneskene bak</span>
     <h2 class="section-title">Grunnlagt av sykepleiere.<br>For menneskene vi møter.</h2>
     <p class="section-body" style="margin:0 auto;">Vi er tre autoriserte sykepleiere med erfaring fra hjemmetjenesten. Vi kjenner systemet innenfra – og vi vet hva som mangler.</p>
@@ -493,9 +589,7 @@
       <span class="team-tag">Pårørendestøtte</span>
     </div>
   </div>
-  <div style="text-align:center; margin-top:2.5rem;">
-    <p style="font-size:0.9rem; color:var(--stone); font-style:italic;">Som småbarnsmødre har vi også personlig innsikt i behovet for praktisk støtte – i alle livets faser.</p>
-  </div>
+  <p class="team-note">Som småbarnsmødre har vi også personlig innsikt i behovet for praktisk støtte – i alle livets faser.</p>
 </section>
 
 <!-- SAMFUNNSEFFEKT -->
@@ -510,7 +604,7 @@
           <div class="effect-item-icon">🧡</div>
           <div>
             <div class="effect-item-title">Redusert ensomhet</div>
-            <div class="effect-item-desc">Regelmessig, varm kontakt med et annet menneske har dokumentert positiv effekt på livskvalitet og psykisk helse.</div>
+            <div class="effect-item-desc">Regelmessig, varm kontakt har dokumentert positiv effekt på livskvalitet og psykisk helse.</div>
           </div>
         </div>
         <div class="effect-item">
@@ -524,7 +618,7 @@
           <div class="effect-item-icon">👨‍👩‍👧</div>
           <div>
             <div class="effect-item-title">Avlastning for pårørende</div>
-            <div class="effect-item-desc">Familier som pleier sine nærmeste trenger pauser. Vi gir dem det – med trygghet og profesjonalitet.</div>
+            <div class="effect-item-desc">Familier som pleier sine nærmeste trenger pauser. Vi gir dem det – trygt og profesjonelt.</div>
           </div>
         </div>
         <div class="effect-item">
@@ -602,9 +696,9 @@
     <div>
       <span class="section-tag">Ta kontakt</span>
       <h2 class="section-title">La oss snakke<br>om mulighetene.</h2>
-      <p class="section-body">Er du en kommune, investor, samarbeidspartner eller privatperson? Vi ønsker å høre fra deg. Fyll ut skjemaet, så tar vi kontakt.</p>
+      <p class="section-body">Er du en kommune, investor, samarbeidspartner eller privatperson? Vi ønsker å høre fra deg.</p>
       <div class="contact-form">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div class="form-row">
           <div class="form-group">
             <label class="form-label">Navn</label>
             <input class="form-input" type="text" placeholder="Ditt navn" id="fname">
@@ -644,11 +738,8 @@
         <div class="contact-detail"><div class="contact-detail-icon">🕐</div>Svarer innen 1–2 virkedager</div>
         <div class="contact-detail"><div class="contact-detail-icon">🤝</div>Åpne for kommunale partnerskap</div>
       </div>
-      <div style="margin-top:2.5rem; padding:1.5rem; background:var(--sage-pale); border-radius:16px;">
-        <p style="font-size:0.85rem; color:var(--ink-soft); line-height:1.7; margin:0;">
-          <strong style="color:var(--sage);">Vil du teste tjenesten?</strong><br>
-          Vi er i oppstartsfasen og ønsker pilotbrukere velkommen. Ta kontakt for en uforpliktende samtale.
-        </p>
+      <div class="pilot-box">
+        <p><strong style="color:var(--sage);">Vil du teste tjenesten?</strong><br>Vi er i oppstartsfasen og ønsker pilotbrukere velkommen. Ta kontakt for en uforpliktende samtale.</p>
       </div>
     </div>
   </div>
@@ -661,15 +752,39 @@
   <div>post@eiranova.no</div>
 </footer>
 
-<!-- TOAST -->
 <div class="toast" id="toast">✅ Takk! Vi tar kontakt snart.</div>
 
 <script>
+  // Scroll fade-in
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+  // Hamburger menu
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    // Small delay to let scroll happen after close
+    setTimeout(() => {}, 100);
+  }
+  // Close menu on outside click
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+    }
+  });
+
+  // Form submit
   function handleSubmit() {
     const name = document.getElementById('fname').value.trim();
     const email = document.getElementById('email').value.trim();
@@ -677,18 +792,11 @@
     const toast = document.getElementById('toast');
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3500);
-    document.getElementById('fname').value = '';
-    document.getElementById('org').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('role').value = '';
-    document.getElementById('msg').value = '';
+    ['fname','org','email','role','msg'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
   }
-
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    const hero = document.querySelector('.hero');
-    if (hero) hero.style.backgroundPositionY = (y * 0.3) + 'px';
-  });
 </script>
 </body>
 </html>
