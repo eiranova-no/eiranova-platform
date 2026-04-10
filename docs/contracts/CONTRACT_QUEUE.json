@@ -1,0 +1,1255 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-04-10",
+  "updated_by": "Claude (Technical Architect)",
+  "project": "EiraNova",
+  "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
+  "status_taxonomy": [
+    "merged",
+    "active",
+    "ready",
+    "planned",
+    "blocked",
+    "superseded"
+  ],
+  "contracts": [
+    {
+      "id": "K-INFRA-001",
+      "title": "Monorepo Foundation & GitHub Michelin-standard",
+      "type": "infra",
+      "status": "ready",
+      "spec_path": "docs/contracts/active/K-INFRA-001.md",
+      "goal": "Etabler Michelin-standard GitHub-oppsett identisk med MBV: CONTRACT_QUEUE.json, CONTROL_CENTER.md, DISCOVERIES.json, .cursorrules, docs-struktur, CI-baseline. Blocker for alle etterfølgende kontrakter.",
+      "in_scope": [
+        "docs/contracts/CONTRACT_QUEUE.json (denne filen) commitet til repo",
+        "docs/contracts/DISCOVERIES.json opprettet med åpne punkter",
+        "docs/status/CONTROL_CENTER.md auto-generert via pnpm generate-cc",
+        "docs/status/MERGED_HISTORY.md opprettet (tom)",
+        "docs/PROCESS.md (AI Dev OS v1.1 — EiraNova-versjon)",
+        "docs/ARCHITECTURE.md (monorepo, én JSX-kildefil, tre Next.js-apper)",
+        "docs/CHANGELOG.md med initial versjon",
+        "docs/HOTFIX-PROTOCOL.md",
+        "docs/ENVIRONMENTS.md (dev/preview/prod + Supabase-mapping)",
+        ".cursorrules oppdatert til full Michelin-standard",
+        "GitHub Actions CI: typecheck + build alle tre apper",
+        "scripts/generate-control-center.ts (pnpm generate-cc)",
+        "scripts/queue.ts (pnpm queue — farget output)",
+        "README.md oppdatert med status-seksjon som lenker til CONTROL_CENTER.md",
+        "package.json scripts: generate-cc, queue"
+      ],
+      "out_of_scope": [
+        "Feature-utvikling",
+        "Supabase-migrasjoner",
+        "Domene-kobling (K-ENV-001)"
+      ],
+      "deliverables": [
+        "docs/contracts/CONTRACT_QUEUE.json",
+        "docs/contracts/DISCOVERIES.json",
+        "docs/contracts/active/.gitkeep",
+        "docs/status/CONTROL_CENTER.md",
+        "docs/status/MERGED_HISTORY.md",
+        "docs/PROCESS.md",
+        "docs/ARCHITECTURE.md",
+        "docs/CHANGELOG.md",
+        "docs/HOTFIX-PROTOCOL.md",
+        "docs/ENVIRONMENTS.md",
+        ".cursorrules",
+        ".github/workflows/ci.yml",
+        "scripts/generate-control-center.ts",
+        "scripts/queue.ts",
+        "README.md"
+      ],
+      "acceptance_criteria": [
+        "pnpm generate-cc produserer korrekt CONTROL_CENTER.md",
+        "pnpm queue viser farget output med riktig status",
+        "CI grønt på alle tre apper (typecheck + build)",
+        "Kun én kontrakt har status active",
+        "docs-struktur identisk med MBV Michelin-standard",
+        "README lenker til CONTROL_CENTER.md"
+      ],
+      "user_stories": [],
+      "dependencies": [],
+      "risks": [
+        "CI-oppsett for tre separate Next.js-apper i monorepo krever nøye path-konfigurasjon"
+      ]
+    },
+    {
+      "id": "K-ENV-001",
+      "title": "Vercel Domenekonfiguration & Miljø-badges",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-ENV-001.md",
+      "goal": "Koble egne domener i Vercel og innfør miljø-badge-system identisk med MBV: Production uten badge, Preview/Feature med ENV+DATA-badge. NEXT_PUBLIC_APP_ENV og NEXT_PUBLIC_DATA_SOURCE env-var.",
+      "in_scope": [
+        "app.eiranova.no → eiranova-web i Vercel (Settings → Domains → Add)",
+        "nurse.eiranova.no → eiranova-nurse i Vercel",
+        "admin.eiranova.no → eiranova-admin i Vercel",
+        "DNS-verifisering i Domeneshop (allerede konfigurert for Vercel)",
+        "NEXT_PUBLIC_APP_ENV i alle tre Vercel-prosjekter (production/preview/development)",
+        "NEXT_PUBLIC_DATA_SOURCE env-var",
+        "EnvBadge-komponent i prototype (badge vises i preview + feature, ikke i production)",
+        "env-guard.ts: kaster tydelig feil ved feil miljø-konfigurasjon",
+        ".env.example oppdatert for alle tre apper",
+        "docs/ENVIRONMENTS.md oppdatert med domener og env-var-tabell"
+      ],
+      "out_of_scope": [
+        "SSL-konfigurasjon (Vercel håndterer automatisk)",
+        "Endring av Supabase-konfigurasjon",
+        "Feature-utvikling"
+      ],
+      "deliverables": [
+        "Domenekonfiguration verifisert i Vercel (alle tre)",
+        "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx (EnvBadge tillagt)",
+        "apps/kunde-app/.env.example",
+        "apps/nurse-app/.env.example",
+        "apps/admin-app/.env.example",
+        "docs/ENVIRONMENTS.md"
+      ],
+      "acceptance_criteria": [
+        "app.eiranova.no laster kunde-appen uten feil",
+        "nurse.eiranova.no laster nurse-appen uten feil",
+        "admin.eiranova.no laster admin-appen uten feil",
+        "Badge vises i Preview og Feature-branches: 'ENV: Preview | DATA: Supabase-Dev'",
+        "Ingen badge i Production",
+        "pnpm build grønt for alle tre apper"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-INFRA-001"
+      ],
+      "risks": [
+        "DNS-propagering kan ta opptil 24 timer",
+        "Domeneshop krever korrekte CNAME/A-records for Vercel"
+      ]
+    },
+    {
+      "id": "K-DB-001",
+      "title": "Supabase Databaseskjema — Komplett Fundament",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-DB-001.md",
+      "goal": "Etabler komplett databaseskjema: alle enums, 20+ tabeller, RLS-policies, hjelpe-funksjoner, seed-data. Alt er spesifisert i CURSOR-INSTRUKSJON.md §T-001 til §T-006. Frankfurt (eu-central-1) er non-negotiable.",
+      "in_scope": [
+        "Alle enums: user_role, oppdrag_status, betaling_metode, betaling_status, mva_risiko, b2b_type, faktura_type, severity_level, samtykke_type, sykepleier_status, kreditering_status, kreditering_metode, b2b_faktura_status, varsel_kanal",
+        "Kjernetabeller: users, parorende, tjeneste_kategorier, tjenester, sykepleiere, oppdrag, oppdrag_endringer (append-only), vurderinger",
+        "Betalings- og B2B-tabeller: b2b_organisasjoner, b2b_brukere, avtalemodeller, betalinger, krediteringer, b2b_fakturaer, kreditnota-sekvens",
+        "Personal- og lønnstabeller: ansatte, vikarer, bemanningsbyraaer, lonnkjoringer, skattetrekk",
+        "Konfigurasjon: dekningsomraader, varslingsmottakere, innstillinger (singleton), push_varsler, system_events",
+        "GDPR-tabeller: samtykker (ingen DELETE), push_subscriptions",
+        "RLS-policies på alle tabeller inkl. current_user_role() hjelpe-funksjon",
+        "handle_new_user() trigger",
+        "Seed-data: 9 tjenester med mva_risiko, 7 dekningsområder, 4 avtalemodeller"
+      ],
+      "out_of_scope": [
+        "Journal-tabeller (K-JOURNAL-001 — krever NHN-sertifisering)",
+        "Tripletex webhook-tabeller (K-TRIPLETEX-001)"
+      ],
+      "deliverables": [
+        "supabase/migrations/001_core.sql",
+        "supabase/migrations/002_payments_b2b.sql",
+        "supabase/migrations/003_personal.sql",
+        "supabase/migrations/004_config_gdpr.sql",
+        "supabase/migrations/005_rls.sql",
+        "supabase/migrations/006_seed.sql",
+        "docs/DATA_MODEL.md"
+      ],
+      "acceptance_criteria": [
+        "supabase db push kjører uten feil",
+        "Alle 20+ tabeller eksisterer i eiranova-dev (eu-central-1)",
+        "RLS aktivert og verifisert på alle tabeller",
+        "Seed-data: 9 tjenester, 7 dekningsområder, 4 avtalemodeller",
+        "current_user_role() hjelpe-funksjon returnerer riktig rolle",
+        "samtykker-tabellen har ingen DELETE policy",
+        "oppdrag_endringer har kun INSERT policy (append-only)"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-INFRA-001"
+      ],
+      "risks": [
+        "oppdrag-tabell refererer b2b_organisasjoner — b2b-tabellen må opprettes før oppdrag",
+        "HPR-nummer må valideres mot Helsedirektoratets register — stub i Fase 0"
+      ]
+    },
+    {
+      "id": "K-AUTH-001",
+      "title": "Auth — Kunder (e-post + passord)",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-AUTH-001.md",
+      "goal": "Koble prototype-auth til ekte Supabase Auth for kunder. E-post + passord med glemt passord via reset-e-post. INGEN Magic Link. INGEN Google OAuth for kunder. Komplett ny konto-flyt: push-tillatelse → samtykke → onboarding → hjem.",
+      "in_scope": [
+        "signUp() + signInWithPassword() + resetPasswordForEmail()",
+        "Glemt passord: reset-link via Resend → nytt passord-skjerm",
+        "Ny konto-flyt: push-tillatelse → samtykke (gdpr + vilkaar påkrevd, markedsfoering valgfri) → onboarding → hjem",
+        "Samtykker lagres i samtykker-tabellen med type + versjon + timestamp",
+        "navTo-guard: PROTECTED = ['bestill','mine','kunde-profil','oppdrag-i-gang','chat-kunde']",
+        "auth/callback route i kunde-app",
+        "Middleware-beskyttelse av beskyttede ruter",
+        "Resend konfigurert for reset-e-post"
+      ],
+      "out_of_scope": [
+        "BankID (blokkert av org.nr. — K-AUTH-002b)",
+        "Vipps Login (blokkert av org.nr.)",
+        "Google OAuth for kunder (eksplisitt forbudt)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/api/auth/callback/route.ts",
+        "apps/kunde-app/middleware.ts",
+        "apps/kunde-app/lib/auth/kunde.ts",
+        "apps/kunde-app/lib/auth/samtykke.ts"
+      ],
+      "acceptance_criteria": [
+        "e-post + passord registrering lagrer i auth.users",
+        "e-post + passord innlogging fungerer",
+        "Feil passord gir tydelig norsk feilmelding (ikke 'bruker finnes ikke')",
+        "Glemt passord → reset-e-post sendes via Resend",
+        "Reset-link setter nytt passord korrekt",
+        "Ny konto → push-tillatelse → samtykke → onboarding → hjem",
+        "Eksisterende konto → direkte til hjem",
+        "Samtykker lagres i samtykker-tabellen",
+        "Uinnlogget → login-gate med pending-nav",
+        "INGEN Magic Link i UI",
+        "INGEN Google OAuth-knapp for kunder"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DB-001"
+      ],
+      "risks": [
+        "Magic Link er eksplisitt forbudt — verifiser at den er deaktivert i Supabase Auth-innstillinger"
+      ]
+    },
+    {
+      "id": "K-AUTH-002",
+      "title": "Auth — Sykepleiere (Google Workspace @eiranova.no)",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-AUTH-002.md",
+      "goal": "Google Workspace (@eiranova.no) innlogging for sykepleiere med hd-begrensning og rollebasert ruting. B2B koordinator og bruker/pasient via Bedriftskunde-flyt.",
+      "in_scope": [
+        "signInWithOAuth({ provider: 'google', queryParams: { hd: 'eiranova.no' } })",
+        "hd-begrensning: kun @eiranova.no-kontoer aksepteres",
+        "Rollebasert ruting etter callback: sykepleier → nurse/hjem, koordinator → admin/dashboard",
+        "B2B koordinator: Login → Bedriftskunde → Har fått invitasjon → Google/epost → b2b-dashboard",
+        "B2B bruker/pasient: Login → Bedriftskunde → Jeg er bruker → epost+passord → b2b-bruker",
+        "Nurse-app: auth/callback + middleware",
+        "Admin-app: auth/callback + middleware"
+      ],
+      "out_of_scope": [
+        "BankID (blokkert — K-AUTH-002b)"
+      ],
+      "deliverables": [
+        "apps/nurse-app/app/api/auth/callback/route.ts",
+        "apps/nurse-app/middleware.ts",
+        "apps/admin-app/app/api/auth/callback/route.ts",
+        "apps/admin-app/middleware.ts",
+        "apps/kunde-app/lib/auth/b2b.ts"
+      ],
+      "acceptance_criteria": [
+        "@eiranova.no Google kontopicker vises automatisk (hd-begrensning)",
+        "Ikke-@eiranova.no-konto gir tydelig feilmelding",
+        "Sykepleier med én rolle → direkte til nurse-hjem",
+        "Koordinator-rolle → velg-rolle-skjerm",
+        "B2B koordinator → b2b-dashboard etter validering",
+        "B2B bruker/pasient → b2b-bruker etter aktivering"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-AUTH-001"
+      ],
+      "risks": [
+        "Google Workspace OAuth krever korrekt callback-URL i Google Cloud Console",
+        "hd-parameter begrenser til @eiranova.no — verifiser at Google Workspace er satt opp"
+      ]
+    },
+    {
+      "id": "K-GDPR-001",
+      "title": "GDPR — Samtykke, Soft-delete & Dataportabilitet",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-GDPR-001.md",
+      "goal": "GDPR art. 17 (sletting) og art. 20 (portabilitet). Samtykke-historikk er aldri-slett. Soft-delete med anonymisering dag+1. JSON-eksport til e-post. Spesielt strengt for helsedata.",
+      "in_scope": [
+        "Profil → Personvern-fane: vis samtykker, trekk markedsføring, slett konto, last ned data",
+        "Soft-delete: deleted_at settes, anonymisering kjøres dag+1 (Supabase cron eller Edge Function)",
+        "Anonymisering: email → deleted-UUID@anon.eiranova.no, navn/adresse/telefon → NULL",
+        "Regnskapsdata beholdes anonymisert (5-år lovkrav), helsedata (oppdragsnotater) slettes etter 3 år",
+        "JSON-eksport: brukerprofil + oppdrag + betalinger + samtykker sendes til e-post via Resend",
+        "Personvernerklæring og vilkår statiske sider i kunde-appen",
+        "samtykker-tabellen: ingen DELETE policy (GDPR-krav)"
+      ],
+      "out_of_scope": [
+        "Journal-data GDPR (K-JOURNAL-001 — egne krav)",
+        "Samtykke for markedsføring (delvis dekket av K-AUTH-001)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/profil/personvern/page.tsx",
+        "apps/kunde-app/app/(public)/personvernerklæring/page.tsx",
+        "apps/kunde-app/app/(public)/vilkaar/page.tsx",
+        "apps/kunde-app/app/api/gdpr/export/route.ts",
+        "apps/kunde-app/app/api/gdpr/delete/route.ts",
+        "supabase/migrations/007_gdpr_anonymize_cron.sql",
+        "docs/compliance/GDPR-OVERSIKT.md"
+      ],
+      "acceptance_criteria": [
+        "Kunde kan eksportere sine data (JSON til e-post innen 72 timer)",
+        "Slett konto setter deleted_at, cron anonymiserer dag+1",
+        "Anonymiserte brukere kan ikke logge inn",
+        "Samtykke logges med type + versjon + timestamp",
+        "Ingen DELETE-operasjon på samtykker-tabellen er mulig via RLS",
+        "Ingen helsedata utenfor eu-central-1"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-AUTH-001"
+      ],
+      "risks": [
+        "Helsedata har strengere krav enn GDPR alene — verifiser mot pasientrettighetsloven",
+        "Statsforvalteren-registrering kan stille tilleggskrav til datahåndtering"
+      ]
+    },
+    {
+      "id": "K-ROUTE-001",
+      "title": "navTo-guard & Routing Fundament",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-ROUTE-001.md",
+      "goal": "Beskytt bestill, mine, kunde-profil, oppdrag-i-gang, chat-kunde med navTo-guard. LoginGate-komponent for uinnloggede. Grunnlag for all videre navigasjon.",
+      "in_scope": [
+        "PROTECTED-array med alle beskyttede skjerm-IDer",
+        "navTo() med innloggingssjekk og pendingNav-state",
+        "LoginGate-komponent: vis login-skjerm med returadresse",
+        "IngenInvitasjonInfo for B2B-ruter uten invitasjon",
+        "Redirect etter innlogging til pendingNav"
+      ],
+      "out_of_scope": [
+        "Ekte Next.js App Router-struktur (prototype er tab-navigasjon)",
+        "Deep linking fra push-varsler (K-PUSH-001)"
+      ],
+      "deliverables": [
+        "Oppdatert prototype: navTo-guard komplett",
+        "Oppdatert prototype: LoginGate-komponent med pendingNav"
+      ],
+      "acceptance_criteria": [
+        "Uinnlogget → klikk bestill → login-gate → etter login → bestill",
+        "Alle 5 PROTECTED-skjermer sjekker innlogging",
+        "B2B-ruter uten invitasjon → IngenInvitasjonInfo"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-AUTH-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-TJENESTE-001",
+      "title": "Tjenestekatalog — Backend & Admin CRUD",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-TJENESTE-001.md",
+      "goal": "Erstatt mock INIT_TJENESTER_CATALOG med ekte Supabase-data. Admin kan opprette, redigere og aktivere/deaktivere tjenester med kategori, instruksjon og MVA-risiko. Kundesiden og prototype-state kobles til Supabase.",
+      "in_scope": [
+        "Admin: CRUD for tjeneste_kategorier (ikon, farge)",
+        "Admin: CRUD for tjenester (navn, pris, b2b_pris, varighet, mva_sats, mva_risiko, instruksjon med versjonering, inkluderer/inkluderer_ikke)",
+        "mva_risiko 'høy' vises med ⚠️-advarsel i admin",
+        "Deaktivering skjuler tjeneste fra kunder men påvirker ikke eksisterende bestillinger",
+        "Kundesiden: useTjenester-hook henter fra Supabase",
+        "Seed-verifisering: 9 tjenester fra K-DB-001 seed er tilgjengelige"
+      ],
+      "out_of_scope": [
+        "Prisberegning per kunde",
+        "Tjenestetildeling til sykepleiere (K-NURSE-001)"
+      ],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/tjenester/page.tsx",
+        "apps/admin-app/components/tjenester/TjenesteForm.tsx",
+        "apps/admin-app/components/tjenester/KategoriForm.tsx",
+        "apps/kunde-app/hooks/useTjenester.ts",
+        "apps/kunde-app/lib/tjenester/queries.ts"
+      ],
+      "acceptance_criteria": [
+        "Admin kan opprette, redigere og deaktivere tjeneste",
+        "mva_risiko 'høy' vises med ⚠️-advarsel",
+        "Instruksjon har versjon-felt — nytt nummer ved endring",
+        "Kundesiden viser kun aktive tjenester fra Supabase",
+        "Kategori kan ikke slettes om den har aktive tjenester",
+        "pnpm build grønt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-ROUTE-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-BESTILL-001",
+      "title": "Bestillingsflyt — 4 Steg Komplett",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-BESTILL-001.md",
+      "goal": "Komplett 4-stegs bestillingsflyt lagret i Supabase. Steg: velg tjeneste → dato/tid → velg sykepleier (valgfri) → bekreft. Kanselleringsregler vises. Pårørende-støtte. Bestilling → status 'pending'.",
+      "in_scope": [
+        "Steg 1: tjenesteliste med kategorier og filter",
+        "Steg 2: dato/tid med kalender og tilgjengelige slots",
+        "Steg 3: velg sykepleier (opsjonelt — 'Velg for meg' som standard)",
+        "Steg 4: bekreft og betal — vis kanselleringsvilkår basert på tidspunkt",
+        "Pårørende-støtte: velg 'Meg selv' eller 'Min pårørende'",
+        "oppdrag lagres med status 'pending'",
+        "Resend: bekreftelsesmail til kunde ved bestilling",
+        "Avbestillingsflyt fra Mine bestillinger"
+      ],
+      "out_of_scope": [
+        "Betaling (K-BETALING-001)",
+        "Automatisk sykepleier-matching (K-OPPDRAG-001)",
+        "Realtime-oppdatering (K-REALTIME-001)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/bestill/page.tsx",
+        "apps/kunde-app/lib/bestillinger/queries.ts",
+        "apps/kunde-app/hooks/useNyBestilling.ts",
+        "apps/kunde-app/app/api/bestillinger/route.ts"
+      ],
+      "acceptance_criteria": [
+        "Alle 4 steg fungerer med back-navigasjon",
+        "Pårørende-valg lagres i oppdrag.parorende_id",
+        "Kanselleringsregler vises korrekt basert på tidspunkt (>24h, 12-24h, <4h)",
+        "oppdrag lagres i Supabase med status 'pending'",
+        "Bekreftelsesmail sendes via Resend",
+        "pnpm build grønt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-TJENESTE-001",
+        "K-GDPR-001"
+      ],
+      "risks": [
+        "Tidsstyring og sykepleier-tilgjengelighet er kompleks — start med enkel dato-velger uten slot-logikk"
+      ]
+    },
+    {
+      "id": "K-BETALING-001",
+      "title": "Betaling — Vipps ePayment",
+      "type": "feature",
+      "status": "blocked",
+      "spec_path": "docs/contracts/active/K-BETALING-001.md",
+      "goal": "Vipps ePayment API for B2C. Initier betaling, webhook-håndtering, refusjon ved kansellering. Oppgjør D+1 til EiraNova DNB-konto.",
+      "in_scope": [
+        "createVippsPayment() — server-only",
+        "Vipps redirect-flyt",
+        "Webhook: epayments.payment.captured.v1 + epayments.payment.failed.v1",
+        "Webhook oppdaterer betalinger.status + oppdrag.status",
+        "refundVippsPayment() for kanselleringer",
+        "Kvittering via Resend ved vellykket betaling"
+      ],
+      "out_of_scope": [
+        "Stripe (K-BETALING-002)",
+        "B2B EHF-faktura (K-B2B-003)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/api/betaling/vipps/route.ts",
+        "apps/kunde-app/app/api/betaling/vipps/webhook/route.ts",
+        "apps/kunde-app/lib/betaling/vipps.ts"
+      ],
+      "acceptance_criteria": [
+        "Vipps redirect fungerer i test-miljø (Vipps Merchant Test)",
+        "Webhook oppdaterer betalinger.status og oppdrag.status",
+        "Kvittering sendes via Resend",
+        "Test-refusjon kjører korrekt",
+        "server-only guard på alle Vipps-funksjoner"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-BESTILL-001"
+      ],
+      "risks": [],
+      "blocked_reason": "Venter på EiraNova AS org.nr. (Lise). Vipps krever organisasjonsnummer for produksjonsintegrasjon. Kan settes opp i Vipps Merchant Test uten org.nr."
+    },
+    {
+      "id": "K-BETALING-002",
+      "title": "Betaling — Stripe Kortbetaling",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Stripe Checkout som kortbetalingsalternativ til Vipps. PaymentIntent, Stripe Elements, webhook, refund. Payouts T+2 til DNB.",
+      "in_scope": [
+        "Stripe Checkout eller Payment Element",
+        "PaymentIntent + webhook for bekreftelse",
+        "Refund-funksjon for kanselleringer"
+      ],
+      "out_of_scope": [
+        "Stripe Billing (abonnementer)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/api/betaling/stripe/route.ts",
+        "apps/kunde-app/app/api/betaling/stripe/webhook/route.ts",
+        "apps/kunde-app/lib/betaling/stripe.ts"
+      ],
+      "acceptance_criteria": [
+        "Stripe Checkout åpnes og betaling gjennomføres i testmodus",
+        "Webhook oppdaterer betalinger.status",
+        "Refund fungerer i testmodus"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-BETALING-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-OPPDRAG-001",
+      "title": "Oppdragshåndtering — Status-maskin & Vaktvakt",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-OPPDRAG-001.md",
+      "goal": "Komplett status-maskin for oppdrag (pending → bekreftet → tildelt → aktiv → fullfort/avlyst). Sykepleier-tildeling med spesialitet/omradefilter. Vaktvakt-automatisering. Endringslogg (oppdrag_endringer append-only).",
+      "in_scope": [
+        "Status-maskin: pending → bekreftet → tildelt → aktiv → fullfort / avlyst",
+        "Admin: tildel sykepleier (filter på spesialiteter + omrade)",
+        "Sykepleier: bekreft/avslå tildelt oppdrag",
+        "Vaktvakt-flyt (Edge Function): Steg 1 push til aktive vikarer → Steg 2 (30min) Manpower API → Steg 3 (90min) push til admin",
+        "Alle statusendringer skrives til oppdrag_endringer (aldri slett)",
+        "Kanselleringsflyt med refusjon-trigger til K-BETALING-001"
+      ],
+      "out_of_scope": [
+        "AI-basert matching",
+        "Reisetidoptimering",
+        "Lønnsgenerering (K-LONN-001)"
+      ],
+      "deliverables": [
+        "apps/admin-app/components/oppdrag/TildelSykepleier.tsx",
+        "apps/nurse-app/app/(protected)/oppdrag/[id]/page.tsx",
+        "supabase/functions/vaktvakt/index.ts",
+        "supabase/migrations/007_vaktvakt_trigger.sql"
+      ],
+      "acceptance_criteria": [
+        "Alle 6 status-overganger fungerer og logges til oppdrag_endringer",
+        "Admin kan filtrere sykepleiere på spesialitet og område",
+        "Sykepleier kan bekrefte og avslå tildelt oppdrag",
+        "Vaktvakt-Edge Function triggres ved udekket oppdrag",
+        "Kansellering trigger refusjon via K-BETALING-001"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-BESTILL-001"
+      ],
+      "risks": [
+        "Manpower Health API (api.manpower.no/health/v2) — avklar tilgjengelighet og autentisering"
+      ]
+    },
+    {
+      "id": "K-NURSE-001",
+      "title": "Sykepleier-app — Innsjekk, Rapport & Profil",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-NURSE-001.md",
+      "goal": "Komplett sykepleier-app koblet til Supabase: oppdragsliste, innsjekk/utsjekk med GPS-validering (< 200m), rapport med checklist + mood-score, NurseProfil med tilgjengelighet og nurse-onboarding 4 steg.",
+      "in_scope": [
+        "Nurse-onboarding 4 steg lagres i Supabase (HPR, tittel, spesialiteter, dekningsområde)",
+        "HPR-nummer format-validering",
+        "Oppdragsliste: henter tildelte oppdrag fra Supabase",
+        "Innsjekk GPS-validering: haversine < 200 meter fra oppdragsadresse",
+        "Utsjekk: tidsstempel + rapport",
+        "Rapport: checklist + mood-score lagres",
+        "NurseProfil: vis og rediger spesialiteter, dekningsområde, tilgjengelighet",
+        "Admin godkjenningskø for profilendringer"
+      ],
+      "out_of_scope": [
+        "HPR-validering mot Helsedirektoratets live API (eget steg)",
+        "CV-opplasting"
+      ],
+      "deliverables": [
+        "apps/nurse-app/app/(protected)/onboarding/page.tsx",
+        "apps/nurse-app/app/(protected)/innsjekk/[oppdragId]/page.tsx",
+        "apps/nurse-app/app/(protected)/profil/rediger/page.tsx",
+        "apps/admin-app/components/ansatte/ProfilGodkjenning.tsx",
+        "supabase/migrations/008_nurse_profile.sql"
+      ],
+      "acceptance_criteria": [
+        "Nurse-onboarding lagres i sykepleiere-tabellen",
+        "HPR-format valideres (8 siffer)",
+        "GPS-innsjekk godkjennes < 200m, avvises > 200m",
+        "Rapport lagres med tidsstempel",
+        "Admin kan godkjenne og avslå profilendringer",
+        "Godkjente endringer reflekteres i sykepleiere-tabellen"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-OPPDRAG-001"
+      ],
+      "risks": [
+        "GPS-tilgang krever brukerens tillatelse — håndter avvisning elegant"
+      ]
+    },
+    {
+      "id": "K-PROFIL-001",
+      "title": "Kundeprofil — 3 Faner (Konto, Pårørende, Personvern)",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-PROFIL-001.md",
+      "goal": "KundeProfil med 3 faner kobles til Supabase: Konto (navn, adresse, telefon), Pårørende (CRUD for parorende-tabellen), Personvern (GDPR-rettigheter fra K-GDPR-001).",
+      "in_scope": [
+        "Konto-fane: rediger og lagre navn, adresse, postnr, poststed, telefon",
+        "Pårørende-fane: CRUD for parorende-tabellen (navn, adresse, relasjon)",
+        "Personvern-fane: vis samtykker, trekk markedsføring, slett konto, last ned data",
+        "E-postbytte med verifikasjonsmail via Resend",
+        "Passordendring via supabase.auth.updateUser()"
+      ],
+      "out_of_scope": [
+        "Avatar/profilbilde",
+        "Notifikasjonsinnstillinger (K-PUSH-001)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/profil/page.tsx",
+        "apps/kunde-app/app/api/profil/route.ts"
+      ],
+      "acceptance_criteria": [
+        "Alle profilfelt lagres i users-tabellen",
+        "Pårørende CRUD fungerer mot parorende-tabellen",
+        "E-postbytte sender verifikasjonsmail",
+        "Passordendring fungerer",
+        "Personvern-fane viser aktive samtykker med tidspunkt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-OPPDRAG-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-REALTIME-001",
+      "title": "Oppdrag-i-gang — Realtime Tre Faser",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-REALTIME-001.md",
+      "goal": "OppdragIGang-skjerm med tre faser: på_vei → her → ferdig. Supabase Realtime-kanal per oppdrag. Sykepleiers GPS-posisjon vises for kunde. Statusendringer trigger live update på alle roller.",
+      "in_scope": [
+        "Supabase Realtime på oppdrag-tabellen",
+        "OppdragIGang-skjerm: tre faser med live statusoppdatering",
+        "Sykepleier sender GPS-posisjon ved innsjekk",
+        "Admin: ny bestilling trigger toast + oppdatert liste",
+        "Sykepleier: oppdragsstatus oppdateres live",
+        "Reconnect-logikk ved mistet forbindelse"
+      ],
+      "out_of_scope": [
+        "Chat (K-CHAT-001)",
+        "Push-varsler (K-PUSH-001)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/oppdrag-i-gang/page.tsx",
+        "apps/kunde-app/hooks/useRealtimeOppdrag.ts",
+        "apps/nurse-app/hooks/useRealtimeStatus.ts",
+        "apps/admin-app/hooks/useRealtimeAdmin.ts"
+      ],
+      "acceptance_criteria": [
+        "Statusendring vises < 2 sekunder uten refresh for alle roller",
+        "OppdragIGang-skjerm går gjennom alle tre faser",
+        "Reconnect fungerer etter nettbrudd",
+        "pnpm build grønt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-PROFIL-001"
+      ],
+      "risks": [
+        "Supabase Realtime har konneksjonslimiter — verifiser kapasitet for forventet brukerantall"
+      ]
+    },
+    {
+      "id": "K-B2B-001",
+      "title": "B2B — Organisasjoner & Koordinator-onboarding",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-B2B-001.md",
+      "goal": "B2B-modul (bak b2b_aktiv-toggle). Kontaktskjema på landingssiden. Admin ser henvendelser, ringer og oppretter koordinator. Koordinator-onboarding 3 steg. Invitasjonssystem for B2B-brukere.",
+      "in_scope": [
+        "b2b_aktiv-toggle kontrollerer all B2B-synlighet globalt",
+        "Kontaktskjema: firmanavn, org.nr, kontaktperson, telefon, epost, antall ansatte",
+        "b2b_henvendelser-tabell (eller via kontaktskjema → admin-panel)",
+        "Admin: Nye henvendelser-seksjon — ring nå (kopier telefon) + opprett koordinator",
+        "Koordinator-onboarding 3 steg lagres i b2b_organisasjoner + users",
+        "Inviter B2B-bruker: epost → aktiveringslink",
+        "B2B bruker-aktivering 2 steg",
+        "Resend: bekreftelsesmail til henvendende bedrift + invitasjon til bruker"
+      ],
+      "out_of_scope": [
+        "EHF-faktura (K-B2B-003)",
+        "Multi-lokasjon (K-B2B-004)",
+        "Avtalemodeller CRUD (K-B2B-004)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(public)/b2b/page.tsx",
+        "apps/admin-app/components/b2b/HenvendelserPanel.tsx",
+        "apps/admin-app/app/(protected)/b2b/page.tsx",
+        "apps/kunde-app/app/(protected)/b2b/dashboard/page.tsx",
+        "apps/kunde-app/app/(protected)/b2b/bruker/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "b2b_aktiv=false skjuler alle B2B-flater for kunder og i admin",
+        "Kontaktskjema lagrer henvendelse og sender bekreftelsesmail",
+        "Admin ser henvendelse og kan opprette koordinator",
+        "Koordinator onboardes og lagres i Supabase",
+        "B2B-bruker aktiveres via invitasjonslink"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-REALTIME-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-B2B-002",
+      "title": "B2B — Koordinator-app & Bestilling på Vegne Av",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "B2BDashboard for koordinator. Bestill på vegne av bruker/pasient. B2BBruker-app med ukeplan og historikk.",
+      "in_scope": [
+        "Koordinator-dashboard: oversikt brukere + aktive oppdrag",
+        "Bestill på vegne av bruker (velg bruker fra b2b_brukere)",
+        "B2BBruker-app: ukeplan, historikk, info",
+        "Koordinator kan deaktivere/reaktivere brukere"
+      ],
+      "out_of_scope": [
+        "Rollehierarki innad i bedrift",
+        "SSO"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/b2b/koordinator/page.tsx",
+        "apps/kunde-app/app/(protected)/b2b/bruker/ukeplan/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "Koordinator kan se alle brukere og bestille på vegne av dem",
+        "B2B-bruker ser ukeplan og historikk"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-B2B-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-B2B-003",
+      "title": "B2B — EHF/PEPPOL-faktura via Tripletex",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-B2B-003.md",
+      "goal": "Samlefaktura til kommuner og bedrifter via Tripletex EHF/PEPPOL. Kreditnota (KN-YYYY-NNN). Purring (maks 70 kr per inkassoloven §2). Månedlig kjøring.",
+      "in_scope": [
+        "Tripletex createInvoice() med EHF/PEPPOL paymentTypeId=3",
+        "KID-generering for betalingsidentifikasjon",
+        "Kreditnota via next_kreditnota_nr() sekvens",
+        "Purring: maks 70 kr, registrert i b2b_fakturaer",
+        "Admin: fakturaoversikt med status (usendt/sendt/forfalt/betalt)",
+        "Koordinator: fakturahistorikk"
+      ],
+      "out_of_scope": [
+        "Automatisk PEPPOL-sending (manuell steg i Tripletex initialt)"
+      ],
+      "deliverables": [
+        "apps/admin-app/lib/tripletex/invoice.ts",
+        "apps/admin-app/app/(protected)/b2b/faktura/page.tsx",
+        "apps/kunde-app/app/(protected)/b2b/fakturaer/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "Tripletex createInvoice() oppretter faktura med riktig MVA (0%)",
+        "Kreditnota nummereres KN-YYYY-NNN",
+        "Koordinator kan se fakturahistorikk",
+        "Purring er maks 70 kr",
+        "server-only guard på Tripletex-kall"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-B2B-002"
+      ],
+      "risks": [
+        "Tripletex API krever EiraNova AS org.nr. og Tripletex-konto — blocker hvis org.nr. ikke foreligger"
+      ]
+    },
+    {
+      "id": "K-B2B-004",
+      "title": "B2B — Avtalemodeller & Multi-lokasjon",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "CRUD for avtalemodeller (system_modell kan ikke slettes). B2B-kunder med flere lokasjoner. Rapport per lokasjon.",
+      "in_scope": [
+        "Avtalemodeller CRUD: rammeavtale, per_oppdrag, maanedlig, egendefinert",
+        "system_modell=TRUE kan ikke slettes",
+        "Multi-lokasjon: lokasjons-tabell under bedrift",
+        "Bestillinger og rapporter per lokasjon"
+      ],
+      "out_of_scope": [
+        "Geografisk optimering"
+      ],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/b2b/avtaler/page.tsx",
+        "supabase/migrations/009_b2b_lokasjoner.sql"
+      ],
+      "acceptance_criteria": [
+        "Avtalemodeller CRUD fungerer",
+        "system_modell kan ikke slettes",
+        "Bedrift kan ha flere lokasjoner med egne rapporter"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-B2B-003"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-TRIPLETEX-001",
+      "title": "Tripletex — Regnskapsintegrasjon Master",
+      "type": "feature",
+      "status": "blocked",
+      "spec_path": "docs/contracts/active/K-TRIPLETEX-001.md",
+      "goal": "Tripletex som master for ALT økonomi: bankfeed, bilagseksport, B2C-bilag, B2B EHF, lønn, A-melding. Erstatter Fiken.",
+      "in_scope": [
+        "Tripletex API-klient (server-only)",
+        "Bankfeed-synkronisering",
+        "Automatisk bilag for B2C-betalinger",
+        "A-melding-eksport",
+        "TRIPLETEX_TOKEN + TRIPLETEX_EMPLOYEE_ID + TRIPLETEX_COMPANY_ID env-var"
+      ],
+      "out_of_scope": [
+        "EHF-faktura (allerede i K-B2B-003)"
+      ],
+      "deliverables": [
+        "apps/admin-app/lib/tripletex/client.ts",
+        "apps/admin-app/lib/tripletex/bankfeed.ts",
+        "apps/admin-app/lib/tripletex/bilag.ts"
+      ],
+      "acceptance_criteria": [
+        "Tripletex API-klient autentiserer",
+        "B2C-bilag opprettes automatisk ved betalt oppdrag",
+        "A-melding eksport fungerer"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-B2B-004"
+      ],
+      "risks": [],
+      "blocked_reason": "Venter på EiraNova AS org.nr. for Tripletex-kontraktregistrering. Tripletex krever organisasjonsnummer."
+    },
+    {
+      "id": "K-LONN-001",
+      "title": "Lønnskjøring, A-melding & Skattetrekk",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-LONN-001.md",
+      "goal": "Lønnskjøring via Tripletex Lønn. Skattetrekk til sperret DNB-konto (lovpålagt). A-melding til Altinn. Lønnsslipp til ansatt. Satser: AG-avgift 14,1%, feriepenger 12%, OTP 2%.",
+      "in_scope": [
+        "Lønnskjøring per periode: brutto, netto, skattetrekk, AG-avgift, feriepenger",
+        "Skattetrekk-innbetaling til sperret DNB-konto med KID",
+        "A-melding via Tripletex",
+        "Lønnsslipp PDF til ansatt via Resend",
+        "Lønnskjøring-historikk i admin"
+      ],
+      "out_of_scope": [
+        "Automatisk lønnskjøring (manuell godkjenning)"
+      ],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/lonn/page.tsx",
+        "apps/admin-app/lib/lonn/beregning.ts",
+        "apps/admin-app/lib/lonn/attest.ts"
+      ],
+      "acceptance_criteria": [
+        "Korrekt lønnsgrunnlag beregnes med riktige satser",
+        "Skattetrekk-innbetaling genereres med KID",
+        "Lønnsslipp PDF genereres og sendes via Resend",
+        "Lønnskjøring-historikk vises i admin"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-TRIPLETEX-001"
+      ],
+      "risks": [
+        "Skattetrekkskonto DNB: Lise håndterer opprettelse av sperret konto"
+      ]
+    },
+    {
+      "id": "K-VIKAR-001",
+      "title": "Tilkallingsvikarer & Vikarregister",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-VIKAR-001.md",
+      "goal": "Vikarregister med HPR-verifisering. Tilgjengelighetssetting. Automatisk push ved udekket oppdrag (vaktvakt-flyt fra K-OPPDRAG-001). Enkeltpersonforetak-støtte.",
+      "in_scope": [
+        "Vikar-type i sykepleiere: er_vikar + enk + kontonr",
+        "Godkjenningsflyt for vikarer (admin)",
+        "Tilgjengelighet: sett aktiv/inaktiv per dag",
+        "vaktvakt-flyt bruker vikarer-tabellen for push-varsling",
+        "Manpower Health API-stub (api.manpower.no/health/v2)"
+      ],
+      "out_of_scope": [
+        "Ekstern vikarportal",
+        "Timeregistrering for vikarer (del av K-LONN-001)"
+      ],
+      "deliverables": [
+        "apps/admin-app/components/vikarer/VikarForm.tsx",
+        "apps/admin-app/app/(protected)/vikarer/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "Vikar kan onboardes og godkjennes",
+        "Vikar dukker opp i vaktvakt-flyt",
+        "Tilgjengelighet kan settes per dag"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-LONN-001"
+      ],
+      "risks": [
+        "Manpower Health API: avklar tilgjengelighet og autentisering med Manpower"
+      ]
+    },
+    {
+      "id": "K-KREDITERING-001",
+      "title": "Kreditering — B2C Refusjon & B2B Kreditnota",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-KREDITERING-001.md",
+      "goal": "To inngangspunkter: fra oppdrag (forhåndsutfylt) og fri kreditering. B2C: Vipps/Stripe refusjon. B2B: kreditnota (KN-YYYY-NNN) via Tripletex + PEPPOL. Alle krediteringer append-only.",
+      "in_scope": [
+        "Admin: kreditering fra oppdrag (forhåndsutfylt beløp og årsak)",
+        "Admin: fri kreditering med kunde/org + beløp + årsak",
+        "B2C: trigger refundVippsPayment() eller Stripe refund()",
+        "B2B: opprett kreditnota via Tripletex",
+        "krediteringer-tabellen: append-only, kan ikke slettes",
+        "Kreditnota-nummerering: KN-YYYY-NNN via next_kreditnota_nr()"
+      ],
+      "out_of_scope": [],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/kreditering/page.tsx",
+        "apps/admin-app/lib/kreditering/index.ts"
+      ],
+      "acceptance_criteria": [
+        "B2C-refusjon trigger Vipps/Stripe-refusjon",
+        "B2B-kreditnota opprettes i Tripletex",
+        "Kreditnota-nummer følger KN-YYYY-NNN format",
+        "Alle krediteringer logges og kan ikke slettes"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-VIKAR-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-PUSH-001",
+      "title": "Push-varsler — Web Push & FCM",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-PUSH-001.md",
+      "goal": "Web Push via Supabase Edge Functions. Prototype har PushTillatelse-skjerm — kobles til ekte VAPID-nøkler. Viktige varsel-typer: Vipps på vei, 24t-påminnelse, bekreftelse, statusendring.",
+      "in_scope": [
+        "VAPID-nøkler og push_subscriptions-tabell",
+        "PushTillatelse-skjerm kobles til ekte Web Push API",
+        "Service Worker for push-mottak og bakgrunnssynk",
+        "Push ved: ny bestilling (admin+sykepleier), statusendring (kunde), 24t-påminnelse",
+        "Notifikasjonsinnstillinger i profil (av/på per type)",
+        "Supabase Edge Function for push-utsending"
+      ],
+      "out_of_scope": [
+        "iOS Safari PWA Push (krever native app / iOS 16.4+)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/public/sw.js",
+        "apps/nurse-app/public/sw.js",
+        "apps/kunde-app/app/api/push/subscribe/route.ts",
+        "supabase/functions/send-push/index.ts"
+      ],
+      "acceptance_criteria": [
+        "Bruker kan aktivere push-varsler via PushTillatelse-skjerm",
+        "Push-varsel mottas ved ny bestilling",
+        "Push-varsel mottas ved statusendring",
+        "Service Worker håndterer push i bakgrunnen",
+        "Kan deaktivere varsler i profil"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-KREDITERING-001"
+      ],
+      "risks": [
+        "iOS Safari støtter Web Push fra iOS 16.4 — eldre iOS får ikke varsler"
+      ]
+    },
+    {
+      "id": "K-CHAT-001",
+      "title": "Chat — Kunde ↔ Sykepleier via Supabase Realtime",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-CHAT-001.md",
+      "goal": "Chat mellom kunde og tildelt sykepleier. Supabase Realtime. Lesekvittering. Push-varsel ved ny melding. Prototype har Chat-fane — kobles til ekte data.",
+      "in_scope": [
+        "meldinger-tabell med RLS (kun kunde og tildelt sykepleier kan lese)",
+        "Realtime-subscription per oppdrag-tråd",
+        "Lesekvittering (lest/ulest-indikator)",
+        "Push-varsel ved ny melding (via K-PUSH-001)",
+        "Admin: lesetilgang til alle samtaler",
+        "Arkivering av chat ved fullført oppdrag"
+      ],
+      "out_of_scope": [
+        "Fil-opplasting i chat",
+        "Videosamtale"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/(protected)/chat/page.tsx",
+        "apps/nurse-app/app/(protected)/chat/page.tsx",
+        "apps/kunde-app/hooks/useChat.ts",
+        "supabase/migrations/010_meldinger.sql"
+      ],
+      "acceptance_criteria": [
+        "Kunde og sykepleier kan chatte i realtime",
+        "Uleste meldinger vises med indikator",
+        "Push-varsel sendes ved ny melding",
+        "Admin har lesetilgang",
+        "pnpm build grønt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-PUSH-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-VURDERING-001",
+      "title": "Vurderingssystem — Stjerner & Aggregering",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "1-5 stjerner + kommentar etter fullført oppdrag. Aggregering (snittskår) på sykepleier-profil. Admin-oversikt.",
+      "in_scope": [
+        "Vurdering-modal trigger ved oppdrag → fullfort-status",
+        "vurderinger-tabellen: én per oppdrag (UNIQUE constraint)",
+        "Sykepleier-profil: snittskår og antall vurderinger",
+        "Admin: vurderingsoversikt med filter"
+      ],
+      "out_of_scope": [
+        "Offentlig visning av vurderinger på landingssiden"
+      ],
+      "deliverables": [
+        "apps/kunde-app/components/VurderingModal.tsx",
+        "apps/admin-app/app/(protected)/vurderinger/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "Vurdering-modal vises etter fullført oppdrag",
+        "Vurdering lagres med UNIQUE constraint per oppdrag",
+        "Snittskår beregnes og vises på sykepleier-profil"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-CHAT-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-RAPPORT-001",
+      "title": "KPI-rapportering — Admin Dashboard",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Månedlig statusrapport til eierne: inntekt, oppdrag per uke, sykepleier-utnyttelsesgrad, aktive kunder. Filtrer per periode. Eksport til CSV.",
+      "in_scope": [
+        "Admin KPI-kort: aktive kunder, oppdrag, inntekt, utnyttelsesgrad",
+        "Graf: oppdrag per uke (siste 12 uker)",
+        "Filtrer per periode",
+        "Eksport til CSV"
+      ],
+      "out_of_scope": [
+        "BI-integrasjon",
+        "Prognose"
+      ],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/oversikt/page.tsx",
+        "apps/admin-app/lib/kpi/queries.ts"
+      ],
+      "acceptance_criteria": [
+        "KPI-kort viser ekte data fra Supabase",
+        "Graf rendres korrekt",
+        "Eksport til CSV fungerer"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-VURDERING-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-DEKN-001",
+      "title": "Dekningsområde — Admin & Kart",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Admin CRUD for dekningsomraader-tabellen. Åpningstider per område. Synlighet i bestillingsflyt. Kart-visualisering (opsjonelt).",
+      "in_scope": [
+        "Admin CRUD: kommuner/bydeler, aktiv/inaktiv, apner/stenges",
+        "Bestillingsflyt sjekker om valgt poststed er i aktivt dekningsområde",
+        "Landingsside: liste over dekningsområder"
+      ],
+      "out_of_scope": [
+        "Interaktivt kart (Leaflet/Mapbox) — opsjonelt tillegg",
+        "Automatisk sykepleier-routing"
+      ],
+      "deliverables": [
+        "apps/admin-app/app/(protected)/innstillinger/dekningsomraader/page.tsx",
+        "apps/kunde-app/components/DekningssjekK.tsx"
+      ],
+      "acceptance_criteria": [
+        "Admin kan opprette og deaktivere dekningsområder",
+        "Bestillingsflyt viser feil hvis adresse ikke er i dekningsområde",
+        "Landingsside viser aktive områder"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-RAPPORT-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-JOURNAL-EXT-001",
+      "title": "Ekstern Journal — Redirect til EPJ-system",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-JOURNAL-EXT-001.md",
+      "goal": "Åpne journal-knapp i sykepleier-appen som leser journal_aktiv + journal_modus fra innstillinger. modus='ekstern' → åpner journal_ekstern_url i ny fane. Gjør EiraNova journalcompliant fra dag én ved stell.",
+      "in_scope": [
+        "getJournalConfig() henter innstillinger fra Supabase",
+        "'Åpne journal'-knapp i NurseHjem og NurseInnsjekk",
+        "Knapp vises KUN når journal_aktiv=true",
+        "modus='ekstern' → window.open(journal_ekstern_url, '_blank')",
+        "Toast: 'Åpner {journal_ekstern_navn} i nettleseren'",
+        "Admin: konfigurer journal_ekstern_url og journal_ekstern_navn i innstillinger",
+        "modus='intern' → navTo('nurse-journal') stub (K-JOURNAL-001)"
+      ],
+      "out_of_scope": [
+        "Intern journal (K-JOURNAL-001)",
+        "Datasynkronisering med EPJ-system"
+      ],
+      "deliverables": [
+        "apps/nurse-app/components/JournalKnapp.tsx",
+        "apps/admin-app/app/(protected)/innstillinger/journal/page.tsx",
+        "apps/nurse-app/lib/journal.ts"
+      ],
+      "acceptance_criteria": [
+        "Knapp vises KUN når journal_aktiv=true i innstillinger",
+        "modus='ekstern' åpner riktig URL i ny fane",
+        "Toast med EPJ-system navn vises",
+        "Admin kan konfigurere URL og navn",
+        "pnpm build grønt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DEKN-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-JOURNAL-001",
+      "title": "Intern Journal — NHN-sertifisert Pasientjournal",
+      "type": "feature",
+      "status": "blocked",
+      "spec_path": "docs/contracts/active/K-JOURNAL-001.md",
+      "goal": "Intern pasientjournal direkte i EiraNova (journal_modus='intern'). NurseJournal, JournalInnsyn, JournalSperring, JournalAdmin. Audit-log (journal_tilganger append-only). Krever NHN-sertifisering.",
+      "in_scope": [
+        "pasientjournaler-tabell med RLS (sykepleier kun egne oppdrag)",
+        "journalnotater-tabell",
+        "journal_tilganger-tabell (append-only — lovpålagt audit-log)",
+        "NurseJournal-skjerm: skriv notat per besøk",
+        "JournalInnsyn: pasient ser sin journal",
+        "JournalSperring: pasient kan sperre journal",
+        "JournalAdmin: tilgangsstyring og audit-log",
+        "Journalansvarlig-rolle (HPR-nummer påkrevd)"
+      ],
+      "out_of_scope": [
+        "Ekstern journal (K-JOURNAL-EXT-001)"
+      ],
+      "deliverables": [
+        "supabase/migrations/011_journal.sql",
+        "apps/nurse-app/app/(protected)/journal/page.tsx",
+        "apps/kunde-app/app/(protected)/journal-innsyn/page.tsx",
+        "apps/admin-app/app/(protected)/journal/page.tsx"
+      ],
+      "acceptance_criteria": [
+        "NHN-sertifisering fullført",
+        "Journalansvarlig utpekt med HPR-nummer",
+        "Alle journaloppføringer har revisjonslogg i journal_tilganger",
+        "Pasient kan sperre sin journal",
+        "journal_tilganger er rent append-only"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-JOURNAL-EXT-001"
+      ],
+      "risks": [],
+      "blocked_reason": "Starter IKKE uten: (1) godkjent helserettsadvokat, (2) Statsforvalteren registrering bekreftet, (3) NHN-sertifisering fullført, (4) journalansvarlig utpekt. Alle fire er lovpåkrevt."
+    },
+    {
+      "id": "K-TILSYN-001",
+      "title": "Internkontroll & Statsforvalter-rapportering",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Internkontroll per forskrift om ledelse og kvalitetsforbedring. AvviksMelding i sykepleier-appen. Kompetansedokumentasjon per sykepleier. Eksport til Statsforvalter.",
+      "in_scope": [
+        "avvik-tabell og AvviksMelding-skjerm i nurse-app",
+        "Kompetansedokumentasjon per sykepleier",
+        "InternKontroll-panel i admin",
+        "Statsforvalter-rapport (PDF-eksport)"
+      ],
+      "out_of_scope": [
+        "Automatisk innsending til Statsforvalteren"
+      ],
+      "deliverables": [
+        "apps/nurse-app/app/(protected)/avvik/page.tsx",
+        "apps/admin-app/app/(protected)/tilsyn/page.tsx",
+        "supabase/migrations/012_avvik.sql"
+      ],
+      "acceptance_criteria": [
+        "Sykepleier kan registrere avvik",
+        "Admin ser alle avvik",
+        "Kompetansedokumentasjon eksporteres",
+        "Statsforvalter-rapport genereres"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-JOURNAL-EXT-001"
+      ],
+      "risks": [
+        "Statsforvalterens krav kan variere — avvent svar på brev sendt av Lise"
+      ]
+    },
+    {
+      "id": "K-KPR-001",
+      "title": "KPR — Kommunalt Pasient- og Brukerregister",
+      "type": "feature",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Rapportering til Kommunalt Pasient- og Brukerregister (KPR). Format og API avklares med Helsedirektoratet (brev sendt — avventer svar).",
+      "in_scope": [
+        "KPR-rapport-generator i korrekt format",
+        "Manuell eller automatisk innsending",
+        "Revisjonslogg for KPR-innsendinger"
+      ],
+      "out_of_scope": [
+        "IPLOS-rapportering"
+      ],
+      "deliverables": [
+        "apps/admin-app/lib/kpr/rapport.ts",
+        "apps/admin-app/app/(protected)/kpr/page.tsx",
+        "docs/compliance/KPR-FORMAT.md"
+      ],
+      "acceptance_criteria": [
+        "KPR-rapport genereres i korrekt format",
+        "Innsending logges med tidsstempel",
+        "docs/compliance/KPR-FORMAT.md er oppdatert med avklart format"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-TILSYN-001"
+      ],
+      "risks": [
+        "KPR-rapporteringsformat — avventer offisielt svar fra Helsedirektoratet"
+      ]
+    }
+  ]
+}
