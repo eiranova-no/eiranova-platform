@@ -6,12 +6,10 @@
 
 | Miljø | Branch | Vercel URL | Supabase | Badge |
 |-------|--------|------------|----------|-------|
-| **Production** | `main` | app.eiranova.no ¹ | eiranova-prod | Ingen |
+| **Production** | `main` | app.eiranova.no | eiranova-prod | Ingen |
 | **Preview** | `dev` | eiranova-platform.vercel.app | eiranova-dev | `ENV: Preview \| DATA: Supabase-Dev` |
 | **Feature** | `feature/*` | Per-PR URL | eiranova-dev | `ENV: Feature \| DATA: Supabase-Dev` |
 | **Local** | — | localhost:3001/3002/3003 | eiranova-dev | `ENV: Local \| DATA: Supabase-Dev` |
-
-¹ nurse.eiranova.no og admin.eiranova.no — ikke koblet ennå (K-ENV-001)
 
 ---
 

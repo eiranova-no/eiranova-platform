@@ -7,6 +7,11 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- Domener koblet i Vercel: app/nurse/admin.eiranova.no
+- EnvBadge-komponent i prototype (vises i preview/local, ikke production)
+- .env.example opprettet for alle tre apper
+
 ### Added
 - CONTRACT_QUEUE.json med alle 31 kontrakter (Fase 0–5)
 - DISCOVERIES.json med åpne tekniske og juridiske punkter
