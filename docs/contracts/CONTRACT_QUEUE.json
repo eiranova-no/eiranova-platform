@@ -17,7 +17,8 @@
       "id": "K-INFRA-001",
       "title": "Monorepo Foundation & GitHub Michelin-standard",
       "type": "infra",
-      "status": "ready",
+      "status": "merged",
+      "merged_at": "2026-04-10",
       "spec_path": "docs/contracts/active/K-INFRA-001.md",
       "goal": "Etabler Michelin-standard GitHub-oppsett identisk med MBV: CONTRACT_QUEUE.json, CONTROL_CENTER.md, DISCOVERIES.json, .cursorrules, docs-struktur, CI-baseline. Blocker for alle etterfølgende kontrakter.",
       "in_scope": [
@@ -77,7 +78,7 @@
       "id": "K-ENV-001",
       "title": "Vercel Domenekonfiguration & Miljø-badges",
       "type": "governance",
-      "status": "planned",
+      "status": "ready",
       "spec_path": "docs/contracts/active/K-ENV-001.md",
       "goal": "Koble egne domener i Vercel og innfør miljø-badge-system identisk med MBV: Production uten badge, Preview/Feature med ENV+DATA-badge. NEXT_PUBLIC_APP_ENV og NEXT_PUBLIC_DATA_SOURCE env-var.",
       "in_scope": [
