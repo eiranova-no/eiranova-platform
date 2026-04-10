@@ -1,0 +1,72 @@
+{
+  "version": "1.0",
+  "description": "Append-only discovery log. Cursor appender, Claude/Richard triagerer.",
+  "discoveries": [
+    {
+      "id": "D-001",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "medium",
+      "title": "Prototype-fil er eneste kildefil — ingen TypeScript ennå",
+      "description": "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx er 7826+ linjer JSX uten TypeScript. Alle tre apper importerer denne filen. Bevisst arkitekturvalg for prototype-fasen, men teknisk gjeld som adresseres ved overgang til Fase 1 (K-ROUTE-001 og videre).",
+      "status": "triaged",
+      "action": "Akseptert for Fase 0. K-ROUTE-001 etablerer ekte Next.js App Router-struktur med TypeScript."
+    },
+    {
+      "id": "D-002",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "high",
+      "title": "Domener ikke koblet til Vercel",
+      "description": "app.eiranova.no, nurse.eiranova.no og admin.eiranova.no er ikke koblet til Vercel-prosjektene. Kun vercel.app-URLene er live. DNS-konfigurasjon i Domeneshop er allerede satt opp for Vercel (per handoff).",
+      "status": "open",
+      "action": "Løses i K-ENV-001. Richard kobler domener manuelt i Vercel-dashboard (Settings → Domains → Add)."
+    },
+    {
+      "id": "D-003",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "critical",
+      "title": "EiraNova AS mangler org.nr. — blocker for Vipps, BankID og Tripletex",
+      "description": "EiraNova AS er ikke formelt registrert med organisasjonsnummer. Dette blokkerer K-BETALING-001 (Vipps), K-AUTH-002b (BankID) og K-TRIPLETEX-001. Alle tre er markert blocked i CONTRACT_QUEUE.json.",
+      "status": "open",
+      "action": "Lise registrerer EiraNova AS i Brønnøysundregistrene. Blokkerte kontrakter kan ikke starte før org.nr. foreligger."
+    },
+    {
+      "id": "D-004",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "critical",
+      "title": "K-JOURNAL-001 blokkert av fire juridiske krav",
+      "description": "Intern pasientjournal (journal_modus='intern') er lovpålagt og krever: (1) helserettsadvokat-godkjenning, (2) Statsforvalteren-registrering, (3) NHN-sertifisering, (4) utpekt journalansvarlig med HPR-nummer. Ingen av disse er fullført.",
+      "status": "open",
+      "action": "K-JOURNAL-EXT-001 (ekstern redirect) kan starte uavhengig og er planlagt. K-JOURNAL-001 forblir blocked til alle fire krav er oppfylt. Richard starter NHN-sertifiseringsprosessen."
+    },
+    {
+      "id": "D-005",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "high",
+      "title": "MVA-risiko: Besøksvenn og Trilleturer er mva_risiko 'høy'",
+      "description": "To tjenester i INIT_TJENESTER_CATALOG er markert mva_risiko: 'høy' i prototypen: Besøksvenn & sosial støtte og Trilleturer & avlastning. MVA-sats (0% vs. 25%) er ikke avklart med revisor. Feil MVA-håndtering er en lovpålagt risiko.",
+      "status": "open",
+      "action": "Lise/Richard avklarer MVA-status med revisor FØR lansering. mva_sats er konfigurerbar per tjeneste i Admin → Tjenester (K-TJENESTE-001)."
+    },
+    {
+      "id": "D-006",
+      "contract": "K-INFRA-001",
+      "date": "2026-04-10",
+      "reported_by": "Claude (Technical Architect)",
+      "severity": "medium",
+      "title": "UX-testing av onboarding-flyter ikke fullført",
+      "description": "Per handoff 8. april 2026 er følgende ikke testet ferdig: nurse-onboarding 4 steg (isNy=true), kunde-registrering full flyt, B2B-flyter, admin-modaler (ReactDOM.createPortal), journal-toggle og B2B-toggle.",
+      "status": "open",
+      "action": "Richard fullfører UX-testing på localhost (porter 3001-3003) før K-DB-001 starter. Se testsjekkliste i EIRANOVA_HANDOFF.md seksjon 4."
+    }
+  ]
+}

@@ -1,45 +1,289 @@
-# EiraNova Cursor Rules v5.0
+# EiraNova Cursor Rules v6.0 — Michelin-standard
+# Basert på MBV-standard + EiraNova-spesifikke krav
+# Last updated: 2026-04-10
 
-Prosjekt: EiraNova — hjemmehelsetjeneste-plattform
-Eier: EiraNova AS / X Group AS / CoreX-rammeverket
-GitHub: github.com/eiranova-no/eiranova-platform
-Supabase: eu-central-1 Frankfurt (OBLIGATORISK — GDPR helsedata)
+---
 
-Auth:
-  Kunder: e-post + passord + Glemt passord. INGEN Magic Link. INGEN Google OAuth for kunder.
-  Sykepleiere: KUN Google Workspace @eiranova.no
-  B2B koordinator: e-post + passord (invitasjon påkrevd)
-  B2B bruker: e-post + passord (aktivert av koordinator)
+## Prosjektkontekst
 
-Regnskap: Tripletex (master — EHF/PEPPOL, lønn, A-melding). IKKE Fiken.
+Produkt:      EiraNova — Norsk hjemmehelsetjeneste-plattform
+Eier (kode):  Richard Møller (gitRichard / moller.richard@gmail.com)
+Eier (virks): Lise Andersen (post@eiranova.no) — daglig leder
+GitHub:       github.com/eiranova-no/eiranova-platform
+Supabase:     eu-central-1 Frankfurt (OBLIGATORISK — GDPR helsedata)
+Vercel:       eiranova-web, eiranova-nurse, eiranova-admin
 
-MVA: 0% for helsetjenester (mval §3-2)
-     ⚠️ Besøksvenn + Trilleturer = mva_risiko 'høy'
+---
 
-Design:
-  Fonter: Fraunces (display) + DM Sans (body) — IKKE Lato
-  Primær: #4A7C6F · Sidebar: #1E3A2F · Aktiv: #4ABC9E
-  Breakpoint: 700px
+## Kilde til sannhet
 
-Modul-toggles (innstillinger-tabellen):
-  b2b_aktiv:         false (default)
-  journal_aktiv:     false (default)
-  journal_modus:     'ekstern' (default)
+Eneste gyldige kilde = ~/code/eiranova-platform/ (repo-root)
+Prototype     = apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
+Kontrakter    = docs/contracts/CONTRACT_QUEUE.json
+Status        = docs/status/CONTROL_CENTER.md (auto-generert — aldri manuelt rediger)
 
-Regler:
-  1. Les kontraktfil FØR kode
-  2. En kontrakt om gangen
-  3. Norsk UI, engelsk kode
-  4. server-only for alle API-kall
-  5. RLS på alle Supabase-tabeller
-  6. Soft-delete på users
-  7. samtykker-tabellen: aldri slett
-  8. oppdrag_endringer: append-only
-  9. journal_tilganger: append-only
- 10. K-JOURNAL-001 starter IKKE uten NHN-sertifisering
+Aldri les fra nedlastede kopier, outputs/-mapper eller eksterne filer.
+Alle endringer skjer i repo-et via Read/StrReplace/Grep på faktiske stier.
 
-Kilde til sannhet:
-  Eneste gyldige kilde = ~/code/eiranova-platform/ (repo-root)
-  Prototype = apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
-  Aldri les fra nedlastede kopier, outputs/-mapper eller eksterne filer.
-  Alle endringer skjer i repo-et via Read/StrReplace/Grep på faktiske stier.
+---
+
+## Core Principles
+
+### 1. Feature Branch Workflow (ALLTID)
+- ALDRI commit direkte til `main` eller `dev`
+- ALT arbeid skjer på feature-branches
+- Feature-branches merger KUN til `dev` — ALDRI til `main`
+- `main` er production — kun touched ved bevisst release (dev → main)
+- Branching-modell: `main ← dev ← feature/K-XXX-navn`
+- Opprett PR for alle endringer
+- Vercel lager preview for alle PR / push til `dev`
+
+### 2. AI-First Architecture
+- **Claude** = Technical Architect (strategi, kontrakter, review)
+- **Cursor** = Implementation tool (kode, doc-koordinering)
+- Alle større beslutninger dokumentert i kontrakter
+- Governance via CoreX Framework
+
+### 3. Norsk-First
+- All UI-tekst på norsk (bokmål)
+- Norsk formatering (mellomrom tusenskilletegn, komma desimal)
+- Norsk terminologi og branding
+- Engelsk for kode og kommentarer
+
+### 4. Spec-fil beskyttelse (SPEC-PROTECTION)
+- Før du skriver til noen fil under `docs/contracts/active/`, les filen først.
+- Hvis filen inneholder mer enn placeholder-tekst, ALDRI overskriv uten eksplisitt
+  bekreftelse fra Richard. Spør alltid: "Denne spec-filen har allerede innhold.
+  Vil du erstatte, eller legge til?"
+
+---
+
+## Auth-regler (LÅST — aldri endre)
+
+Kunder:          e-post + passord + Glemt passord (reset via e-post)
+                 INGEN Magic Link. INGEN Google OAuth for kunder.
+
+Sykepleiere:     Google Workspace @eiranova.no (KUN @eiranova.no)
+                 hd-parameter: { hd: 'eiranova.no' }
+                 e-post + passord som reserve (skjult bak "Problemer med Google?")
+
+B2B koordinator: Google Workspace / e-post + passord (invitasjon påkrevd)
+B2B bruker:      e-post + passord (aktivert av koordinator)
+
+---
+
+## Database-regler (LÅST — aldri bryt)
+
+1. Supabase eu-central-1 Frankfurt — ALLTID
+2. RLS på ALLE tabeller uten unntak
+3. Soft-delete på users — aldri hard-slett persondata
+4. samtykker — ingen DELETE policy (GDPR-krav)
+5. oppdrag_endringer — append-only (GDPR-audit-log)
+6. journal_tilganger — append-only (lovpålagt audit-log)
+7. server-only på Vipps, Stripe og Tripletex-kall
+
+---
+
+## Designsystem
+
+Fonter:   Fraunces (display/titler) + DM Sans (brødtekst)
+          NB: DM Sans erstatter Lato — oppdater alle apper
+
+Farger:
+  Primær:       #4A7C6F
+  Navy:         #1A2E24 / #2C3E35
+  GreenDark:    #2C5C52
+  Sidebar:      #1E3A2F
+  SidebarAktiv: #4ABC9E
+  Gold:         #C4956A
+  Rose:         #E8A4A4
+  Danger:       #E11D48
+
+Breakpoint:   700px — under = phone-shell (390px), over = full webapp
+
+---
+
+## Modul-toggles
+
+innstillinger-tabellen (singleton):
+  b2b_aktiv:           false  — B2B-portal av/på globalt
+  journal_aktiv:       false  — Journalknapp av/på
+  journal_modus:       ekstern — 'ekstern' | 'intern'
+  journal_ekstern_url: null   — URL til CGM Pridok / Aidn
+  journal_ekstern_navn: null  — Displaynavn for EPJ-system
+
+ALDRI sett journal_modus='intern' uten NHN-sertifisering!
+
+---
+
+## Documentation Automation
+
+### ALLTID oppdater (automatisk):
+  README.md         — Status-seksjon, milepæler
+  docs/CHANGELOG.md — Legg til versjonsseksjon ved merge
+
+### KAN oppdatere (kun tillegg):
+  docs/ARCHITECTURE.md — Legg til seksjoner (ikke omstrukturer)
+  docs/ENVIRONMENTS.md  — Legg til ny env-var (følg format)
+
+### ALDRI oppdater:
+  docs/contracts/CONTRACT_QUEUE.json  — Kun i chore/queue-update-* branches
+  docs/contracts/active/*.md          — Les alltid, aldri modifiser
+  docs/status/CONTROL_CENTER.md       — Auto-generert, aldri manuelt rediger
+
+### Etter CONTRACT_QUEUE-endringer:
+  kjør `pnpm generate-cc`
+  inkluder docs/status/CONTROL_CENTER.md og docs/status/MERGED_HISTORY.md i commit
+
+---
+
+## Development Workflow
+
+```bash
+# Start alltid fra dev
+git checkout dev
+git pull origin dev
+
+# Opprett feature-branch (ALLTID fra dev)
+git checkout -b feature/K-XXX-beskrivelse
+
+# Arbeid...
+
+# Commit kode
+git add .
+git commit -m "feat(scope): beskrivelse"
+
+# Commit docs
+git add docs/ README.md
+git commit -m "docs: K-XXX dokumentasjonsoppdatering"
+
+# Push
+git push origin feature/K-XXX-beskrivelse
+
+# PR → merge til dev → Slett branch
+# ALDRI merge direkte til main
+```
+
+---
+
+## Branch-navnkonvensjon
+
+Format: `type/CONTRACT_ID-kort-beskrivelse`
+
+Types:
+  feature/    Nye features
+  fix/        Bug-fixes
+  docs/       Kun dokumentasjon
+  refactor/   Kodeomstrukturering
+  chore/      Vedlikehold (infra, queue-oppdateringer)
+
+Eksempler:
+  feature/K-DB-001-supabase-schema
+  feature/K-AUTH-001-kunde-auth
+  fix/K-XXX-nurse-login
+  chore/queue-update-post-K-INFRA-001
+
+Queue-beskyttelse: Branches navngitt `chore/queue-update-*` er de ENESTE
+som kan modifisere `docs/contracts/CONTRACT_QUEUE.json`.
+
+---
+
+## Commit-konvensjon
+
+Format: `type(scope): beskrivelse`
+
+Types: feat | fix | docs | style | refactor | test | chore
+
+Eksempler:
+  feat(auth): implementer e-post + passord innlogging
+  feat(bestilling): 4-stegs bestillingsflyt
+  fix(nurse): glemt-passord validerer @eiranova.no
+  docs: K-AUTH-001 dokumentasjonsoppdatering
+  chore(ci): GitHub Actions for alle tre apper
+
+---
+
+## PR-prosess
+
+1. Target branch: `dev` (ALDRI `main`)
+2. Klar tittel (matcher commit)
+3. Beskrivelse med endringer + kontrakt-ID
+4. Sjekk Vercel preview (Supabase eiranova-dev)
+5. Test på mobil (375px)
+6. Verifiser CI grønt (build alle tre apper)
+7. Squash and merge → slett branch
+
+---
+
+## Tech Stack-regler
+
+### Next.js 15
+- App Router kun
+- Server Components som standard
+- Client Components med 'use client'
+- Bruk loading.tsx og error.tsx
+
+### TypeScript (ved overgang fra JSX)
+- Strict mode
+- Type alt
+- Ingen `any` med mindre nødvendig
+- Interfaces over types for objekter
+
+---
+
+## Kritiske åpne punkter å huske
+
+1. MVA-RISIKO: Besøksvenn + Trilleturer = mva_risiko 'høy' — avklar med revisor FØR lansering
+2. EiraNova AS org.nr. mangler — blocker for Vipps, BankID, Tripletex
+3. K-JOURNAL-001 starter IKKE uten alle fire juridiske krav
+4. Statsforvalteren-registrering (brev sendt — avventer svar)
+5. KPR-rapporteringsformat (brev sendt — avventer svar)
+
+---
+
+## Nøkkelkommandoer
+
+```bash
+# Bygg-sjekk
+pnpm --filter kunde-app build
+pnpm --filter nurse-app build
+pnpm --filter admin-app build
+
+# Governance
+pnpm generate-cc    # Regenerer CONTROL_CENTER.md
+pnpm queue          # Vis kontrakt-kø i terminal
+
+# Dev-servere
+pnpm --filter kunde-app dev   # localhost:3001
+pnpm --filter nurse-app dev   # localhost:3002
+pnpm --filter admin-app dev   # localhost:3003
+```
+
+---
+
+## Governance
+
+- Contract-before-code alltid
+- Single-Contract Mode: maks 1 kontrakt active om gangen
+- Claude godkjenner arkitektur og queue-rekkefølge
+- Cursor implementerer + koordinerer docs
+- Richard (PO) er eneste som setter kontrakt til `ready`
+
+### Når Claude skal konsulteres:
+- Arkitektur-beslutninger
+- Nye features (trenger kontrakt)
+- Sikkerhets-/compliance-spørsmål
+- Juridisk posisjonering (journal, MVA, GDPR)
+- Queue-omstilling
+
+### Når Cursor kan gå solo:
+- Små fixes (feature branch → dev)
+- UI-justeringer (feature branch → dev)
+- Enkle doc-oppdateringer (spesifiserte filer)
+
+---
+
+**Last updated:** 2026-04-10
+**Cursor:** Følg dette for konsistent utvikling + doc-automatisering
+**Claude:** Gir kontrakter, strategiske docs, governance
+**System:** Single-Contract Mode — maks 1 kontrakt active, Richard setter ready

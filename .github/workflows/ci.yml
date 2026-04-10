@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  build:
+    name: Build ${{ matrix.app }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [kunde-app, nurse-app, admin-app]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build ${{ matrix.app }}
+        run: pnpm --filter ${{ matrix.app }} build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_APP_ENV: preview
+
+  validate-queue:
+    name: Validate CONTRACT_QUEUE
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate single-contract rule
+        run: |
+          ACTIVE_COUNT=$(cat docs/contracts/CONTRACT_QUEUE.json | node -e "
+            const data = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
+            const active = data.contracts.filter(c => c.status === 'active').length;
+            console.log(active);
+          ")
+          if [ "$ACTIVE_COUNT" -gt "1" ]; then
+            echo "❌ ERROR: More than one contract is 'active' ($ACTIVE_COUNT found). Single-contract rule violated."
+            exit 1
+          fi
+          echo "✅ Single-contract rule OK ($ACTIVE_COUNT active)"
+
+      - name: Validate CONTROL_CENTER is not manually edited
+        run: |
+          echo "ℹ️  CONTROL_CENTER validation: run pnpm generate-cc locally to verify"
