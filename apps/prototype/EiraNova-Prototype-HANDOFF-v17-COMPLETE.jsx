@@ -9214,6 +9214,47 @@ const SCREENS={
   "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
+// ── EnvBadge ─────────────────────────────────────────────────────────────────
+const APP_ENV = typeof window !== 'undefined'
+  ? (process.env.NEXT_PUBLIC_APP_ENV || 'development')
+  : 'development'
+
+const DATA_SOURCE = typeof window !== 'undefined'
+  ? (process.env.NEXT_PUBLIC_DATA_SOURCE || 'dev')
+  : 'dev'
+
+function EnvBadge() {
+  if (APP_ENV === 'production') return null
+
+  const label = APP_ENV === 'preview'
+    ? `ENV: Preview | DATA: Supabase-Dev`
+    : `ENV: Local | DATA: Supabase-Dev`
+
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: 12,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 9999,
+      background: APP_ENV === 'preview' ? '#C4956A' : '#2563EB',
+      color: '#fff',
+      fontSize: 11,
+      fontFamily: 'DM Sans, sans-serif',
+      fontWeight: 600,
+      padding: '4px 12px',
+      borderRadius: 20,
+      letterSpacing: '0.03em',
+      pointerEvents: 'none',
+      whiteSpace: 'nowrap',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+    }}>
+      {label}
+    </div>
+  )
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function App({
   forcedTab=null,
   forcedScreen=null,
@@ -9335,6 +9376,8 @@ export default function App({
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
+      {/* EnvBadge — vises kun i preview og local, ikke i production */}
+      <EnvBadge />
     </>
   );
 }
