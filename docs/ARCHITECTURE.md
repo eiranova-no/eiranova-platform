@@ -62,8 +62,9 @@ EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
     "kunde")         "nurse")        "admin")
 ```
 
-Alle UX-endringer skjer i prototypen. Ingen separate komponent-filer ennå.
-K-ROUTE-001 og videre vil splitte prototypen til ekte Next.js App Router-struktur.
+Prototypen er allerede pushet til både dev og main (april 2026).
+Alle UX-endringer skjer i prototypen inntil K-ROUTE-001 splitter den
+til ekte Next.js App Router-struktur med TypeScript.
 
 ---
 
