@@ -1,0 +1,79 @@
+# CONTROL CENTER
+> ⚠️ AUTO-GENERATED — Do not edit manually.
+> Generated from: docs/contracts/CONTRACT_QUEUE.json
+> Run `pnpm generate-cc` to regenerate.
+
+**Last generated:** 2026-04-10
+**Progress:** 0% → MVP Launch
+
+---
+
+## 🟢 ACTIVE CONTRACT
+
+Ingen aktiv kontrakt.
+
+---
+
+## ✅ READY CONTRACTS
+
+| ID | Title | Type | Dependencies | Goal |
+|----|-------|------|--------------|------|
+| **K-INFRA-001** | Monorepo Foundation & GitHub Michelin-standard | infra | — | Etabler Michelin-standard GitHub-oppsett identisk med MBV: CONTRACT_QUEUE.json, ... |
+
+---
+
+## 📋 PLANNED CONTRACTS
+
+| ID | Title | Type | Dependencies |
+|----|-------|------|--------------|
+| K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | governance | K-INFRA-001 |
+| K-DB-001 | Supabase Databaseskjema — Komplett Fundament | feature | K-INFRA-001 |
+| K-AUTH-001 | Auth — Kunder (e-post + passord) | feature | K-DB-001 |
+| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 |
+| K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 |
+| K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 |
+| K-TJENESTE-001 | Tjenestekatalog — Backend & Admin CRUD | feature | K-ROUTE-001 |
+| K-BESTILL-001 | Bestillingsflyt — 4 Steg Komplett | feature | K-TJENESTE-001, K-GDPR-001 |
+| K-BETALING-002 | Betaling — Stripe Kortbetaling | feature | K-BETALING-001 |
+| K-OPPDRAG-001 | Oppdragshåndtering — Status-maskin & Vaktvakt | feature | K-BESTILL-001 |
+| K-NURSE-001 | Sykepleier-app — Innsjekk, Rapport & Profil | feature | K-OPPDRAG-001 |
+| K-PROFIL-001 | Kundeprofil — 3 Faner (Konto, Pårørende, Personvern) | feature | K-OPPDRAG-001 |
+| K-REALTIME-001 | Oppdrag-i-gang — Realtime Tre Faser | feature | K-PROFIL-001 |
+| K-B2B-001 | B2B — Organisasjoner & Koordinator-onboarding | feature | K-REALTIME-001 |
+| K-B2B-002 | B2B — Koordinator-app & Bestilling på Vegne Av | feature | K-B2B-001 |
+| K-B2B-003 | B2B — EHF/PEPPOL-faktura via Tripletex | feature | K-B2B-002 |
+| K-B2B-004 | B2B — Avtalemodeller & Multi-lokasjon | feature | K-B2B-003 |
+| K-LONN-001 | Lønnskjøring, A-melding & Skattetrekk | feature | K-TRIPLETEX-001 |
+| K-VIKAR-001 | Tilkallingsvikarer & Vikarregister | feature | K-LONN-001 |
+| K-KREDITERING-001 | Kreditering — B2C Refusjon & B2B Kreditnota | feature | K-VIKAR-001 |
+| K-PUSH-001 | Push-varsler — Web Push & FCM | feature | K-KREDITERING-001 |
+| K-CHAT-001 | Chat — Kunde ↔ Sykepleier via Supabase Realtime | feature | K-PUSH-001 |
+| K-VURDERING-001 | Vurderingssystem — Stjerner & Aggregering | feature | K-CHAT-001 |
+| K-RAPPORT-001 | KPI-rapportering — Admin Dashboard | feature | K-VURDERING-001 |
+| K-DEKN-001 | Dekningsområde — Admin & Kart | feature | K-RAPPORT-001 |
+| K-JOURNAL-EXT-001 | Ekstern Journal — Redirect til EPJ-system | feature | K-DEKN-001 |
+| K-TILSYN-001 | Internkontroll & Statsforvalter-rapportering | governance | K-JOURNAL-EXT-001 |
+| K-KPR-001 | KPR — Kommunalt Pasient- og Brukerregister | feature | K-TILSYN-001 |
+
+---
+
+## 🚫 BLOCKED
+
+| ID | Title | Blocked reason |
+|----|-------|----------------|
+| K-BETALING-001 | Betaling — Vipps ePayment | Venter på EiraNova AS org.nr. (Lise). Vipps krever organisasjonsnummer for produksjonsintegrasjon. Kan settes opp i Vipps Merchant Test uten org.nr. |
+| K-TRIPLETEX-001 | Tripletex — Regnskapsintegrasjon Master | Venter på EiraNova AS org.nr. for Tripletex-kontraktregistrering. Tripletex krever organisasjonsnummer. |
+| K-JOURNAL-001 | Intern Journal — NHN-sertifisert Pasientjournal | Starter IKKE uten: (1) godkjent helserettsadvokat, (2) Statsforvalteren registrering bekreftet, (3) NHN-sertifisering fullført, (4) journalansvarlig utpekt. Alle fire er lovpåkrevt. |
+
+---
+
+## ✅ RECENTLY MERGED
+
+Ingen kontrakter merget ennå.
+
+→ [Komplett merge-historikk](./MERGED_HISTORY.md)
+
+---
+
+*Source: docs/contracts/CONTRACT_QUEUE.json*
+*Process: docs/PROCESS.md*
