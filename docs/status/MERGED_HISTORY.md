@@ -1,12 +1,11 @@
 # Merge History — EiraNova
 
-> Auto-generated appendix to CONTROL_CENTER.md.
-> Full chronological list of all merged contracts.
+> Auto-generert appendix til CONTROL_CENTER.md.
+> Komplett kronologisk liste over alle mergede kontrakter.
 
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
-
-*Ingen kontrakter merget ennå.*
+| K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | infra | 2026-04-10 |
 
 ---
 *Source: docs/contracts/CONTRACT_QUEUE.json*
