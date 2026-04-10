@@ -4,7 +4,7 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-04-10
-**Progress:** 3% → MVP Launch
+**Progress:** 6% → MVP Launch
 
 ---
 
@@ -18,7 +18,7 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies | Goal |
 |----|-------|------|--------------|------|
-| **K-ENV-001** | Vercel Domenekonfiguration & Miljø-badges | governance | K-INFRA-001 ✅ | Koble egne domener i Vercel og innfør miljø-badge-system identisk med MBV: Produ... |
+| **K-DB-001** | Supabase Databaseskjema — Komplett Fundament | feature | K-INFRA-001 ✅ | Etabler komplett databaseskjema: alle enums, 20+ tabeller, RLS-policies, hjelpe-... |
 
 ---
 
@@ -26,7 +26,6 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies |
 |----|-------|------|--------------|
-| K-DB-001 | Supabase Databaseskjema — Komplett Fundament | feature | K-INFRA-001 ✅ |
 | K-AUTH-001 | Auth — Kunder (e-post + passord) | feature | K-DB-001 |
 | K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 |
 | K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 |
@@ -71,6 +70,7 @@ Ingen aktiv kontrakt.
 | ID | Title | Merged |
 |----|-------|--------|
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | 2026-04-10 |
+| K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | 2026-04-10 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 
