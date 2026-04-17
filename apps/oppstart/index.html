@@ -782,6 +782,234 @@
     100% { transform: translateX(350%); }
   }
 
+  /* ── FEEDBACK FLOATING BUTTON (de tre ser dette) ── */
+  .feedback-fab {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 400;
+    background: var(--sage); color: white;
+    border: none; border-radius: 2rem;
+    padding: 0.85rem 1.4rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+    font-weight: 500; letter-spacing: 0.02em;
+    box-shadow: 0 6px 20px rgba(107,143,113,0.35);
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: all 0.25s;
+  }
+  .feedback-fab:hover {
+    background: var(--sage-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(107,143,113,0.45);
+  }
+  .feedback-fab svg {
+    width: 16px; height: 16px; stroke: currentColor;
+    fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ── FEEDBACK MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 800;
+    background: rgba(28,43,30,0.4);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    background: white; border-radius: 24px;
+    padding: 2.2rem 2.2rem 1.8rem;
+    max-width: 500px; width: 100%;
+    box-shadow: 0 20px 60px rgba(28,43,30,0.2);
+    transform: translateY(20px) scale(0.98);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem; margin-bottom: 0.3rem;
+  }
+  .modal-tag {
+    font-size: 0.7rem; color: var(--warm);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400;
+    line-height: 1.25; color: var(--ink);
+  }
+  .modal-close {
+    background: none; border: none; cursor: pointer;
+    padding: 0.3rem; color: var(--stone);
+    transition: color 0.2s; margin: -0.3rem -0.3rem 0 0;
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .modal-desc {
+    font-size: 0.92rem; color: var(--ink-soft);
+    line-height: 1.6; margin-bottom: 1.4rem; font-weight: 300;
+  }
+  .modal-desc strong { color: var(--sage); font-weight: 500; }
+  .modal-textarea {
+    width: 100%; padding: 0.9rem 1.1rem;
+    border: 1.5px solid rgba(107,143,113,0.25);
+    border-radius: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; background: var(--cream);
+    color: var(--ink); line-height: 1.6;
+    resize: vertical; min-height: 120px;
+    transition: all 0.2s; margin-bottom: 1rem;
+  }
+  .modal-textarea:focus {
+    outline: none; border-color: var(--sage);
+    background: white; box-shadow: 0 0 0 4px var(--sage-pale);
+  }
+  .modal-actions {
+    display: flex; gap: 0.6rem; justify-content: flex-end;
+  }
+  .modal-btn {
+    padding: 0.65rem 1.4rem; border-radius: 2rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.04em;
+    transition: all 0.2s; border: 1px solid transparent;
+  }
+  .modal-btn.primary { background: var(--sage); color: white; }
+  .modal-btn.primary:hover { background: var(--sage-dark); }
+  .modal-btn.primary:disabled {
+    background: rgba(107,143,113,0.3); cursor: not-allowed;
+  }
+  .modal-btn.secondary {
+    background: transparent; color: var(--ink-soft);
+    border-color: rgba(107,143,113,0.25);
+  }
+  .modal-btn.secondary:hover { background: var(--cream); }
+
+  /* ── ADMIN VIEW (kun Richard) ── */
+  .admin-wrap {
+    max-width: 1000px; margin: 0 auto;
+    padding: 9rem 3rem 5rem;
+  }
+  .admin-header {
+    margin-bottom: 2.5rem;
+  }
+  .admin-tag {
+    font-size: 0.72rem; color: var(--warm);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 0.6rem; display: block;
+  }
+  .admin-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300; line-height: 1.15; color: var(--ink);
+    margin-bottom: 0.8rem;
+  }
+  .admin-header h1 em { font-style: italic; color: var(--sage); }
+  .admin-header p {
+    font-size: 1rem; line-height: 1.7;
+    color: var(--ink-soft); font-weight: 300; max-width: 600px;
+  }
+  .admin-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1rem; margin-bottom: 2.5rem;
+  }
+  .admin-stat {
+    background: white; border-radius: 16px;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid rgba(107,143,113,0.12);
+  }
+  .admin-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 600;
+    color: var(--sage); line-height: 1; display: block;
+    margin-bottom: 0.3rem;
+  }
+  .admin-stat.unseen .admin-stat-num { color: var(--warm); }
+  .admin-stat-label {
+    font-size: 0.72rem; color: var(--stone);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .admin-feedback-list {
+    display: flex; flex-direction: column; gap: 0.9rem;
+  }
+  .admin-feedback {
+    background: white; border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid rgba(107,143,113,0.12);
+    transition: all 0.2s;
+  }
+  .admin-feedback.unseen {
+    border-left: 3px solid var(--warm);
+    background: var(--warm-pale);
+  }
+  .admin-feedback.resolved {
+    opacity: 0.65;
+    background: var(--sage-pale);
+    border-color: rgba(107,143,113,0.2);
+  }
+  .admin-feedback-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 1rem; margin-bottom: 0.7rem;
+  }
+  .admin-feedback-author {
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .admin-feedback-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--sage); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: 1rem;
+  }
+  .admin-feedback-meta { font-size: 0.78rem; }
+  .admin-feedback-name {
+    font-weight: 500; color: var(--ink);
+    font-size: 0.92rem; display: block;
+  }
+  .admin-feedback-time {
+    color: var(--stone); font-size: 0.75rem;
+  }
+  .admin-feedback-badges {
+    display: flex; gap: 0.4rem; flex-shrink: 0;
+  }
+  .admin-feedback-badge {
+    font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 500;
+    padding: 0.25rem 0.7rem; border-radius: 2rem;
+  }
+  .admin-feedback-badge.new { background: var(--warm); color: white; }
+  .admin-feedback-badge.resolved { background: var(--sage); color: white; }
+  .admin-feedback-message {
+    font-size: 0.95rem; line-height: 1.7;
+    color: var(--ink); white-space: pre-wrap; word-wrap: break-word;
+    margin-bottom: 1rem;
+  }
+  .admin-feedback-actions {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    padding-top: 0.9rem;
+    border-top: 1px solid rgba(107,143,113,0.15);
+  }
+  .admin-action-btn {
+    padding: 0.45rem 1rem; border-radius: 2rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.75rem;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.04em;
+    transition: all 0.2s;
+    background: transparent; border: 1px solid rgba(107,143,113,0.25);
+    color: var(--ink-soft);
+  }
+  .admin-action-btn:hover { background: var(--cream); border-color: var(--sage); color: var(--sage); }
+  .admin-action-btn.danger:hover { background: var(--alert-pale); border-color: var(--alert); color: var(--alert); }
+  .admin-empty {
+    text-align: center; padding: 4rem 2rem;
+    color: var(--stone);
+  }
+  .admin-empty-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400;
+    color: var(--ink-soft); margin-bottom: 0.6rem;
+  }
+  .admin-empty-desc {
+    font-size: 0.9rem; line-height: 1.6;
+    font-weight: 300; max-width: 380px; margin: 0 auto;
+  }
+
   /* Responsive */
   @media (max-width: 900px) {
     nav { padding: 0.9rem 1.5rem; }
@@ -800,6 +1028,13 @@
     .section-header h3 { font-size: 1.2rem; }
     .task-form-row { grid-template-columns: 1fr; }
     .task-actions { opacity: 1; }
+    .admin-wrap { padding: 7rem 1.5rem 4rem; }
+    .admin-stats { grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+    .admin-stat { padding: 1rem 1rem; }
+    .admin-stat-num { font-size: 1.7rem; }
+    .admin-feedback { padding: 1.2rem 1.3rem; }
+    .feedback-fab { bottom: 1rem; right: 1rem; padding: 0.75rem 1.1rem; font-size: 0.8rem; }
+    .modal { padding: 1.8rem 1.6rem 1.4rem; }
     footer { padding: 2rem 1.5rem 1.5rem; }
   }
   @media (max-width: 500px) {
@@ -814,6 +1049,9 @@
     .task { padding: 0.8rem 0.95rem; }
     .task-main { gap: 0.7rem; }
     .tools-grid { grid-template-columns: 1fr; }
+    .admin-wrap { padding: 6.5rem 1.2rem 3rem; }
+    .feedback-fab span { display: none; }
+    .feedback-fab { padding: 0.75rem; border-radius: 50%; }
   }
 </style>
 </head>
@@ -1042,6 +1280,59 @@
   <div class="footer-copy">EiraNova AS · <span id="year"></span></div>
 </footer>
 
+<!-- Svevende knapp: Send forbedringsforslag (vises for de tre, ikke for Richard) -->
+<button class="feedback-fab" id="feedback-fab" style="display:none" title="Send forbedringsforslag til Richard">
+  <svg viewBox="0 0 24 24"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path><path d="M9 12l2 2 4-4"></path></svg>
+  <span>Forbedringsforslag</span>
+</button>
+
+</div>
+
+<!-- Feedback modal -->
+<div class="modal-overlay" id="feedback-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-tag">Til Richard</div>
+        <h3>Send forbedringsforslag</h3>
+      </div>
+      <button class="modal-close" id="feedback-modal-close" aria-label="Lukk">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <p class="modal-desc">Har du ideer til forbedringer, funksjoner du savner, eller noe som ikke fungerer? <strong>Kun Richard ser dette</strong> — meldingen deles ikke med de andre medgrunnleggerne.</p>
+    <textarea class="modal-textarea" id="feedback-textarea" placeholder="Beskriv forslaget ditt…" rows="5"></textarea>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" id="feedback-cancel">Avbryt</button>
+      <button class="modal-btn primary" id="feedback-send">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin view (kun Richard) -->
+<div id="admin-view" style="display:none">
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <span class="admin-tag">Admin · kun Richard</span>
+      <h1>Forbedrings<em>forslag</em></h1>
+      <p>Tilbakemeldinger fra Lise, Therese og Jeanett. De tre ser ikke denne siden og vet ikke hva de andre har sendt — dette er en privat kanal fra hver av dem til deg.</p>
+    </div>
+    <div class="admin-stats">
+      <div class="admin-stat unseen">
+        <span class="admin-stat-num" id="admin-stat-unseen">0</span>
+        <span class="admin-stat-label">Uleste</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-num" id="admin-stat-open">0</span>
+        <span class="admin-stat-label">Åpne</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-num" id="admin-stat-total">0</span>
+        <span class="admin-stat-label">Totalt</span>
+      </div>
+    </div>
+    <div class="admin-feedback-list" id="admin-feedback-list"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1055,7 +1346,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://jvhfelvwzsqkmewecvfz.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2aGZlbHZ3enNxa21ld2VjdmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzOTkyMDIsImV4cCI6MjA5MTk3NTIwMn0.K_GWGY00mHzIv-e42LG686x01pCPE7ebiqQ1bcMgovs';
 const GATE_PASSWORD = 'eiranova2026';
+const ADMIN_PASSWORD = 'richard2026';  // Endre dette til noe Richard vil bruke. Må være ulikt GATE_PASSWORD.
 const USERS = ['Lise', 'Therese', 'Jeanett'];
+const ADMIN_USER = 'Richard';
 
 const STACK_ITEMS = [
   { tag: 'Booking', name: 'Calendly', desc: 'Booking-link med tjenestekatalog. Kundene velger tid og tjeneste selv.', cost: '~150 kr/mnd', alt: 'SimplyBook.me' },
@@ -1099,10 +1392,12 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
 });
 
 let currentUser = null;
+let isAdmin = false;
 let tasks = [];                    // all tasks from db
 let completions = new Map();       // task_id -> { completed_by, completed_at }
 let comments = new Map();          // task_id -> [ {id, author, body, created_at} ]
 let expandedComments = new Set();  // task_id's with open comment sections
+let feedback = [];                 // admin-only: all feedback entries
 
 // ═════════════════════════════════════════════════════════
 // GATE
@@ -1114,7 +1409,16 @@ const gatePassword = document.getElementById('gate-password');
 const gateName = document.getElementById('gate-name');
 
 function tryPassword() {
-  if (gatePw.value === GATE_PASSWORD) {
+  const pw = gatePw.value;
+  if (pw === ADMIN_PASSWORD) {
+    // Richard logger inn som admin
+    sessionStorage.setItem('eiranova-oppstart-admin', '1');
+    currentUser = ADMIN_USER;
+    isAdmin = true;
+    gatePassword.style.display = 'none';
+    document.getElementById('loading').style.display = 'flex';
+    bootAdmin();
+  } else if (pw === GATE_PASSWORD) {
     sessionStorage.setItem('eiranova-oppstart-pw', '1');
     gatePassword.style.display = 'none';
     showNamePicker();
@@ -1147,18 +1451,27 @@ function showNamePicker() {
 
 async function selectUser(name) {
   currentUser = name;
+  isAdmin = false;
   localStorage.setItem('eiranova-oppstart-user', name);
   gateName.style.display = 'none';
   document.getElementById('loading').style.display = 'flex';
   await boot();
 }
 
-// Auto-resume if already authenticated in session
-if (sessionStorage.getItem('eiranova-oppstart-pw') === '1') {
+// Auto-resume
+if (sessionStorage.getItem('eiranova-oppstart-admin') === '1') {
+  // Richard: hopp rett til admin-view
+  currentUser = ADMIN_USER;
+  isAdmin = true;
+  gatePassword.style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+  bootAdmin();
+} else if (sessionStorage.getItem('eiranova-oppstart-pw') === '1') {
   gatePassword.style.display = 'none';
   const savedUser = localStorage.getItem('eiranova-oppstart-user');
   if (savedUser && USERS.includes(savedUser)) {
     currentUser = savedUser;
+    isAdmin = false;
     document.getElementById('loading').style.display = 'flex';
     boot();
   } else {
@@ -1169,7 +1482,7 @@ if (sessionStorage.getItem('eiranova-oppstart-pw') === '1') {
 }
 
 // ═════════════════════════════════════════════════════════
-// BOOT
+// BOOT — vanlig bruker (Lise/Therese/Jeanett)
 // ═════════════════════════════════════════════════════════
 async function boot() {
   await Promise.all([
@@ -1179,11 +1492,26 @@ async function boot() {
   ]);
   subscribeRealtime();
   setupUI();
+  setupFeedbackUI();
   document.getElementById('loading').style.display = 'none';
   document.getElementById('main-nav').style.display = 'flex';
   document.getElementById('app').style.display = 'block';
+  document.getElementById('feedback-fab').style.display = 'flex';
   updateUserChip();
   render();
+  setConnection('online');
+}
+
+// ═════════════════════════════════════════════════════════
+// BOOT — admin (Richard)
+// ═════════════════════════════════════════════════════════
+async function bootAdmin() {
+  await loadFeedback();
+  subscribeAdminRealtime();
+  setupAdminUI();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('admin-view').style.display = 'block';
+  renderAdmin();
   setConnection('online');
 }
 
@@ -1686,6 +2014,181 @@ function showTaskForm(sectionId, kind, existingTask) {
       cleanup();
     }
   });
+}
+
+// ═════════════════════════════════════════════════════════
+// FEEDBACK (de tre kan sende, ingen kan lese tilbake)
+// ═════════════════════════════════════════════════════════
+function setupFeedbackUI() {
+  const fab = document.getElementById('feedback-fab');
+  const modal = document.getElementById('feedback-modal');
+  const textarea = document.getElementById('feedback-textarea');
+  const sendBtn = document.getElementById('feedback-send');
+  const cancelBtn = document.getElementById('feedback-cancel');
+  const closeBtn = document.getElementById('feedback-modal-close');
+
+  const open = () => {
+    modal.classList.add('open');
+    setTimeout(() => textarea.focus(), 150);
+  };
+  const close = () => {
+    modal.classList.remove('open');
+    textarea.value = '';
+  };
+
+  fab.addEventListener('click', open);
+  cancelBtn.addEventListener('click', close);
+  closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+
+  sendBtn.addEventListener('click', async () => {
+    const msg = textarea.value.trim();
+    if (!msg) { textarea.focus(); return; }
+    sendBtn.disabled = true;
+    const { error } = await supabase.from('feedback').insert({
+      from_user: currentUser, message: msg,
+    });
+    sendBtn.disabled = false;
+    if (error) {
+      showToast('Kunne ikke sende — prøv igjen');
+      console.error(error);
+      return;
+    }
+    close();
+    showToast('Takk! Richard får beskjed 🌿');
+  });
+
+  textarea.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      sendBtn.click();
+    } else if (e.key === 'Escape') {
+      close();
+    }
+  });
+}
+
+// ═════════════════════════════════════════════════════════
+// ADMIN (kun Richard)
+// ═════════════════════════════════════════════════════════
+async function loadFeedback() {
+  const { data, error } = await supabase
+    .from('feedback').select('*')
+    .order('created_at', { ascending: false });
+  if (error) { console.error(error); return; }
+  feedback = data || [];
+}
+
+function subscribeAdminRealtime() {
+  const ch = supabase.channel('admin-feedback');
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'feedback' }, async (payload) => {
+    await loadFeedback();
+    renderAdmin();
+    if (payload.eventType === 'INSERT') {
+      showToast(`Nytt forslag fra ${payload.new.from_user}`);
+    }
+  });
+  ch.subscribe((status) => {
+    if (status === 'SUBSCRIBED') setConnection('online');
+    else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setConnection('offline');
+    else setConnection('connecting');
+  });
+}
+
+function setupAdminUI() {
+  // Event delegation for admin actions
+  document.getElementById('admin-feedback-list').addEventListener('click', async (e) => {
+    const btn = e.target.closest('[data-admin-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.adminAction;
+
+    if (action === 'mark-seen') {
+      const { error } = await supabase.from('feedback')
+        .update({ seen_at: new Date().toISOString() }).eq('id', id);
+      if (error) showToast('Feil'); else { await loadFeedback(); renderAdmin(); }
+    } else if (action === 'mark-unseen') {
+      const { error } = await supabase.from('feedback')
+        .update({ seen_at: null }).eq('id', id);
+      if (error) showToast('Feil'); else { await loadFeedback(); renderAdmin(); }
+    } else if (action === 'resolve') {
+      const { error } = await supabase.from('feedback')
+        .update({ resolved_at: new Date().toISOString(), seen_at: new Date().toISOString() }).eq('id', id);
+      if (error) showToast('Feil'); else { await loadFeedback(); renderAdmin(); showToast('Markert som ferdig'); }
+    } else if (action === 'unresolve') {
+      const { error } = await supabase.from('feedback')
+        .update({ resolved_at: null }).eq('id', id);
+      if (error) showToast('Feil'); else { await loadFeedback(); renderAdmin(); }
+    } else if (action === 'delete') {
+      if (!confirm('Slette dette forslaget permanent?')) return;
+      const { error } = await supabase.from('feedback').delete().eq('id', id);
+      if (error) showToast('Feil'); else { await loadFeedback(); renderAdmin(); showToast('Slettet'); }
+    }
+  });
+}
+
+function renderAdmin() {
+  const unseen = feedback.filter(f => !f.seen_at).length;
+  const open = feedback.filter(f => !f.resolved_at).length;
+  const total = feedback.length;
+
+  document.getElementById('admin-stat-unseen').textContent = unseen;
+  document.getElementById('admin-stat-open').textContent = open;
+  document.getElementById('admin-stat-total').textContent = total;
+
+  // Update page title with unseen count
+  document.title = unseen > 0
+    ? `(${unseen}) EiraNova — Admin`
+    : 'EiraNova — Admin';
+
+  const list = document.getElementById('admin-feedback-list');
+  if (feedback.length === 0) {
+    list.innerHTML = `
+      <div class="admin-empty">
+        <div class="admin-empty-title">Ingen forslag ennå</div>
+        <div class="admin-empty-desc">Når Lise, Therese eller Jeanett sender inn et forbedringsforslag, vil det dukke opp her umiddelbart.</div>
+      </div>
+    `;
+    return;
+  }
+
+  list.innerHTML = feedback.map(f => {
+    const unseenCls = !f.seen_at ? ' unseen' : '';
+    const resolvedCls = f.resolved_at ? ' resolved' : '';
+    const badges = [];
+    if (!f.seen_at) badges.push(`<span class="admin-feedback-badge new">Ny</span>`);
+    if (f.resolved_at) badges.push(`<span class="admin-feedback-badge resolved">Ferdig</span>`);
+
+    const actions = [];
+    if (!f.seen_at) actions.push(`<button class="admin-action-btn" data-admin-action="mark-seen" data-id="${f.id}">Marker som lest</button>`);
+    else actions.push(`<button class="admin-action-btn" data-admin-action="mark-unseen" data-id="${f.id}">Marker som ulest</button>`);
+
+    if (!f.resolved_at) actions.push(`<button class="admin-action-btn" data-admin-action="resolve" data-id="${f.id}">Marker som ferdig</button>`);
+    else actions.push(`<button class="admin-action-btn" data-admin-action="unresolve" data-id="${f.id}">Åpne igjen</button>`);
+
+    actions.push(`<button class="admin-action-btn danger" data-admin-action="delete" data-id="${f.id}">Slett</button>`);
+
+    const fullDate = new Date(f.created_at).toLocaleString('nb-NO', {
+      day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'
+    });
+
+    return `
+      <div class="admin-feedback${unseenCls}${resolvedCls}">
+        <div class="admin-feedback-header">
+          <div class="admin-feedback-author">
+            <div class="admin-feedback-avatar">${f.from_user[0]}</div>
+            <div class="admin-feedback-meta">
+              <span class="admin-feedback-name">${escapeHtml(f.from_user)}</span>
+              <span class="admin-feedback-time">${fullDate} · ${formatTime(f.created_at)}</span>
+            </div>
+          </div>
+          <div class="admin-feedback-badges">${badges.join('')}</div>
+        </div>
+        <div class="admin-feedback-message">${escapeHtml(f.message)}</div>
+        <div class="admin-feedback-actions">${actions.join('')}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 // ═════════════════════════════════════════════════════════
