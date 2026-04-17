@@ -488,13 +488,57 @@
     border-color: rgba(182,84,73,0.3);
   }
   .task-action svg { width: 14px; height: 14px; }
-  .comment-count-badge {
-    position: absolute; top: -4px; right: -4px;
-    background: var(--warm); color: white;
-    font-size: 0.62rem; font-weight: 600;
-    min-width: 14px; height: 14px; border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    padding: 0 3px;
+
+  /* Comment indicator in meta-line (always visible) */
+  .task-meta-comments {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    color: var(--warm); font-weight: 500;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .task-meta-comments:hover { color: var(--sage); }
+  .task-meta-comments svg {
+    width: 12px; height: 12px; stroke: currentColor;
+    fill: none; stroke-width: 2;
+  }
+
+  /* Comment preview under task (when collapsed) */
+  .task-comment-preview {
+    margin-top: 0.7rem;
+    padding: 0.65rem 0.8rem 0.65rem 0.75rem;
+    background: var(--warm-pale);
+    border-left: 2px solid var(--warm);
+    border-radius: 4px 10px 10px 4px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .task-comment-preview:hover {
+    background: var(--warm-light);
+  }
+  .task.expanded .task-comment-preview { display: none; }
+  .task-comment-preview-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 0.5rem; margin-bottom: 0.15rem;
+  }
+  .task-comment-preview-author {
+    font-weight: 500; color: var(--ink);
+    font-size: 0.78rem;
+  }
+  .task-comment-preview-meta {
+    font-size: 0.7rem; color: var(--stone);
+    display: inline-flex; gap: 0.35rem; align-items: baseline;
+  }
+  .task-comment-preview-more {
+    color: var(--warm); font-weight: 500;
+  }
+  .task-comment-preview-text {
+    color: var(--ink-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-wrap: break-word;
   }
 
   /* Comments section (expandable) */
@@ -1257,6 +1301,15 @@ function renderTask(task) {
   if (task.area) metaBits.push(`<span class="task-meta-item"><strong>${escapeHtml(task.area)}</strong></span>`);
   if (task.owner) metaBits.push(`<span class="task-meta-item">${escapeHtml(task.owner)}</span>`);
   if (done) metaBits.push(`<span class="task-meta-item task-meta-done">${escapeHtml(completion.completed_by)} · ${formatTime(completion.completed_at)}</span>`);
+  if (cList.length) {
+    metaBits.push(`<span class="task-meta-item"><span class="task-meta-comments" data-action="comments">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      ${cList.length} ${cList.length === 1 ? 'kommentar' : 'kommentarer'}
+    </span></span>`);
+  }
+
+  const lastComment = cList.length ? cList[cList.length - 1] : null;
+  const extraCount = cList.length > 1 ? cList.length - 1 : 0;
 
   return `
     <div class="task${done ? ' done' : ''}${!task.is_default ? ' custom' : ''}${expanded ? ' expanded' : ''}" data-id="${task.id}">
@@ -1269,9 +1322,8 @@ function renderTask(task) {
           <div class="task-meta">${metaBits.join('')}</div>
         </div>
         <div class="task-actions">
-          <button class="task-action" data-action="comments" title="Kommentarer">
+          <button class="task-action" data-action="comments" title="${cList.length ? 'Se kommentarer' : 'Skriv kommentar'}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            ${cList.length ? `<span class="comment-count-badge">${cList.length}</span>` : ''}
           </button>
           <button class="task-action" data-action="edit" title="Rediger">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
@@ -1281,6 +1333,18 @@ function renderTask(task) {
           </button>
         </div>
       </div>
+      ${lastComment && !expanded ? `
+        <div class="task-comment-preview" data-action="comments">
+          <div class="task-comment-preview-header">
+            <span class="task-comment-preview-author">${escapeHtml(lastComment.author)}</span>
+            <span class="task-comment-preview-meta">
+              ${extraCount > 0 ? `<span class="task-comment-preview-more">+${extraCount} eldre</span>` : ''}
+              <span>${formatTime(lastComment.created_at)}</span>
+            </span>
+          </div>
+          <div class="task-comment-preview-text">${escapeHtml(lastComment.body)}</div>
+        </div>
+      ` : ''}
       <div class="task-comments">
         ${cList.map(c => `
           <div class="comment">
