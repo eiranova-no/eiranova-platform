@@ -24,6 +24,7 @@
 | Kunde-app | app.eiranova.no ¹ | eiranova-platform.vercel.app | 3001 |
 | Nurse-app | nurse.eiranova.no ¹ | eiranova-nurse.vercel.app | 3002 |
 | Admin-app | admin.eiranova.no ¹ | eiranova-admin.vercel.app | 3003 |
+| Oppstart-app | oppstart.eiranova.no ¹ | eiranova-oppstart.vercel.app | — (static) |
 
 ¹ Domener ikke koblet ennå — se K-ENV-001
 
@@ -34,7 +35,7 @@
 - **Frontend:** Next.js 15, React, JSX (→ TSX ved K-ROUTE-001)
 - **Database:** Supabase PostgreSQL — eu-central-1 Frankfurt 🇩🇪 (GDPR)
 - **Auth:** Supabase Auth (e-post + passord / Google Workspace)
-- **Hosting:** Vercel Pro (tre prosjekter)
+- **Hosting:** Vercel Pro (fire prosjekter: tre Next.js-apper + statisk oppstart)
 - **E-post:** Resend
 - **Betaling:** Vipps ePayment + Stripe
 - **Regnskap:** Tripletex (EHF/PEPPOL, lønn, A-melding)

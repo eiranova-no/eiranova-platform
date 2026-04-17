@@ -4,7 +4,7 @@ Standalone statisk app som viser EiraNova AS sin oppstartsplan og compliance-sje
 
 ## Formål
 
-- Gi jentene (Lise + medgründere) en konkret, kryssbar plan fra AS-registrering til første betalende kunde
+- Gi de tre likeverdige medgrunnleggerne en konkret, kryssbar plan fra AS-registrering til første betalende kunde
 - Dokumentere alle compliance-krav som må oppfylles før oppstart
 - Lagre progresjon lokalt (localStorage) så fremdriften vises neste gang appen åpnes
 

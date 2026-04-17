@@ -19,6 +19,9 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - PROCESS.md — AI Dev OS v1.1 for EiraNova
 - ENVIRONMENTS.md — miljø-oversikt og env-var-dokumentasjon
 - HOTFIX-PROTOCOL.md
+- apps/oppstart/ — intern statisk app for oppstartsplan og compliance-sjekkliste
+  (passordbeskyttet, localStorage-persistens, add/edit/delete av egne oppgaver).
+  Deploy-mål: oppstart.eiranova.no via egen Vercel-prosjekt, root apps/oppstart/.
 
 ---
 
