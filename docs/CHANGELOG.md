@@ -21,7 +21,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - HOTFIX-PROTOCOL.md
 - apps/oppstart/ — intern statisk app for oppstartsplan og compliance-sjekkliste
   (passordbeskyttet, localStorage-persistens, add/edit/delete av egne oppgaver).
-  Deploy-mål: oppstart.eiranova.no via egen Vercel-prosjekt, root apps/oppstart/.
+  Midlertidig: eget Vercel-prosjekt (samme mønster som marketing), root apps/oppstart/, ingen custom domain.
 
 ---
 

@@ -10,8 +10,8 @@ Standalone statisk app som viser EiraNova AS sin oppstartsplan og compliance-sje
 
 ## Deploy
 
-Deployes uavhengig til Vercel — root directory: `apps/oppstart`
-Ingen build-step. Ren statisk HTML.
+Deployes uavhengig til Vercel (samme mønster som `apps/marketing/`) — root directory: `apps/oppstart`.
+Ingen build-step. Ren statisk HTML. Midlertidig internt verktøy; ingen eget produksjonsdomene planlagt.
 
 ## Tilgang
 
