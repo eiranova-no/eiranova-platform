@@ -35,7 +35,7 @@
     min-height: 100vh;
   }
 
-  /* ── PASSWORD GATE ── */
+  /* ── GATE ── */
   .gate {
     position: fixed; inset: 0; z-index: 1000;
     background: var(--cream);
@@ -56,7 +56,7 @@
   }
   .gate-card {
     background: white; border-radius: 24px;
-    padding: 3rem 2.5rem; max-width: 420px; width: 100%;
+    padding: 3rem 2.5rem; max-width: 440px; width: 100%;
     box-shadow: 0 20px 60px rgba(28,43,30,0.08);
     text-align: center; position: relative; z-index: 2;
   }
@@ -104,6 +104,38 @@
     margin-top: 0.8rem; min-height: 1rem;
   }
 
+  /* Name picker (second gate step) */
+  .name-picker {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .name-btn {
+    padding: 1rem 1.2rem; border-radius: 14px;
+    background: var(--cream); border: 1.5px solid rgba(107,143,113,0.2);
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 500; color: var(--ink);
+    transition: all 0.2s; display: flex; align-items: center;
+    justify-content: space-between;
+  }
+  .name-btn:hover {
+    background: var(--sage-pale); border-color: var(--sage);
+    transform: translateY(-1px);
+  }
+  .name-btn-initial {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--sage); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .name-btn .name-btn-right {
+    color: var(--stone); font-size: 1.2rem;
+  }
+  .gate-tiny {
+    font-size: 0.72rem; color: var(--stone);
+    margin-top: 0.6rem;
+  }
+
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 200;
@@ -127,6 +159,7 @@
     padding-left: 1rem;
     border-left: 1px solid rgba(107,143,113,0.2);
   }
+  .nav-right { display: flex; gap: 1.6rem; align-items: center; }
   .nav-links { display: flex; gap: 1.6rem; list-style: none; align-items: center; }
   .nav-links a {
     font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
@@ -134,15 +167,37 @@
     text-decoration: none; transition: color 0.2s; cursor: pointer;
   }
   .nav-links a:hover { color: var(--sage); }
-  .nav-reset {
-    background: transparent; color: var(--ink-soft);
-    border: 1px solid rgba(107,143,113,0.25); padding: 0.5rem 1rem;
-    border-radius: 2rem; font-size: 0.7rem;
-    font-weight: 500; cursor: pointer; letter-spacing: 0.08em;
-    font-family: 'DM Sans', sans-serif; text-transform: uppercase;
-    transition: all 0.2s;
+
+  .nav-user {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.4rem 0.9rem 0.4rem 0.4rem;
+    background: var(--sage-pale); border-radius: 2rem;
+    border: 1px solid rgba(107,143,113,0.2);
+    cursor: pointer; transition: all 0.2s;
   }
-  .nav-reset:hover { border-color: var(--alert); color: var(--alert); }
+  .nav-user:hover { background: var(--sage-light); }
+  .nav-user-initial {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--sage); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: 0.82rem;
+  }
+  .nav-user-name {
+    font-size: 0.78rem; font-weight: 500; color: var(--ink);
+  }
+
+  .connection-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--sage); flex-shrink: 0;
+    position: relative;
+  }
+  .connection-dot.offline { background: var(--alert); }
+  .connection-dot.connecting { background: var(--warm); animation: pulse 1.5s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 
   .hamburger {
     display: none; flex-direction: column; gap: 5px;
@@ -170,6 +225,9 @@
     text-decoration: none; padding: 0.7rem 0;
     border-bottom: 1px solid rgba(107,143,113,0.1);
     letter-spacing: 0.04em; cursor: pointer;
+  }
+  .mobile-menu .sign-out-link {
+    color: var(--alert);
   }
 
   /* ── HERO ── */
@@ -207,11 +265,10 @@
     max-width: 640px;
   }
 
-  /* ── OVERALL PROGRESS ── */
+  /* ── PROGRESS ── */
   .progress-wrap {
     max-width: 1200px; margin: 0 auto 2.5rem;
-    padding: 0 3rem;
-    position: relative; z-index: 1;
+    padding: 0 3rem; position: relative; z-index: 1;
   }
   .progress-bar-outer {
     background: white; border-radius: 20px; padding: 1.8rem 2rem;
@@ -226,9 +283,7 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.3rem; font-weight: 400;
   }
-  .progress-stats {
-    display: flex; gap: 2rem; align-items: baseline;
-  }
+  .progress-stats { display: flex; gap: 2rem; align-items: baseline; }
   .progress-stat-num {
     font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem; font-weight: 600; color: var(--sage);
@@ -240,8 +295,7 @@
   }
   .progress-track {
     width: 100%; height: 8px;
-    background: var(--sage-pale); border-radius: 8px;
-    overflow: hidden;
+    background: var(--sage-pale); border-radius: 8px; overflow: hidden;
   }
   .progress-fill {
     height: 100%;
@@ -251,10 +305,7 @@
   }
 
   /* ── TABS ── */
-  .tabs-wrap {
-    max-width: 1200px; margin: 0 auto 2rem;
-    padding: 0 3rem;
-  }
+  .tabs-wrap { max-width: 1200px; margin: 0 auto 2rem; padding: 0 3rem; }
   .tabs {
     display: flex; gap: 0.5rem;
     border-bottom: 1px solid rgba(107,143,113,0.15);
@@ -331,8 +382,7 @@
     color: var(--alert); margin-bottom: 0.3rem;
   }
   .critical-content p {
-    font-size: 0.88rem; line-height: 1.6;
-    color: var(--ink-soft);
+    font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft);
   }
 
   /* Section headers */
@@ -345,8 +395,7 @@
   .section-header:first-child { margin-top: 0; }
   .section-header h3 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem; font-weight: 400;
-    color: var(--ink);
+    font-size: 1.4rem; font-weight: 400; color: var(--ink);
   }
   .section-header h3 .phase-tag {
     font-family: 'DM Sans', sans-serif;
@@ -354,10 +403,7 @@
     letter-spacing: 0.12em; text-transform: uppercase;
     margin-right: 0.6rem; font-weight: 500;
   }
-  .section-meta {
-    font-size: 0.75rem; color: var(--stone);
-    letter-spacing: 0.04em;
-  }
+  .section-meta { font-size: 0.75rem; color: var(--stone); letter-spacing: 0.04em; }
   .section-meta strong { color: var(--sage); font-weight: 500; }
 
   /* Task cards */
@@ -366,9 +412,10 @@
     background: white; border-radius: 14px;
     padding: 0.95rem 1.1rem;
     border: 1px solid rgba(107,143,113,0.12);
+    transition: all 0.25s; position: relative;
+  }
+  .task-main {
     display: flex; gap: 0.9rem; align-items: flex-start;
-    transition: all 0.25s;
-    position: relative;
   }
   .task:hover {
     border-color: rgba(107,143,113,0.3);
@@ -389,9 +436,7 @@
     background: white; flex-shrink: 0; margin-top: 2px;
     transition: all 0.25s; cursor: pointer;
   }
-  .task.done .task-check {
-    background: var(--sage); border-color: var(--sage);
-  }
+  .task.done .task-check { background: var(--sage); border-color: var(--sage); }
   .task-check svg {
     width: 14px; height: 14px; stroke: white; stroke-width: 3;
     fill: none; opacity: 0; transition: opacity 0.2s;
@@ -406,8 +451,7 @@
   }
   .task-meta {
     font-size: 0.75rem; color: var(--stone);
-    display: flex; flex-wrap: wrap; gap: 0.6rem;
-    align-items: center;
+    display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;
   }
   .task-meta-item {
     display: inline-flex; align-items: center; gap: 0.3rem;
@@ -418,6 +462,9 @@
   }
   .task-meta-item:first-child::before { display: none; }
   .task-meta strong { color: var(--ink-soft); font-weight: 500; }
+  .task-meta-done {
+    color: var(--sage); font-style: italic;
+  }
 
   .task-actions {
     display: flex; gap: 0.4rem;
@@ -429,8 +476,8 @@
     width: 28px; height: 28px; border-radius: 6px;
     background: transparent; border: 1px solid rgba(107,143,113,0.2);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--stone); transition: all 0.2s;
-    padding: 0;
+    color: var(--stone); transition: all 0.2s; padding: 0;
+    position: relative;
   }
   .task-action:hover {
     background: var(--cream); color: var(--ink-soft);
@@ -441,6 +488,82 @@
     border-color: rgba(182,84,73,0.3);
   }
   .task-action svg { width: 14px; height: 14px; }
+  .comment-count-badge {
+    position: absolute; top: -4px; right: -4px;
+    background: var(--warm); color: white;
+    font-size: 0.62rem; font-weight: 600;
+    min-width: 14px; height: 14px; border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 3px;
+  }
+
+  /* Comments section (expandable) */
+  .task-comments {
+    display: none; margin-top: 0.9rem; padding-top: 0.9rem;
+    border-top: 1px solid rgba(107,143,113,0.15);
+  }
+  .task.expanded .task-comments { display: block; }
+  .comment {
+    display: flex; gap: 0.7rem; margin-bottom: 0.7rem;
+    font-size: 0.85rem;
+  }
+  .comment-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--sage-pale); color: var(--sage);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: 0.82rem; flex-shrink: 0;
+  }
+  .comment-body { flex: 1; min-width: 0; }
+  .comment-header {
+    display: flex; justify-content: space-between; gap: 0.5rem;
+    margin-bottom: 0.15rem; align-items: baseline;
+  }
+  .comment-author { font-weight: 500; color: var(--ink); font-size: 0.82rem; }
+  .comment-time { font-size: 0.7rem; color: var(--stone); }
+  .comment-text { color: var(--ink-soft); line-height: 1.5; word-wrap: break-word; }
+  .comment-delete {
+    background: none; border: none; cursor: pointer;
+    color: var(--stone); font-size: 0.7rem;
+    padding: 0; margin-left: 0.5rem;
+    transition: color 0.2s;
+  }
+  .comment-delete:hover { color: var(--alert); }
+
+  .comment-form {
+    display: flex; gap: 0.6rem; align-items: flex-start;
+    margin-top: 0.6rem;
+  }
+  .comment-form-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--sage); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif; font-weight: 600;
+    font-size: 0.82rem; flex-shrink: 0;
+  }
+  .comment-form-input {
+    flex: 1; padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(107,143,113,0.2);
+    border-radius: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; background: var(--cream);
+    color: var(--ink); resize: none; min-height: 38px;
+    max-height: 120px; line-height: 1.5;
+    transition: all 0.2s;
+  }
+  .comment-form-input:focus {
+    outline: none; border-color: var(--sage); background: white;
+    box-shadow: 0 0 0 3px var(--sage-pale);
+  }
+  .comment-form-send {
+    padding: 0.55rem 1rem; border-radius: 14px;
+    background: var(--sage); color: white; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 500; cursor: pointer; transition: all 0.2s;
+  }
+  .comment-form-send:hover { background: var(--sage-dark); }
+  .comment-form-send:disabled {
+    background: rgba(107,143,113,0.3); cursor: not-allowed;
+  }
 
   /* Add task button */
   .add-task {
@@ -464,7 +587,7 @@
     font-size: 1.1rem; line-height: 1; font-weight: 400;
   }
 
-  /* Inline form for adding/editing */
+  /* Task form (add/edit) */
   .task-form {
     background: white; border-radius: 14px;
     padding: 1rem 1.1rem;
@@ -476,8 +599,7 @@
     border: 1px solid rgba(107,143,113,0.2);
     border-radius: 8px; font-family: 'DM Sans', sans-serif;
     font-size: 0.9rem; background: var(--cream);
-    transition: all 0.2s; margin-bottom: 0.6rem;
-    color: var(--ink);
+    transition: all 0.2s; margin-bottom: 0.6rem; color: var(--ink);
   }
   .task-form-input:focus {
     outline: none; border-color: var(--sage);
@@ -497,9 +619,7 @@
     font-weight: 500; cursor: pointer; letter-spacing: 0.04em;
     transition: all 0.2s; border: 1px solid transparent;
   }
-  .task-form-btn.primary {
-    background: var(--sage); color: white;
-  }
+  .task-form-btn.primary { background: var(--sage); color: white; }
   .task-form-btn.primary:hover { background: var(--sage-dark); }
   .task-form-btn.secondary {
     background: transparent; color: var(--ink-soft);
@@ -588,10 +708,41 @@
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
-  /* ── RESPONSIVE ── */
+  /* Loading overlay */
+  .loading {
+    position: fixed; inset: 0; z-index: 900;
+    background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 1rem;
+  }
+  .loading-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 600;
+    color: var(--sage);
+  }
+  .loading-logo span { color: var(--warm); }
+  .loading-dot {
+    width: 40px; height: 4px;
+    background: var(--sage-pale); border-radius: 4px;
+    overflow: hidden; position: relative;
+  }
+  .loading-dot::after {
+    content: ''; position: absolute;
+    left: 0; top: 0; height: 100%; width: 40%;
+    background: var(--sage); border-radius: 4px;
+    animation: loadingSlide 1.2s infinite ease-in-out;
+  }
+  @keyframes loadingSlide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+  }
+
+  /* Responsive */
   @media (max-width: 900px) {
     nav { padding: 0.9rem 1.5rem; }
     .nav-links { display: none; }
+    .nav-user .nav-user-name { display: none; }
+    .nav-user { padding: 0.3rem; }
     .hamburger { display: flex; }
     .nav-context { display: none; }
     .hero { padding: 7rem 1.5rem 2rem; }
@@ -615,24 +766,43 @@
     .progress-stat-num { font-size: 1.2rem; }
     .progress-stat-label { font-size: 0.65rem; }
     .tab { padding: 0.8rem 0.9rem; font-size: 0.75rem; }
-    .task { padding: 0.8rem 0.95rem; gap: 0.7rem; }
+    .task { padding: 0.8rem 0.95rem; }
+    .task-main { gap: 0.7rem; }
     .tools-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
-<div class="gate" id="gate">
+<!-- GATE: Passord -->
+<div class="gate" id="gate-password">
   <div class="gate-card">
     <div class="gate-logo">Eira<span>Nova</span></div>
     <div class="gate-sub">Intern oppstart</div>
     <h2 class="gate-title">Velkommen</h2>
-    <p class="gate-desc">Denne siden er kun for medgrunnleggere i EiraNova AS.</p>
+    <p class="gate-desc">For medgrunnleggere i EiraNova AS.</p>
     <input type="password" id="gate-pw" class="gate-input" placeholder="Passord" autocomplete="off">
-    <button class="gate-btn" id="gate-btn">Logg inn</button>
+    <button class="gate-btn" id="gate-btn">Fortsett</button>
     <div class="gate-error" id="gate-error"></div>
   </div>
+</div>
+
+<!-- GATE: Navn -->
+<div class="gate" id="gate-name" style="display:none">
+  <div class="gate-card">
+    <div class="gate-logo">Eira<span>Nova</span></div>
+    <div class="gate-sub">Hvem er du?</div>
+    <h2 class="gate-title">Velg navnet ditt</h2>
+    <p class="gate-desc">Vi logger hvem som huker av oppgaver så dere kan se hverandres fremgang.</p>
+    <div class="name-picker" id="name-picker"></div>
+    <div class="gate-tiny">Feil valg? Du kan bytte senere ved å klikke på navnet ditt øverst til høyre.</div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading" id="loading" style="display:none">
+  <div class="loading-logo">Eira<span>Nova</span></div>
+  <div class="loading-dot"></div>
 </div>
 
 <!-- NAV -->
@@ -641,16 +811,22 @@
     <a href="#" class="nav-logo">Eira<span>Nova</span></a>
     <span class="nav-context">Oppstart</span>
   </div>
-  <ul class="nav-links">
-    <li><a data-tab="oversikt">Oversikt</a></li>
-    <li><a data-tab="plan">Plan</a></li>
-    <li><a data-tab="compliance">Compliance</a></li>
-    <li><a data-tab="stack">Stack</a></li>
-    <li><button class="nav-reset" id="reset-btn">Nullstill</button></li>
-  </ul>
-  <button class="hamburger" id="hamburger" aria-label="Meny">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a data-tab="oversikt">Oversikt</a></li>
+      <li><a data-tab="plan">Plan</a></li>
+      <li><a data-tab="compliance">Compliance</a></li>
+      <li><a data-tab="stack">Stack</a></li>
+    </ul>
+    <div class="nav-user" id="nav-user" title="Klikk for å bytte bruker">
+      <div class="nav-user-initial" id="nav-user-initial">?</div>
+      <span class="nav-user-name" id="nav-user-name">—</span>
+      <div class="connection-dot connecting" id="conn-dot" title="Tilkobling"></div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Meny">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <div class="mobile-menu" id="mobile-menu">
@@ -658,21 +834,19 @@
   <a data-tab="plan">Plan</a>
   <a data-tab="compliance">Compliance</a>
   <a data-tab="stack">Stack</a>
-  <a id="reset-btn-mobile" style="color: var(--alert);">Nullstill fremdrift</a>
+  <a class="sign-out-link" id="sign-out-link">Bytt bruker</a>
 </div>
 
 <div id="app" style="display:none">
 
-<!-- HERO -->
 <header class="hero">
   <div class="hero-inner">
     <span class="hero-badge">Fra AS til første kunde</span>
     <h1>Oppstartsplan<br>& <em>compliance</em></h1>
-    <p class="hero-sub">Praktisk arbeidsplan for de tre medgrunnleggerne mens EiraNova-plattformen utvikles. Kom i gang med manuell drift, bygg kundebase, og samle reell erfaring som gjør appen bedre når den lanseres.</p>
+    <p class="hero-sub">Praktisk arbeidsplan for Lise, Therese og Jeanett mens EiraNova-plattformen utvikles. Delt fremdrift i sanntid — hak av, legg til egne oppgaver, kommenter på hverandres arbeid.</p>
   </div>
 </header>
 
-<!-- PROGRESS -->
 <div class="progress-wrap">
   <div class="progress-bar-outer">
     <div class="progress-bar-top">
@@ -689,7 +863,6 @@
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tabs-wrap">
   <div class="tabs" role="tablist">
     <button class="tab active" data-tab="oversikt">Oversikt</button>
@@ -701,7 +874,6 @@
 
 <main>
 
-<!-- ───────── OVERSIKT ───────── -->
 <section class="panel active" data-panel="oversikt">
   <div class="panel-intro">
     <span class="panel-intro-tag">Hvorfor denne planen</span>
@@ -712,7 +884,7 @@
   <div class="panel-intro" style="background: var(--sage-pale); border-color: rgba(107,143,113,0.25);">
     <span class="panel-intro-tag" style="color: var(--sage-dark);">Tre likeverdige grunnleggere</span>
     <h2 style="color: var(--sage-dark);">Delt ansvar, delt lærekurve</h2>
-    <p style="color: var(--ink);">Alle tre medgrunnleggerne er likeverdige eiere og autoriserte sykepleiere. Fordeling av operative oppgaver (kundekontakt, journalføring, markedsføring, økonomi) gjøres internt og oppdateres her i planen etter hvert som rollene krystalliserer seg. Ingen "daglig leder" — alle tre står på samme linje.</p>
+    <p style="color: var(--ink);">Lise, Therese og Jeanett er likeverdige eiere og autoriserte sykepleiere. Fordeling av operative oppgaver (kundekontakt, journalføring, markedsføring, økonomi) gjøres internt og oppdateres her i planen etter hvert som rollene krystalliserer seg. Alle tre står på samme linje.</p>
   </div>
 
   <div class="section-header">
@@ -756,22 +928,20 @@
   </div>
 </section>
 
-<!-- ───────── PLAN ───────── -->
 <section class="panel" data-panel="plan">
   <div class="panel-intro">
     <span class="panel-intro-tag">Konkret oppstartsplan</span>
     <h2>Uke for uke til første kunde</h2>
-    <p>Huk av oppgavene etter hvert som de fullføres. Legg til egne oppgaver per uke med «+»-knappen. Rediger eller slett oppgaver ved å holde over dem. Alt lagres automatisk i denne nettleseren.</p>
+    <p>Huk av oppgavene når de fullføres. Legg til egne oppgaver per uke med «+»-knappen. Kommenter på oppgaver med talebobleikonet. Endringer synkroniseres umiddelbart mellom Lise, Therese og Jeanett.</p>
   </div>
   <div id="plan-sections"></div>
 </section>
 
-<!-- ───────── COMPLIANCE ───────── -->
 <section class="panel" data-panel="compliance">
   <div class="panel-intro">
     <span class="panel-intro-tag">Compliance-sjekkliste</span>
     <h2>Alt må være grønt før første kunde</h2>
-    <p>Dette er ikke en formalitet — det er et lovkrav etter norsk helselovgivning og GDPR. Ingen betalende kunder før alle punkter er avkrysset. Tilpass gjerne med egne oppgaver som reflekterer deres konkrete situasjon.</p>
+    <p>Dette er ikke en formalitet — det er et lovkrav etter norsk helselovgivning og GDPR. Ingen betalende kunder før alle punkter er avkrysset. Tilpass gjerne med egne oppgaver.</p>
   </div>
   <div class="critical">
     <div class="critical-icon">!</div>
@@ -783,7 +953,6 @@
   <div id="compliance-sections"></div>
 </section>
 
-<!-- ───────── STACK ───────── -->
 <section class="panel" data-panel="stack">
   <div class="panel-intro">
     <span class="panel-intro-tag">Operativ stack</span>
@@ -824,7 +993,7 @@
 <footer>
   <div class="footer-logo">Eira<span>Nova</span></div>
   <div class="footer-tag">Intern · Oppstart</div>
-  <p class="footer-note">Fremdriften på denne siden lagres i din nettleser (localStorage). Den synkroniseres ikke automatisk mellom dere tre — avklar i ukentlig sync. For deling: eksporter status ved behov.</p>
+  <p class="footer-note">Delt fremdrift via Supabase — alle endringer synkroniseres i sanntid mellom Lise, Therese og Jeanett. Midlertidig intern app mens EiraNova-plattformen ferdigstilles.</p>
   <div class="footer-copy">EiraNova AS · <span id="year"></span></div>
 </footer>
 
@@ -832,206 +1001,16 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
 // ═════════════════════════════════════════════════════════
 // CONFIG
 // ═════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://jvhfelvwzsqkmewecvfz.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2aGZlbHZ3enNxa21ld2VjdmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzOTkyMDIsImV4cCI6MjA5MTk3NTIwMn0.K_GWGY00mHzIv-e42LG686x01pCPE7ebiqQ1bcMgovs';
 const GATE_PASSWORD = 'eiranova2026';
-const STORAGE_KEY = 'eiranova-oppstart-v1';
-
-// ═════════════════════════════════════════════════════════
-// DEFAULT TASKS
-// ═════════════════════════════════════════════════════════
-const PLAN_SECTIONS = [
-  {
-    id: 'plan-w1', phase: 'Fase 1', title: 'Uke 1 · Selskap og bank', meta: 'Grunnmur på plass',
-    tasks: [
-      { id: 'p-w1-1', text: 'Ferdigstill AS-registrering i Brønnøysund, bekreft org.nr. mottatt', area: 'Selskap', owner: 'Alle tre' },
-      { id: 'p-w1-2', text: 'Oppstartsmøte DNB — bedriftskonto, LIS (likviditetsservice), Vipps Bedrift', area: 'Bank', owner: 'Alle tre' },
-      { id: 'p-w1-3', text: 'Velg regnskapssystem og engasjer regnskapsfører (Tripletex anbefales iht. arkitektur)', area: 'Regnskap', owner: 'Én tildelt' },
-      { id: 'p-w1-4', text: 'Innhent tilbud på yrkesansvarsforsikring (If, Gjensidige, Tryg)', area: 'Forsikring', owner: 'Én tildelt' },
-      { id: 'p-w1-5', text: 'Vurder MVA-registrering (helsetjenester fritatt, men kan være aktuelt)', area: 'Skatt', owner: 'Regnskapsfører' },
-    ]
-  },
-  {
-    id: 'plan-w2', phase: 'Fase 1', title: 'Uke 2 · Juridisk fundament', meta: 'Avtaler og compliance-start',
-    tasks: [
-      { id: 'p-w2-1', text: 'Aksjonæravtale mellom de tre medgrunnleggerne (likeverdige 33,3% eierandeler)', area: 'Aksjonæravtale', owner: 'Alle tre + jurist' },
-      { id: 'p-w2-2', text: 'IP-lisensavtale signert (Richard → EiraNova AS) for plattformbruk', area: 'IP', owner: 'Alle tre + Richard' },
-      { id: 'p-w2-3', text: 'Start arbeid med ROS-analyse (se compliance-fanen)', area: 'Compliance', owner: 'Én tildelt + input fra alle' },
-      { id: 'p-w2-4', text: 'Start internkontrollsystem — mal fra Helsedirektoratet', area: 'Compliance', owner: 'Én tildelt' },
-      { id: 'p-w2-5', text: 'Verifiser at post@eiranova.no og individuelle @eiranova.no-adresser fungerer', area: 'Domene', owner: 'Richard' },
-    ]
-  },
-  {
-    id: 'plan-w3', phase: 'Fase 2', title: 'Uke 3 · Operativ stack', meta: 'Verktøy i drift',
-    tasks: [
-      { id: 'p-w3-1', text: 'Sett opp Calendly eller SimplyBook.me med tjenestekatalog', area: 'Booking', owner: 'Én tildelt' },
-      { id: 'p-w3-2', text: 'Delt Google Calendar «EiraNova Drift» for oppdrag og tilgjengelighet', area: 'Kalender', owner: 'Alle tre' },
-      { id: 'p-w3-3', text: 'Velg og aktiver journalsystem (Infodoc / Pridok / WebMed) — aldri Google Docs', area: 'Journal', owner: 'Alle tre' },
-      { id: 'p-w3-4', text: 'Aktiver Vipps Bedrift og Stripe (når org.nr. er aktivt)', area: 'Betaling', owner: 'Én tildelt' },
-      { id: 'p-w3-5', text: 'Fakturamal i Tripletex (helsetjenester fritatt MVA)', area: 'Faktura', owner: 'Regnskapsfører' },
-      { id: 'p-w3-6', text: 'OneDrive Business / SharePoint for pasientdata — aldri Google Drive', area: 'Lagring', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'plan-w4', phase: 'Fase 2', title: 'Uke 4 · Prising og dokumentasjon', meta: 'Klar for compliance-fasen',
-    tasks: [
-      { id: 'p-w4-1', text: 'Prissett tjenestekatalog — konkurranseanalyse mot Stendi, Aleris, lokale aktører', area: 'Prising', owner: 'Alle tre' },
-      { id: 'p-w4-2', text: 'Samtykkeskjema for behandling og personvern', area: 'Samtykke', owner: 'Én tildelt + jurist' },
-      { id: 'p-w4-3', text: 'Tjenestevilkår inkl. 48-timers kanselleringsregel', area: 'Vilkår', owner: 'Én tildelt + jurist' },
-      { id: 'p-w4-4', text: 'Personvernerklæring publisert på marketing-siden', area: 'Personvern', owner: 'Richard + alle tre' },
-      { id: 'p-w4-5', text: 'Prosedyrebok: hygiene, dokumentasjon, avviksrapportering, taushetsplikt', area: 'Fag', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'plan-w5', phase: 'Fase 3', title: 'Uke 5 · Compliance låst', meta: 'Siste stopp før kunder',
-    tasks: [
-      { id: 'p-w5-1', text: 'Send melding til Statsforvalteren om oppstart av privat helsetjeneste', area: 'Statsforvalter', owner: 'Én tildelt' },
-      { id: 'p-w5-2', text: 'Bekreftelse fra Statsforvalteren mottatt og arkivert', area: 'Statsforvalter', owner: 'Én tildelt' },
-      { id: 'p-w5-3', text: 'ROS-analyse fullført og arkivert', area: 'Compliance', owner: 'Alle tre' },
-      { id: 'p-w5-4', text: 'Internkontrollsystem godkjent og implementert', area: 'Compliance', owner: 'Alle tre' },
-      { id: 'p-w5-5', text: 'Databehandleravtaler signert med ALLE leverandører', area: 'GDPR', owner: 'Én tildelt' },
-      { id: 'p-w5-6', text: 'Yrkesansvarsforsikring aktiv — dokument arkivert', area: 'Forsikring', owner: 'Alle tre' },
-      { id: 'p-w5-7', text: 'Bekreft at alle tres autorisasjoner er aktive i Helsepersonellregisteret (HPR)', area: 'HPR', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'plan-w6', phase: 'Fase 3', title: 'Uke 6 · Soft launch', meta: 'Markedsføring starter',
-    tasks: [
-      { id: 'p-w6-1', text: 'Legg til «Book time»-knapp på marketing-siden → Calendly', area: 'Marketing', owner: 'Richard' },
-      { id: 'p-w6-2', text: 'Publiser prisliste og tjenestekatalog på marketing-siden', area: 'Marketing', owner: 'Alle tre' },
-      { id: 'p-w6-3', text: 'Kontakt eget profesjonelle nettverk (tidligere kolleger)', area: 'Nettverk', owner: 'Alle tre individuelt' },
-      { id: 'p-w6-4', text: 'Personlige besøk hos 10 fastleger i Moss/Fredrikstad/Sarpsborg', area: 'Fastleger', owner: 'Delt mellom alle tre' },
-      { id: 'p-w6-5', text: 'Kontakt lokale sykehjem og forsikringsselskap (If, Gjensidige omsorg)', area: 'B2B', owner: 'Én tildelt' },
-      { id: 'p-w6-6', text: 'Opprett Google Business-profil og Facebook-side for EiraNova AS', area: 'Digital', owner: 'Én tildelt' },
-      { id: 'p-w6-7', text: 'Test lokal Facebook-annonsering — budsjett 3 000–5 000 kr', area: 'Annonsering', owner: 'Én tildelt' },
-    ]
-  },
-  {
-    id: 'plan-w7', phase: 'Fase 4', title: 'Uke 7 · Første oppdrag', meta: 'Pilotkunder',
-    tasks: [
-      { id: 'p-w7-1', text: 'Mål: 3–5 pilotkunder med reduserte priser mot skriftlig tilbakemelding', area: 'Pilot', owner: 'Alle tre' },
-      { id: 'p-w7-2', text: 'Standard onboarding-rutine: samtykke, helsestatus, pårørende, nøkkelhåndtering', area: 'Onboarding', owner: 'Alle tre' },
-      { id: 'p-w7-3', text: 'Journalføring samme dag som oppdrag (dokumentasjonsplikt, helsepersonelloven § 39)', area: 'Journal', owner: 'Alle tre' },
-      { id: 'p-w7-4', text: 'Avvikslogg i bruk fra dag én (internkontrollkrav)', area: 'Avvik', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'plan-w8', phase: 'Fase 4', title: 'Uke 8 · Evaluering og rytme', meta: 'Fast ukentlig drift',
-    tasks: [
-      { id: 'p-w8-1', text: 'Tilbakemeldingssamtale etter 2 uker med hver pilotkunde', area: 'Kunder', owner: 'Alle tre' },
-      { id: 'p-w8-2', text: 'Ukentlig rapport til Richard: friksjon, tidsbruk, kundebehov (→ app-utvikling)', area: 'App-sync', owner: 'Alle tre → Richard' },
-      { id: 'p-w8-3', text: 'Første fakturakjøring via Tripletex — test at alt flyter', area: 'Økonomi', owner: 'Regnskapsfører' },
-      { id: 'p-w8-4', text: 'Vurder rekruttering av flere sykepleiere (hvis etterspørsel > kapasitet)', area: 'Skalering', owner: 'Alle tre' },
-    ]
-  },
-];
-
-const COMPLIANCE_SECTIONS = [
-  {
-    id: 'c-01', phase: '1', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk',
-    tasks: [
-      { id: 'c-01-1', text: 'AS registrert i Brønnøysund med gyldig org.nr.', area: 'Aksjeloven', owner: 'Alle tre' },
-      { id: 'c-01-2', text: 'Registrert i Arbeidsgiverregisteret (når første ansettelse)', area: 'Folketrygdloven § 24', owner: 'Alle tre' },
-      { id: 'c-01-3', text: 'Alle tres sykepleierautorisasjon aktiv i Helsepersonellregisteret (HPR)', area: 'Helsepersonelloven § 48', owner: 'Alle tre' },
-      { id: 'c-01-4', text: 'HPR-verifisering dokumentert (skjermbilde i arkiv)', area: 'Intern kontroll', owner: 'Alle tre' },
-      { id: 'c-01-5', text: 'Aksjonæravtale signert (tre likeverdige medgrunnleggere)', area: 'Aksjeloven', owner: 'Alle tre' },
-      { id: 'c-01-6', text: 'IP-lisensavtale signert (Richard → EiraNova AS)', area: 'Åndsverkloven', owner: 'Alle tre + Richard' },
-    ]
-  },
-  {
-    id: 'c-02', phase: '2', title: 'Melding til myndigheter', meta: 'Før første kunde',
-    tasks: [
-      { id: 'c-02-1', text: 'Melding til Statsforvalteren om oppstart av privat helsetjeneste', area: 'HOL § 5-4', owner: 'Én tildelt' },
-      { id: 'c-02-2', text: 'Bekreftelse fra Statsforvalteren mottatt og arkivert', area: 'Dokumentasjon', owner: 'Én tildelt' },
-      { id: 'c-02-3', text: 'Vurdert om tjenesten krever godkjenning (ikke bare melding)', area: 'HOL § 5-4', owner: 'Alle tre + jurist' },
-    ]
-  },
-  {
-    id: 'c-03', phase: '3', title: 'Internkontroll og kvalitet', meta: 'Forskrift om ledelse',
-    tasks: [
-      { id: 'c-03-1', text: 'Internkontrollsystem etablert', area: 'Forskrift om ledelse', owner: 'Alle tre' },
-      { id: 'c-03-2', text: 'Dokumentert ansvarsfordeling mellom de tre grunnleggerne', area: 'Forskrift § 6', owner: 'Alle tre' },
-      { id: 'c-03-3', text: 'Prosedyre for avvikshåndtering', area: 'Forskrift § 7', owner: 'Alle tre' },
-      { id: 'c-03-4', text: 'Avvikslogg operativ (fra dag én)', area: 'Forskrift § 8', owner: 'Alle tre' },
-      { id: 'c-03-5', text: 'Prosedyre for medikamenthåndtering (hvis relevant)', area: 'Helsepersonelloven § 4', owner: 'Alle tre' },
-      { id: 'c-03-6', text: 'Prosedyre for hygiene og smittevern', area: 'Smittevernloven', owner: 'Alle tre' },
-      { id: 'c-03-7', text: 'Prosedyre for akuttsituasjoner (HLR, 113, pårørendevarsling)', area: 'Helsepersonelloven § 7', owner: 'Alle tre' },
-      { id: 'c-03-8', text: 'Årlig evaluering og forbedring planlagt', area: 'Forskrift § 8', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'c-04', phase: '4', title: 'Personvern og GDPR', meta: 'Helsedata = særlig kategori',
-    tasks: [
-      { id: 'c-04-1', text: 'ROS-analyse (risikovurdering) gjennomført og dokumentert', area: 'GDPR art. 35', owner: 'Alle tre' },
-      { id: 'c-04-2', text: 'Personvernerklæring publisert på nettside', area: 'GDPR art. 13', owner: 'Alle tre + Richard' },
-      { id: 'c-04-3', text: 'Samtykkeskjema for behandling utarbeidet', area: 'GDPR art. 9 (2)(a)', owner: 'Alle tre + jurist' },
-      { id: 'c-04-4', text: 'Databehandleravtale: journalsystem', area: 'GDPR art. 28', owner: 'Én tildelt' },
-      { id: 'c-04-5', text: 'Databehandleravtale: booking-system (Calendly)', area: 'GDPR art. 28', owner: 'Én tildelt' },
-      { id: 'c-04-6', text: 'Databehandleravtale: Google Workspace', area: 'GDPR art. 28', owner: 'Én tildelt' },
-      { id: 'c-04-7', text: 'Databehandleravtale: Microsoft (OneDrive/SharePoint)', area: 'GDPR art. 28', owner: 'Én tildelt' },
-      { id: 'c-04-8', text: 'Databehandleravtale: Tripletex', area: 'GDPR art. 28', owner: 'Én tildelt' },
-      { id: 'c-04-9', text: 'Behandlingsprotokoll ført (hva lagres, hvor, hvor lenge)', area: 'GDPR art. 30', owner: 'Alle tre' },
-      { id: 'c-04-10', text: 'Lagringstid definert per datakategori (journal = min. 10 år)', area: 'Pasientjournalforskriften', owner: 'Alle tre' },
-      { id: 'c-04-11', text: 'Rutine for innsyn, retting og sletting', area: 'GDPR art. 15–17', owner: 'Alle tre' },
-      { id: 'c-04-12', text: 'Rutine for avviksmelding til Datatilsynet (72 timer)', area: 'GDPR art. 33', owner: 'Alle tre' },
-      { id: 'c-04-13', text: 'Vurdert om DPIA (konsekvensvurdering) kreves', area: 'GDPR art. 35', owner: 'Alle tre + jurist' },
-    ]
-  },
-  {
-    id: 'c-05', phase: '5', title: 'Dokumentasjon og journalføring', meta: 'Helsepersonelloven § 39',
-    tasks: [
-      { id: 'c-05-1', text: 'Elektronisk pasientjournalsystem valgt og i drift', area: 'HPL § 39', owner: 'Alle tre' },
-      { id: 'c-05-2', text: 'IKKE bruk av Google Docs, OneNote e.l. for pasientdata', area: 'GDPR + journalforskriften', owner: 'Alle tre' },
-      { id: 'c-05-3', text: 'Journal føres samme dag som oppdrag', area: 'HPL § 39–40', owner: 'Alle tre' },
-      { id: 'c-05-4', text: 'Tilgangskontroll: kun autorisert helsepersonell har tilgang', area: 'Pasientjournalforskriften § 13', owner: 'Alle tre' },
-      { id: 'c-05-5', text: 'Logg over journaltilgang aktivert', area: 'Pasientjournalforskriften § 14', owner: 'Alle tre' },
-      { id: 'c-05-6', text: '2FA aktivert på alle systemer med pasientdata', area: 'Normen for informasjonssikkerhet', owner: 'Alle tre + Richard' },
-    ]
-  },
-  {
-    id: 'c-06', phase: '6', title: 'Forsikring og økonomi', meta: 'Dekning og regnskap',
-    tasks: [
-      { id: 'c-06-1', text: 'Yrkesansvarsforsikring aktiv (alle tre dekket)', area: 'HPL § 20', owner: 'Alle tre' },
-      { id: 'c-06-2', text: 'Forsikringsdokument arkivert og tilgjengelig', area: 'Dokumentasjon', owner: 'Én tildelt' },
-      { id: 'c-06-3', text: 'Innholdsforsikring (utstyr, PC, medisinsk utstyr)', area: 'Anbefalt', owner: 'Én tildelt' },
-      { id: 'c-06-4', text: 'Regnskapssystem operativt (Tripletex anbefalt)', area: 'Bokføringsloven', owner: 'Regnskapsfører' },
-      { id: 'c-06-5', text: 'Regnskapsfører engasjert', area: 'Anbefalt for AS', owner: 'Alle tre' },
-      { id: 'c-06-6', text: 'Helsetjenester er fritatt MVA — bekreftet med regnskapsfører', area: 'MVA-loven § 3-2', owner: 'Regnskapsfører' },
-    ]
-  },
-  {
-    id: 'c-07', phase: '7', title: 'Avtaler med kunder', meta: 'Forbrukerrettigheter',
-    tasks: [
-      { id: 'c-07-1', text: 'Tjenestevilkår publisert og tilgjengelig', area: 'Avtaleretten', owner: 'Alle tre + jurist' },
-      { id: 'c-07-2', text: 'Prisliste transparent og publisert', area: 'Markedsføringsloven', owner: 'Alle tre' },
-      { id: 'c-07-3', text: 'Kanselleringsregler tydelige (48-timers regel)', area: 'Forbrukerkjøpsloven', owner: 'Alle tre' },
-      { id: 'c-07-4', text: 'Klageadgang beskrevet (Statsforvalter + Pasientombud)', area: 'Pasientrettighetsloven', owner: 'Alle tre' },
-      { id: 'c-07-5', text: 'Taushetsplikt bekreftet skriftlig overfor kunde', area: 'HPL § 21', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'c-08', phase: '8', title: 'Operasjonell beredskap', meta: 'Faglig og sikkerhet',
-    tasks: [
-      { id: 'c-08-1', text: 'Nødprosedyre ved akutt forverring (113, pårørende, fastlege)', area: 'HPL § 7', owner: 'Alle tre' },
-      { id: 'c-08-2', text: 'Oppdatert liste over pårørendekontakter per kunde', area: 'Pasientjournal', owner: 'Alle tre' },
-      { id: 'c-08-3', text: 'Medisinsk utstyr kalibrert og kontrollert', area: 'Produsentanbefaling', owner: 'Alle tre' },
-      { id: 'c-08-4', text: 'HLR-sertifisering aktiv (alle tre, gyldig 12 mnd)', area: 'Faglig anbefaling', owner: 'Alle tre' },
-      { id: 'c-08-5', text: 'Politiattest innhentet for alle tre (krav ved arbeid i private hjem)', area: 'Politiregisterloven', owner: 'Alle tre' },
-      { id: 'c-08-6', text: 'Sikkerhetsrutine for alenearbeid (check-in/out ved oppdrag)', area: 'Arbeidsmiljøloven § 4-3', owner: 'Alle tre' },
-    ]
-  },
-  {
-    id: 'c-09', phase: '9', title: 'Markedsføring', meta: 'Helsepersonelloven § 13',
-    tasks: [
-      { id: 'c-09-1', text: 'Markedsføring er sannferdig og ikke villedende', area: 'HPL § 13', owner: 'Alle tre' },
-      { id: 'c-09-2', text: 'Ingen påstander om medisinske effekter uten faglig grunnlag', area: 'HPL + markedsføringsloven', owner: 'Alle tre' },
-      { id: 'c-09-3', text: 'Kundeuttalelser krever skriftlig samtykke', area: 'GDPR + markedsføringsloven', owner: 'Alle tre' },
-      { id: 'c-09-4', text: 'Cookie-erklæring og samtykkemekanisme på nettside', area: 'Ekomloven § 2-7b', owner: 'Richard' },
-    ]
-  },
-];
+const USERS = ['Lise', 'Therese', 'Jeanett'];
 
 const STACK_ITEMS = [
   { tag: 'Booking', name: 'Calendly', desc: 'Booking-link med tjenestekatalog. Kundene velger tid og tjeneste selv.', cost: '~150 kr/mnd', alt: 'SimplyBook.me' },
@@ -1044,51 +1023,56 @@ const STACK_ITEMS = [
   { tag: 'Marketing', name: 'eiranova-marketing.vercel.app', desc: 'Marketing-siden med «Book time»-knapp til Calendly.', cost: 'Gratis (Vercel)', alt: 'Allerede live' },
 ];
 
-// ═════════════════════════════════════════════════════════
-// STATE MANAGEMENT
-// ═════════════════════════════════════════════════════════
-const state = {
-  checked: {},         // { taskId: true }
-  customTasks: {},     // { sectionId: [ {id, text, area, owner} ] }
-  deletedDefaults: {}, // { taskId: true }
-  editedDefaults: {},  // { taskId: {text, area, owner} }
+const SECTION_META = {
+  'plan-w1': { phase: 'Fase 1', title: 'Uke 1 · Selskap og bank', meta: 'Grunnmur på plass' },
+  'plan-w2': { phase: 'Fase 1', title: 'Uke 2 · Juridisk fundament', meta: 'Avtaler og compliance-start' },
+  'plan-w3': { phase: 'Fase 2', title: 'Uke 3 · Operativ stack', meta: 'Verktøy i drift' },
+  'plan-w4': { phase: 'Fase 2', title: 'Uke 4 · Prising og dokumentasjon', meta: 'Klar for compliance-fasen' },
+  'plan-w5': { phase: 'Fase 3', title: 'Uke 5 · Compliance låst', meta: 'Siste stopp før kunder' },
+  'plan-w6': { phase: 'Fase 3', title: 'Uke 6 · Soft launch', meta: 'Markedsføring starter' },
+  'plan-w7': { phase: 'Fase 4', title: 'Uke 7 · Første oppdrag', meta: 'Pilotkunder' },
+  'plan-w8': { phase: 'Fase 4', title: 'Uke 8 · Evaluering og rytme', meta: 'Fast ukentlig drift' },
+  'c-01': { phase: '1', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk' },
+  'c-02': { phase: '2', title: 'Melding til myndigheter', meta: 'Før første kunde' },
+  'c-03': { phase: '3', title: 'Internkontroll og kvalitet', meta: 'Forskrift om ledelse' },
+  'c-04': { phase: '4', title: 'Personvern og GDPR', meta: 'Helsedata = særlig kategori' },
+  'c-05': { phase: '5', title: 'Dokumentasjon og journalføring', meta: 'Helsepersonelloven § 39' },
+  'c-06': { phase: '6', title: 'Forsikring og økonomi', meta: 'Dekning og regnskap' },
+  'c-07': { phase: '7', title: 'Avtaler med kunder', meta: 'Forbrukerrettigheter' },
+  'c-08': { phase: '8', title: 'Operasjonell beredskap', meta: 'Faglig og sikkerhet' },
+  'c-09': { phase: '9', title: 'Markedsføring', meta: 'Helsepersonelloven § 13' },
 };
 
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const saved = JSON.parse(raw);
-      Object.assign(state, saved);
-    }
-  } catch (e) { console.warn('Kunne ikke laste state', e); }
-}
+const PLAN_SECTION_IDS = ['plan-w1','plan-w2','plan-w3','plan-w4','plan-w5','plan-w6','plan-w7','plan-w8'];
+const COMPLIANCE_SECTION_IDS = ['c-01','c-02','c-03','c-04','c-05','c-06','c-07','c-08','c-09'];
 
-function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (e) { console.warn('Kunne ikke lagre state', e); }
-}
+// ═════════════════════════════════════════════════════════
+// STATE
+// ═════════════════════════════════════════════════════════
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON, {
+  realtime: { params: { eventsPerSecond: 10 } }
+});
+
+let currentUser = null;
+let tasks = [];                    // all tasks from db
+let completions = new Map();       // task_id -> { completed_by, completed_at }
+let comments = new Map();          // task_id -> [ {id, author, body, created_at} ]
+let expandedComments = new Set();  // task_id's with open comment sections
 
 // ═════════════════════════════════════════════════════════
 // GATE
 // ═════════════════════════════════════════════════════════
-const gate = document.getElementById('gate');
 const gatePw = document.getElementById('gate-pw');
 const gateBtn = document.getElementById('gate-btn');
 const gateError = document.getElementById('gate-error');
+const gatePassword = document.getElementById('gate-password');
+const gateName = document.getElementById('gate-name');
 
-function unlock() {
-  gate.style.display = 'none';
-  document.getElementById('main-nav').style.display = 'flex';
-  document.getElementById('app').style.display = 'block';
-  sessionStorage.setItem('eiranova-oppstart-unlocked', '1');
-  render();
-}
-
-function tryUnlock() {
+function tryPassword() {
   if (gatePw.value === GATE_PASSWORD) {
-    unlock();
+    sessionStorage.setItem('eiranova-oppstart-pw', '1');
+    gatePassword.style.display = 'none';
+    showNamePicker();
   } else {
     gateError.textContent = 'Feil passord. Prøv igjen.';
     gatePw.value = '';
@@ -1096,109 +1080,246 @@ function tryUnlock() {
   }
 }
 
-gateBtn.addEventListener('click', tryUnlock);
-gatePw.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+gateBtn.addEventListener('click', tryPassword);
+gatePw.addEventListener('keydown', e => { if (e.key === 'Enter') tryPassword(); });
 
-if (sessionStorage.getItem('eiranova-oppstart-unlocked') === '1') {
-  unlock();
+function showNamePicker() {
+  const picker = document.getElementById('name-picker');
+  picker.innerHTML = USERS.map(name => `
+    <button class="name-btn" data-name="${escapeHtmlAttr(name)}">
+      <span style="display: flex; align-items: center; gap: 0.8rem;">
+        <span class="name-btn-initial">${name[0]}</span>
+        <span>${escapeHtml(name)}</span>
+      </span>
+      <span class="name-btn-right">→</span>
+    </button>
+  `).join('');
+  picker.querySelectorAll('.name-btn').forEach(btn => {
+    btn.addEventListener('click', () => selectUser(btn.dataset.name));
+  });
+  gateName.style.display = 'flex';
+}
+
+async function selectUser(name) {
+  currentUser = name;
+  localStorage.setItem('eiranova-oppstart-user', name);
+  gateName.style.display = 'none';
+  document.getElementById('loading').style.display = 'flex';
+  await boot();
+}
+
+// Auto-resume if already authenticated in session
+if (sessionStorage.getItem('eiranova-oppstart-pw') === '1') {
+  gatePassword.style.display = 'none';
+  const savedUser = localStorage.getItem('eiranova-oppstart-user');
+  if (savedUser && USERS.includes(savedUser)) {
+    currentUser = savedUser;
+    document.getElementById('loading').style.display = 'flex';
+    boot();
+  } else {
+    showNamePicker();
+  }
 } else {
   setTimeout(() => gatePw.focus(), 100);
 }
 
 // ═════════════════════════════════════════════════════════
-// NAV & TABS
+// BOOT
 // ═════════════════════════════════════════════════════════
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobile-menu');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
-});
-
-function switchTab(tabName) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
-  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tabName));
-  hamburger.classList.remove('open');
-  mobileMenu.classList.remove('open');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+async function boot() {
+  await Promise.all([
+    loadTasks(),
+    loadCompletions(),
+    loadComments(),
+  ]);
+  subscribeRealtime();
+  setupUI();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('main-nav').style.display = 'flex';
+  document.getElementById('app').style.display = 'block';
+  updateUserChip();
+  render();
+  setConnection('online');
 }
 
-document.querySelectorAll('[data-tab]').forEach(el => {
-  el.addEventListener('click', e => {
-    e.preventDefault();
-    switchTab(el.dataset.tab);
+function setConnection(status) {
+  const dot = document.getElementById('conn-dot');
+  dot.classList.remove('offline', 'connecting');
+  if (status !== 'online') dot.classList.add(status);
+  dot.title = status === 'online' ? 'Tilkoblet' : status === 'connecting' ? 'Kobler til…' : 'Frakoblet';
+}
+
+function updateUserChip() {
+  document.getElementById('nav-user-initial').textContent = currentUser[0];
+  document.getElementById('nav-user-name').textContent = currentUser;
+}
+
+// ═════════════════════════════════════════════════════════
+// DATA LOAD
+// ═════════════════════════════════════════════════════════
+async function loadTasks() {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('is_deleted', false)
+    .order('section_id', { ascending: true })
+    .order('is_default', { ascending: false })
+    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  if (error) { console.error(error); return; }
+  tasks = data || [];
+}
+
+async function loadCompletions() {
+  const { data, error } = await supabase.from('completions').select('*');
+  if (error) { console.error(error); return; }
+  completions = new Map();
+  (data || []).forEach(c => completions.set(c.task_id, c));
+}
+
+async function loadComments() {
+  const { data, error } = await supabase
+    .from('comments')
+    .select('*')
+    .order('created_at', { ascending: true });
+  if (error) { console.error(error); return; }
+  comments = new Map();
+  (data || []).forEach(c => {
+    if (!comments.has(c.task_id)) comments.set(c.task_id, []);
+    comments.get(c.task_id).push(c);
   });
-});
-
-// Reset
-function confirmReset() {
-  if (confirm('Er du sikker på at du vil nullstille all fremdrift? Dette kan ikke angres.')) {
-    localStorage.removeItem(STORAGE_KEY);
-    state.checked = {};
-    state.customTasks = {};
-    state.deletedDefaults = {};
-    state.editedDefaults = {};
-    render();
-    showToast('Fremdrift nullstilt');
-  }
 }
-document.getElementById('reset-btn').addEventListener('click', confirmReset);
-document.getElementById('reset-btn-mobile').addEventListener('click', confirmReset);
+
+// ═════════════════════════════════════════════════════════
+// REALTIME
+// ═════════════════════════════════════════════════════════
+function subscribeRealtime() {
+  const ch = supabase.channel('oppstart-sync');
+
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, async (payload) => {
+    await loadTasks(); render();
+    if (payload.eventType === 'INSERT' && payload.new.created_by && payload.new.created_by !== currentUser) {
+      showToast(`${payload.new.created_by} la til en oppgave`);
+    }
+  });
+
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'completions' }, (payload) => {
+    if (payload.eventType === 'INSERT') {
+      completions.set(payload.new.task_id, payload.new);
+      if (payload.new.completed_by !== currentUser) {
+        const task = tasks.find(t => t.id === payload.new.task_id);
+        if (task) showToast(`${payload.new.completed_by} haket av «${truncate(task.text, 40)}»`);
+      }
+    } else if (payload.eventType === 'DELETE') {
+      completions.delete(payload.old.task_id);
+    }
+    render();
+  });
+
+  ch.on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, (payload) => {
+    if (payload.eventType === 'INSERT') {
+      const list = comments.get(payload.new.task_id) || [];
+      if (!list.find(c => c.id === payload.new.id)) {
+        list.push(payload.new);
+        comments.set(payload.new.task_id, list);
+      }
+      if (payload.new.author !== currentUser) {
+        showToast(`${payload.new.author} kommenterte`);
+      }
+    } else if (payload.eventType === 'DELETE') {
+      const list = comments.get(payload.old.task_id) || [];
+      comments.set(payload.old.task_id, list.filter(c => c.id !== payload.old.id));
+    }
+    render();
+  });
+
+  ch.subscribe((status) => {
+    if (status === 'SUBSCRIBED') setConnection('online');
+    else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') setConnection('offline');
+    else setConnection('connecting');
+  });
+}
 
 // ═════════════════════════════════════════════════════════
 // RENDER
 // ═════════════════════════════════════════════════════════
-function allTasksForSection(section) {
-  const defaults = section.tasks
-    .filter(t => !state.deletedDefaults[t.id])
-    .map(t => {
-      const edit = state.editedDefaults[t.id];
-      return edit ? { ...t, ...edit, _default: true } : { ...t, _default: true };
-    });
-  const customs = (state.customTasks[section.id] || []).map(t => ({ ...t, _custom: true }));
-  return [...defaults, ...customs];
+function tasksFor(sectionId) {
+  return tasks.filter(t => t.section_id === sectionId);
 }
 
 function renderTask(task) {
-  const done = !!state.checked[task.id];
-  const customClass = task._custom ? ' custom' : '';
-  const doneClass = done ? ' done' : '';
+  const completion = completions.get(task.id);
+  const done = !!completion;
+  const cList = comments.get(task.id) || [];
+  const expanded = expandedComments.has(task.id);
+
+  let metaBits = [];
+  if (task.area) metaBits.push(`<span class="task-meta-item"><strong>${escapeHtml(task.area)}</strong></span>`);
+  if (task.owner) metaBits.push(`<span class="task-meta-item">${escapeHtml(task.owner)}</span>`);
+  if (done) metaBits.push(`<span class="task-meta-item task-meta-done">${escapeHtml(completion.completed_by)} · ${formatTime(completion.completed_at)}</span>`);
+
   return `
-    <div class="task${doneClass}${customClass}" data-id="${task.id}">
-      <div class="task-check" data-action="toggle">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      <div class="task-body" data-action="toggle">
-        <div class="task-text">${escapeHtml(task.text)}</div>
-        <div class="task-meta">
-          ${task.area ? `<span class="task-meta-item"><strong>${escapeHtml(task.area)}</strong></span>` : ''}
-          ${task.owner ? `<span class="task-meta-item">${escapeHtml(task.owner)}</span>` : ''}
+    <div class="task${done ? ' done' : ''}${!task.is_default ? ' custom' : ''}${expanded ? ' expanded' : ''}" data-id="${task.id}">
+      <div class="task-main">
+        <div class="task-check" data-action="toggle">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="task-body" data-action="toggle">
+          <div class="task-text">${escapeHtml(task.text)}</div>
+          <div class="task-meta">${metaBits.join('')}</div>
+        </div>
+        <div class="task-actions">
+          <button class="task-action" data-action="comments" title="Kommentarer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            ${cList.length ? `<span class="comment-count-badge">${cList.length}</span>` : ''}
+          </button>
+          <button class="task-action" data-action="edit" title="Rediger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          </button>
+          <button class="task-action delete" data-action="delete" title="Slett">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
         </div>
       </div>
-      <div class="task-actions">
-        <button class="task-action" data-action="edit" title="Rediger">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-        </button>
-        <button class="task-action delete" data-action="delete" title="Slett">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-        </button>
+      <div class="task-comments">
+        ${cList.map(c => `
+          <div class="comment">
+            <div class="comment-avatar">${c.author[0]}</div>
+            <div class="comment-body">
+              <div class="comment-header">
+                <span class="comment-author">${escapeHtml(c.author)}</span>
+                <span>
+                  <span class="comment-time">${formatTime(c.created_at)}</span>
+                  ${c.author === currentUser ? `<button class="comment-delete" data-comment-id="${c.id}">Slett</button>` : ''}
+                </span>
+              </div>
+              <div class="comment-text">${escapeHtml(c.body)}</div>
+            </div>
+          </div>
+        `).join('')}
+        <div class="comment-form">
+          <div class="comment-form-avatar">${currentUser[0]}</div>
+          <textarea class="comment-form-input" data-task-id="${task.id}" placeholder="Skriv en kommentar…" rows="1"></textarea>
+          <button class="comment-form-send" data-task-id="${task.id}">Send</button>
+        </div>
       </div>
     </div>
   `;
 }
 
-function renderSection(section) {
-  const tasks = allTasksForSection(section);
-  const phaseTag = section.phase ? `<span class="phase-tag">${escapeHtml(section.phase)}</span>` : '';
+function renderSection(sectionId) {
+  const meta = SECTION_META[sectionId] || { phase: '', title: sectionId, meta: '' };
+  const sectionTasks = tasksFor(sectionId);
+  const phaseTag = meta.phase ? `<span class="phase-tag">${escapeHtml(meta.phase)}</span>` : '';
   return `
     <div class="section-header">
-      <h3>${phaseTag}${escapeHtml(section.title)}</h3>
-      <div class="section-meta">${escapeHtml(section.meta || '')}</div>
+      <h3>${phaseTag}${escapeHtml(meta.title)}</h3>
+      <div class="section-meta">${escapeHtml(meta.meta || '')}</div>
     </div>
-    <div class="tasks" data-section="${section.id}">
-      ${tasks.map(renderTask).join('')}
+    <div class="tasks">
+      ${sectionTasks.map(renderTask).join('')}
     </div>
-    <button class="add-task" data-add-section="${section.id}">
+    <button class="add-task" data-add-section="${sectionId}" data-kind="${sectionId.startsWith('plan') ? 'plan' : 'compliance'}">
       <span class="add-task-icon">+</span>
       <span>Legg til egen oppgave</span>
     </button>
@@ -1206,13 +1327,8 @@ function renderSection(section) {
 }
 
 function render() {
-  // Plan
-  document.getElementById('plan-sections').innerHTML =
-    PLAN_SECTIONS.map(renderSection).join('');
-  // Compliance
-  document.getElementById('compliance-sections').innerHTML =
-    COMPLIANCE_SECTIONS.map(renderSection).join('');
-  // Stack
+  document.getElementById('plan-sections').innerHTML = PLAN_SECTION_IDS.map(renderSection).join('');
+  document.getElementById('compliance-sections').innerHTML = COMPLIANCE_SECTION_IDS.map(renderSection).join('');
   document.getElementById('stack-grid').innerHTML = STACK_ITEMS.map(s => `
     <div class="tool-card">
       <div class="tool-card-tag">${escapeHtml(s.tag)}</div>
@@ -1229,10 +1345,10 @@ function render() {
 }
 
 function updateProgress() {
-  const planTasks = PLAN_SECTIONS.flatMap(allTasksForSection);
-  const compTasks = COMPLIANCE_SECTIONS.flatMap(allTasksForSection);
-  const planDone = planTasks.filter(t => state.checked[t.id]).length;
-  const compDone = compTasks.filter(t => state.checked[t.id]).length;
+  const planTasks = tasks.filter(t => t.kind === 'plan');
+  const compTasks = tasks.filter(t => t.kind === 'compliance');
+  const planDone = planTasks.filter(t => completions.has(t.id)).length;
+  const compDone = compTasks.filter(t => completions.has(t.id)).length;
   const total = planTasks.length + compTasks.length;
   const done = planDone + compDone;
   const pct = total ? Math.round((done / total) * 100) : 0;
@@ -1245,48 +1361,195 @@ function updateProgress() {
 }
 
 // ═════════════════════════════════════════════════════════
-// TASK INTERACTIONS
+// MUTATIONS
 // ═════════════════════════════════════════════════════════
-function findTask(taskId) {
-  for (const section of [...PLAN_SECTIONS, ...COMPLIANCE_SECTIONS]) {
-    const def = section.tasks.find(t => t.id === taskId);
-    if (def) {
-      const edit = state.editedDefaults[taskId];
-      return { section, task: edit ? { ...def, ...edit } : def, isCustom: false };
-    }
-    const custom = (state.customTasks[section.id] || []).find(t => t.id === taskId);
-    if (custom) return { section, task: custom, isCustom: true };
-  }
-  return null;
-}
-
-function toggleTask(taskId) {
-  state.checked[taskId] = !state.checked[taskId];
-  if (!state.checked[taskId]) delete state.checked[taskId];
-  saveState();
-  // Optimistic UI: just toggle the class
-  const el = document.querySelector(`.task[data-id="${taskId}"]`);
-  if (el) el.classList.toggle('done', !!state.checked[taskId]);
-  updateProgress();
-}
-
-function deleteTask(taskId) {
-  const found = findTask(taskId);
-  if (!found) return;
-  if (!confirm(`Slette oppgaven «${found.task.text}»?`)) return;
-  if (found.isCustom) {
-    state.customTasks[found.section.id] = state.customTasks[found.section.id].filter(t => t.id !== taskId);
+async function toggleTask(taskId) {
+  const isDone = completions.has(taskId);
+  if (isDone) {
+    completions.delete(taskId);
+    render();
+    const { error } = await supabase.from('completions').delete().eq('task_id', taskId);
+    if (error) { showToast('Feil ved uncheck'); await loadCompletions(); render(); }
   } else {
-    state.deletedDefaults[taskId] = true;
+    const completion = { task_id: taskId, completed_by: currentUser, completed_at: new Date().toISOString() };
+    completions.set(taskId, completion);
+    render();
+    const { error } = await supabase.from('completions').upsert(completion);
+    if (error) { showToast('Feil ved check'); await loadCompletions(); render(); }
   }
-  delete state.checked[taskId];
-  delete state.editedDefaults[taskId];
-  saveState();
+}
+
+async function deleteTask(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+  if (!confirm(`Slette oppgaven «${task.text}»?`)) return;
+  if (task.is_default) {
+    const { error } = await supabase.from('tasks').update({ is_deleted: true }).eq('id', taskId);
+    if (error) { showToast('Feil ved sletting'); return; }
+  } else {
+    const { error } = await supabase.from('tasks').delete().eq('id', taskId);
+    if (error) { showToast('Feil ved sletting'); return; }
+  }
+  await loadTasks();
   render();
   showToast('Oppgave slettet');
 }
 
-function showTaskForm(sectionId, existingTask) {
+async function addTask(sectionId, kind, text, area, owner) {
+  const maxSort = Math.max(0, ...tasksFor(sectionId).map(t => t.sort_order || 0));
+  const newTask = {
+    section_id: sectionId, kind, text, area: area || null, owner: owner || null,
+    is_default: false, sort_order: maxSort + 1, created_by: currentUser,
+  };
+  const { data, error } = await supabase.from('tasks').insert(newTask).select().single();
+  if (error) { showToast('Feil ved opprettelse'); return; }
+  // Optimistic: include immediately (realtime will also fire)
+  if (data && !tasks.find(t => t.id === data.id)) tasks.push(data);
+  render();
+  showToast('Oppgave lagt til');
+}
+
+async function editTask(taskId, text, area, owner) {
+  const { error } = await supabase.from('tasks')
+    .update({ text, area: area || null, owner: owner || null })
+    .eq('id', taskId);
+  if (error) { showToast('Feil ved oppdatering'); return; }
+  await loadTasks();
+  render();
+  showToast('Oppgave oppdatert');
+}
+
+async function addComment(taskId, body) {
+  const trimmed = body.trim();
+  if (!trimmed) return;
+  const { error } = await supabase.from('comments').insert({
+    task_id: taskId, author: currentUser, body: trimmed,
+  });
+  if (error) { showToast('Feil ved kommentering'); return; }
+  await loadComments();
+  render();
+}
+
+async function deleteComment(commentId) {
+  if (!confirm('Slette kommentaren?')) return;
+  const { error } = await supabase.from('comments').delete().eq('id', commentId);
+  if (error) { showToast('Feil ved sletting'); return; }
+  await loadComments();
+  render();
+}
+
+// ═════════════════════════════════════════════════════════
+// UI SETUP
+// ═════════════════════════════════════════════════════════
+function setupUI() {
+  // Tabs
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      switchTab(el.dataset.tab);
+    });
+  });
+
+  // Hamburger
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  // User chip — bytt bruker
+  document.getElementById('nav-user').addEventListener('click', switchUser);
+  document.getElementById('sign-out-link').addEventListener('click', switchUser);
+
+  // Event delegation for tasks
+  document.querySelector('main').addEventListener('click', async (e) => {
+    // Add task
+    const addBtn = e.target.closest('[data-add-section]');
+    if (addBtn) {
+      showTaskForm(addBtn.dataset.addSection, addBtn.dataset.kind);
+      return;
+    }
+    // Comment delete
+    const commentDelete = e.target.closest('.comment-delete');
+    if (commentDelete) {
+      await deleteComment(commentDelete.dataset.commentId);
+      return;
+    }
+    // Comment send
+    const sendBtn = e.target.closest('.comment-form-send');
+    if (sendBtn) {
+      const taskId = sendBtn.dataset.taskId;
+      const input = document.querySelector(`.comment-form-input[data-task-id="${taskId}"]`);
+      if (input) {
+        await addComment(taskId, input.value);
+        input.value = '';
+      }
+      return;
+    }
+    // Task actions
+    const actionEl = e.target.closest('[data-action]');
+    if (actionEl) {
+      const taskEl = actionEl.closest('.task');
+      if (!taskEl) return;
+      const taskId = taskEl.dataset.id;
+      const action = actionEl.dataset.action;
+      if (action === 'toggle') {
+        await toggleTask(taskId);
+      } else if (action === 'delete') {
+        await deleteTask(taskId);
+      } else if (action === 'edit') {
+        const task = tasks.find(t => t.id === taskId);
+        if (task) showTaskForm(task.section_id, task.kind, task);
+      } else if (action === 'comments') {
+        toggleComments(taskId);
+      }
+    }
+  });
+
+  // Enter-to-send on comment inputs (event delegation)
+  document.querySelector('main').addEventListener('keydown', async (e) => {
+    if (e.target.matches('.comment-form-input') && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const taskId = e.target.dataset.taskId;
+      await addComment(taskId, e.target.value);
+      e.target.value = '';
+    }
+  });
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tabName));
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobile-menu').classList.remove('open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleComments(taskId) {
+  if (expandedComments.has(taskId)) expandedComments.delete(taskId);
+  else expandedComments.add(taskId);
+  render();
+  // Focus input if just opened
+  if (expandedComments.has(taskId)) {
+    setTimeout(() => {
+      const input = document.querySelector(`.comment-form-input[data-task-id="${taskId}"]`);
+      if (input) input.focus();
+    }, 50);
+  }
+}
+
+function switchUser() {
+  if (confirm(`Bytte bruker? (Du er logget inn som ${currentUser})`)) {
+    localStorage.removeItem('eiranova-oppstart-user');
+    location.reload();
+  }
+}
+
+function showTaskForm(sectionId, kind, existingTask) {
+  // Remove any existing form
+  document.querySelectorAll('.task-form').forEach(f => f.remove());
+
   const isEdit = !!existingTask;
   const formId = `form-${sectionId}-${Date.now()}`;
   const html = `
@@ -1321,45 +1584,32 @@ function showTaskForm(sectionId, existingTask) {
   const form = document.getElementById(formId);
   form.querySelector('[data-field="text"]').focus();
 
-  form.addEventListener('click', e => {
+  const cleanup = () => {
+    form.remove();
+    const btn = document.querySelector(`[data-add-section="${sectionId}"]`);
+    if (btn) btn.style.display = '';
+    if (isEdit) {
+      const taskEl = document.querySelector(`.task[data-id="${existingTask.id}"]`);
+      if (taskEl) taskEl.style.display = '';
+    }
+  };
+
+  form.addEventListener('click', async (e) => {
     const action = e.target.closest('[data-form-action]')?.dataset.formAction;
     if (!action) return;
     if (action === 'cancel') {
-      form.remove();
-      if (isEdit) {
-        const taskEl = document.querySelector(`.task[data-id="${existingTask.id}"]`);
-        if (taskEl) taskEl.style.display = '';
-      } else {
-        const btn = document.querySelector(`[data-add-section="${sectionId}"]`);
-        if (btn) btn.style.display = '';
-      }
+      cleanup();
     } else if (action === 'save') {
       const text = form.querySelector('[data-field="text"]').value.trim();
       const area = form.querySelector('[data-field="area"]').value.trim();
       const owner = form.querySelector('[data-field="owner"]').value.trim();
       if (!text) { form.querySelector('[data-field="text"]').focus(); return; }
+      cleanup();
       if (isEdit) {
-        if (existingTask._custom || !existingTask._default) {
-          // Custom task — update in customTasks
-          const arr = state.customTasks[sectionId] || [];
-          const idx = arr.findIndex(t => t.id === existingTask.id);
-          if (idx >= 0) arr[idx] = { ...arr[idx], text, area, owner };
-        } else {
-          // Default task — store override
-          state.editedDefaults[existingTask.id] = { text, area, owner };
-        }
-        showToast('Oppgave oppdatert');
+        await editTask(existingTask.id, text, area, owner);
       } else {
-        const newTask = {
-          id: `custom-${sectionId}-${Date.now()}`,
-          text, area, owner,
-        };
-        if (!state.customTasks[sectionId]) state.customTasks[sectionId] = [];
-        state.customTasks[sectionId].push(newTask);
-        showToast('Oppgave lagt til');
+        await addTask(sectionId, kind, text, area, owner);
       }
-      saveState();
-      render();
     }
   });
 
@@ -1368,41 +1618,10 @@ function showTaskForm(sectionId, existingTask) {
       e.preventDefault();
       form.querySelector('[data-form-action="save"]').click();
     } else if (e.key === 'Escape') {
-      form.querySelector('[data-form-action="cancel"]').click();
+      cleanup();
     }
   });
 }
-
-// Event delegation on main content
-document.addEventListener('click', e => {
-  // Add task
-  const addBtn = e.target.closest('[data-add-section]');
-  if (addBtn) {
-    showTaskForm(addBtn.dataset.addSection);
-    return;
-  }
-  // Task actions
-  const actionEl = e.target.closest('[data-action]');
-  if (actionEl) {
-    const taskEl = actionEl.closest('.task');
-    if (!taskEl) return;
-    const taskId = taskEl.dataset.id;
-    const action = actionEl.dataset.action;
-    if (action === 'toggle') {
-      toggleTask(taskId);
-    } else if (action === 'delete') {
-      deleteTask(taskId);
-    } else if (action === 'edit') {
-      const found = findTask(taskId);
-      if (found) {
-        const taskForForm = found.isCustom
-          ? { ...found.task, _custom: true }
-          : { ...found.task, _default: true };
-        showTaskForm(found.section.id, taskForForm);
-      }
-    }
-  }
-});
 
 // ═════════════════════════════════════════════════════════
 // HELPERS
@@ -1415,19 +1634,33 @@ function escapeHtml(str) {
 }
 function escapeHtmlAttr(str) { return escapeHtml(str); }
 
+function truncate(str, len) {
+  if (!str || str.length <= len) return str || '';
+  return str.slice(0, len) + '…';
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMin = Math.round(diffMs / 60000);
+  if (diffMin < 1) return 'nå';
+  if (diffMin < 60) return `${diffMin}m siden`;
+  const diffH = Math.round(diffMin / 60);
+  if (diffH < 24) return `${diffH}t siden`;
+  const diffD = Math.round(diffH / 24);
+  if (diffD < 7) return `${diffD}d siden`;
+  return d.toLocaleDateString('nb-NO', { day: 'numeric', month: 'short' });
+}
+
 function showToast(msg) {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
   toast.classList.add('show');
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2500);
 }
-
-// ═════════════════════════════════════════════════════════
-// INIT
-// ═════════════════════════════════════════════════════════
-loadState();
-if (sessionStorage.getItem('eiranova-oppstart-unlocked') === '1') render();
 </script>
 
 </body>
