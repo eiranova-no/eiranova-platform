@@ -468,20 +468,21 @@
 
   .task-actions {
     display: flex; gap: 0.4rem;
-    opacity: 0; transition: opacity 0.2s;
+    opacity: 0.4; transition: opacity 0.2s;
     flex-shrink: 0;
   }
   .task:hover .task-actions { opacity: 1; }
   .task-action {
     width: 28px; height: 28px; border-radius: 6px;
-    background: transparent; border: 1px solid rgba(107,143,113,0.2);
+    background: transparent; border: 1px solid rgba(107,143,113,0.18);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     color: var(--stone); transition: all 0.2s; padding: 0;
     position: relative;
   }
   .task-action:hover {
     background: var(--cream); color: var(--ink-soft);
-    border-color: rgba(107,143,113,0.35);
+    border-color: rgba(107,143,113,0.4);
+    opacity: 1;
   }
   .task-action.delete:hover {
     background: var(--alert-pale); color: var(--alert);
