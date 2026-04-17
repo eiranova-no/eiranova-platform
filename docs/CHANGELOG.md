@@ -8,6 +8,11 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
+- apps/oppstart/ oppgradert fra localStorage til Supabase realtime sync.
+  Nytt Supabase-prosjekt eiranova-oppstart (eu-central-1), separate tabeller
+  for tasks/completions/comments. Tre-brukerlogg (Lise/Therese/Jeanett) med
+  completed_by og comments per oppgave. RLS på med åpen anon-policy —
+  sikkerheten ligger i delt passord + deling av anon-nøkkel.
 - Domener koblet i Vercel: app/nurse/admin.eiranova.no
 - EnvBadge-komponent i prototype (vises i preview/local, ikke production)
 - .env.example opprettet for alle tre apper
@@ -19,6 +24,9 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - PROCESS.md — AI Dev OS v1.1 for EiraNova
 - ENVIRONMENTS.md — miljø-oversikt og env-var-dokumentasjon
 - HOTFIX-PROTOCOL.md
+- apps/oppstart/ — intern statisk app for oppstartsplan og compliance-sjekkliste
+  (passordbeskyttet, Supabase realtime-sync, add/edit/delete av egne oppgaver).
+  Midlertidig: eget Vercel-prosjekt (samme mønster som marketing), root apps/oppstart/, ingen custom domain.
 
 ---
 
