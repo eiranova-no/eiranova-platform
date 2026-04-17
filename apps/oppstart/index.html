@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EiraNova — Oppstart</title>
+<meta name="description" content="Oppstartsplan og compliance for EiraNova AS">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌿%3C/text%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #6B8F71;
+    --sage-light: #A8C5AD;
+    --sage-pale: #E8F0E9;
+    --sage-dark: #4A6E50;
+    --warm: #C4956A;
+    --warm-light: #EDD9C4;
+    --warm-pale: #F7EFE6;
+    --cream: #FAF8F4;
+    --ink: #1C2B1E;
+    --ink-soft: #4A5C4C;
+    --stone: #8B9E8D;
+    --white: #FFFFFF;
+    --alert: #B65449;
+    --alert-pale: #F9E8E4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── PASSWORD GATE ── */
+  .gate {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--cream);
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .gate::before {
+    content: ''; position: absolute; top: -10%; right: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,197,173,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .gate::after {
+    content: ''; position: absolute; bottom: -10%; left: -5%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(196,149,106,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .gate-card {
+    background: white; border-radius: 24px;
+    padding: 3rem 2.5rem; max-width: 420px; width: 100%;
+    box-shadow: 0 20px 60px rgba(28,43,30,0.08);
+    text-align: center; position: relative; z-index: 2;
+  }
+  .gate-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600;
+    color: var(--sage); margin-bottom: 0.4rem;
+  }
+  .gate-logo span { color: var(--warm); }
+  .gate-sub {
+    font-size: 0.72rem; color: var(--stone);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .gate-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; margin-bottom: 0.6rem;
+  }
+  .gate-desc {
+    font-size: 0.9rem; color: var(--ink-soft);
+    line-height: 1.6; margin-bottom: 1.8rem; font-weight: 300;
+  }
+  .gate-input {
+    width: 100%; padding: 0.9rem 1.2rem;
+    border: 1.5px solid rgba(107,143,113,0.25);
+    border-radius: 14px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; background: var(--cream);
+    transition: all 0.2s; margin-bottom: 1rem;
+    text-align: center; letter-spacing: 0.04em;
+  }
+  .gate-input:focus {
+    outline: none; border-color: var(--sage);
+    background: white; box-shadow: 0 0 0 4px var(--sage-pale);
+  }
+  .gate-btn {
+    width: 100%; background: var(--sage); color: white;
+    border: none; padding: 0.9rem; border-radius: 2rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.1em;
+    text-transform: uppercase; transition: all 0.25s;
+  }
+  .gate-btn:hover { background: var(--ink); }
+  .gate-error {
+    font-size: 0.8rem; color: var(--alert);
+    margin-top: 0.8rem; min-height: 1rem;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 3rem;
+    background: rgba(250,248,244,0.95);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(107,143,113,0.12);
+  }
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 600;
+    color: var(--sage); letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--warm); }
+  .nav-context {
+    font-size: 0.7rem; color: var(--stone);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(107,143,113,0.2);
+  }
+  .nav-links { display: flex; gap: 1.6rem; list-style: none; align-items: center; }
+  .nav-links a {
+    font-size: 0.76rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    text-decoration: none; transition: color 0.2s; cursor: pointer;
+  }
+  .nav-links a:hover { color: var(--sage); }
+  .nav-reset {
+    background: transparent; color: var(--ink-soft);
+    border: 1px solid rgba(107,143,113,0.25); padding: 0.5rem 1rem;
+    border-radius: 2rem; font-size: 0.7rem;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.08em;
+    font-family: 'DM Sans', sans-serif; text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .nav-reset:hover { border-color: var(--alert); color: var(--alert); }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--ink); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    background: rgba(250,248,244,0.98); backdrop-filter: blur(14px);
+    z-index: 199; padding: 1.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(107,143,113,0.15);
+    flex-direction: column; gap: 0.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-size: 0.95rem; font-weight: 500; color: var(--ink-soft);
+    text-decoration: none; padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(107,143,113,0.1);
+    letter-spacing: 0.04em; cursor: pointer;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 9rem 3rem 3rem;
+    position: relative; overflow: hidden;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 4rem; right: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(168,197,173,0.2) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none; z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 780px; }
+  .hero-badge {
+    display: inline-block;
+    background: var(--sage-pale); color: var(--sage);
+    font-size: 0.72rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 2rem;
+    margin-bottom: 1.6rem;
+    border: 1px solid rgba(107,143,113,0.25);
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    font-weight: 300; line-height: 1.15;
+    color: var(--ink); margin-bottom: 1.2rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--sage); }
+  .hero-sub {
+    font-size: 1.02rem; line-height: 1.75;
+    color: var(--ink-soft); font-weight: 300;
+    max-width: 640px;
+  }
+
+  /* ── OVERALL PROGRESS ── */
+  .progress-wrap {
+    max-width: 1200px; margin: 0 auto 2.5rem;
+    padding: 0 3rem;
+    position: relative; z-index: 1;
+  }
+  .progress-bar-outer {
+    background: white; border-radius: 20px; padding: 1.8rem 2rem;
+    border: 1px solid rgba(107,143,113,0.12);
+    box-shadow: 0 4px 20px rgba(28,43,30,0.04);
+  }
+  .progress-bar-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .progress-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 400;
+  }
+  .progress-stats {
+    display: flex; gap: 2rem; align-items: baseline;
+  }
+  .progress-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 600; color: var(--sage);
+  }
+  .progress-stat-label {
+    font-size: 0.7rem; color: var(--stone);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-left: 0.4rem;
+  }
+  .progress-track {
+    width: 100%; height: 8px;
+    background: var(--sage-pale); border-radius: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage) 0%, var(--sage-light) 100%);
+    border-radius: 8px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── TABS ── */
+  .tabs-wrap {
+    max-width: 1200px; margin: 0 auto 2rem;
+    padding: 0 3rem;
+  }
+  .tabs {
+    display: flex; gap: 0.5rem;
+    border-bottom: 1px solid rgba(107,143,113,0.15);
+    overflow-x: auto;
+  }
+  .tab {
+    background: transparent; border: none;
+    padding: 0.9rem 1.4rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--stone); position: relative;
+    transition: color 0.2s; white-space: nowrap;
+  }
+  .tab:hover { color: var(--ink-soft); }
+  .tab.active { color: var(--sage); }
+  .tab.active::after {
+    content: ''; position: absolute; bottom: -1px; left: 1rem; right: 1rem;
+    height: 2px; background: var(--sage); border-radius: 2px 2px 0 0;
+  }
+  .tab-count {
+    display: inline-block; margin-left: 0.5rem;
+    font-size: 0.7rem; padding: 0.1rem 0.5rem;
+    background: var(--sage-pale); color: var(--sage);
+    border-radius: 2rem; letter-spacing: 0;
+  }
+  .tab.active .tab-count { background: var(--sage); color: white; }
+
+  /* ── CONTENT ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 3rem 6rem; }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-intro {
+    background: white; border-radius: 20px;
+    padding: 2rem 2.2rem; margin-bottom: 2rem;
+    border: 1px solid rgba(107,143,113,0.12);
+  }
+  .panel-intro-tag {
+    font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--warm);
+    margin-bottom: 0.6rem; display: block;
+  }
+  .panel-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 400;
+    margin-bottom: 0.8rem; line-height: 1.25;
+  }
+  .panel-intro p {
+    font-size: 0.95rem; line-height: 1.7;
+    color: var(--ink-soft); font-weight: 300;
+  }
+
+  .critical {
+    background: var(--alert-pale);
+    border: 1.5px solid rgba(182,84,73,0.25);
+    border-radius: 16px; padding: 1.3rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .critical-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--alert); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; flex-shrink: 0; font-size: 1rem;
+  }
+  .critical-content h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--alert); margin-bottom: 0.3rem;
+  }
+  .critical-content p {
+    font-size: 0.88rem; line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin: 2.5rem 0 1rem; padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(107,143,113,0.15);
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400;
+    color: var(--ink);
+  }
+  .section-header h3 .phase-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem; color: var(--warm);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-right: 0.6rem; font-weight: 500;
+  }
+  .section-meta {
+    font-size: 0.75rem; color: var(--stone);
+    letter-spacing: 0.04em;
+  }
+  .section-meta strong { color: var(--sage); font-weight: 500; }
+
+  /* Task cards */
+  .tasks { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.8rem; }
+  .task {
+    background: white; border-radius: 14px;
+    padding: 0.95rem 1.1rem;
+    border: 1px solid rgba(107,143,113,0.12);
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .task:hover {
+    border-color: rgba(107,143,113,0.3);
+    box-shadow: 0 4px 12px rgba(28,43,30,0.04);
+  }
+  .task.done {
+    background: var(--sage-pale);
+    border-color: rgba(107,143,113,0.25);
+  }
+  .task.done .task-text { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: rgba(107,143,113,0.4); }
+  .task.done .task-meta { opacity: 0.7; }
+  .task.custom { border-left: 3px solid var(--warm); }
+
+  .task-check {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 1.5px solid rgba(107,143,113,0.4);
+    display: flex; align-items: center; justify-content: center;
+    background: white; flex-shrink: 0; margin-top: 2px;
+    transition: all 0.25s; cursor: pointer;
+  }
+  .task.done .task-check {
+    background: var(--sage); border-color: var(--sage);
+  }
+  .task-check svg {
+    width: 14px; height: 14px; stroke: white; stroke-width: 3;
+    fill: none; opacity: 0; transition: opacity 0.2s;
+  }
+  .task.done .task-check svg { opacity: 1; }
+
+  .task-body { flex: 1; min-width: 0; cursor: pointer; }
+  .task-text {
+    font-size: 0.92rem; line-height: 1.5;
+    color: var(--ink); font-weight: 400;
+    margin-bottom: 0.25rem;
+  }
+  .task-meta {
+    font-size: 0.75rem; color: var(--stone);
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    align-items: center;
+  }
+  .task-meta-item {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  .task-meta-item::before {
+    content: ''; width: 3px; height: 3px; border-radius: 50%;
+    background: var(--stone); display: inline-block;
+  }
+  .task-meta-item:first-child::before { display: none; }
+  .task-meta strong { color: var(--ink-soft); font-weight: 500; }
+
+  .task-actions {
+    display: flex; gap: 0.4rem;
+    opacity: 0; transition: opacity 0.2s;
+    flex-shrink: 0;
+  }
+  .task:hover .task-actions { opacity: 1; }
+  .task-action {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: transparent; border: 1px solid rgba(107,143,113,0.2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--stone); transition: all 0.2s;
+    padding: 0;
+  }
+  .task-action:hover {
+    background: var(--cream); color: var(--ink-soft);
+    border-color: rgba(107,143,113,0.35);
+  }
+  .task-action.delete:hover {
+    background: var(--alert-pale); color: var(--alert);
+    border-color: rgba(182,84,73,0.3);
+  }
+  .task-action svg { width: 14px; height: 14px; }
+
+  /* Add task button */
+  .add-task {
+    background: white; border: 1.5px dashed rgba(107,143,113,0.35);
+    border-radius: 14px; padding: 0.85rem 1.1rem;
+    display: flex; align-items: center; gap: 0.7rem;
+    cursor: pointer; transition: all 0.25s;
+    color: var(--sage); font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500;
+    width: 100%; text-align: left;
+  }
+  .add-task:hover {
+    background: var(--sage-pale);
+    border-color: var(--sage);
+    border-style: solid;
+  }
+  .add-task-icon {
+    width: 22px; height: 22px; border-radius: 6px;
+    background: var(--sage-pale); color: var(--sage);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; line-height: 1; font-weight: 400;
+  }
+
+  /* Inline form for adding/editing */
+  .task-form {
+    background: white; border-radius: 14px;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid var(--sage);
+    box-shadow: 0 4px 16px rgba(107,143,113,0.15);
+  }
+  .task-form-input {
+    width: 100%; padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(107,143,113,0.2);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; background: var(--cream);
+    transition: all 0.2s; margin-bottom: 0.6rem;
+    color: var(--ink);
+  }
+  .task-form-input:focus {
+    outline: none; border-color: var(--sage);
+    background: white; box-shadow: 0 0 0 3px var(--sage-pale);
+  }
+  .task-form-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.6rem; margin-bottom: 0.6rem;
+  }
+  .task-form-row .task-form-input { margin-bottom: 0; }
+  .task-form-actions {
+    display: flex; gap: 0.5rem; justify-content: flex-end;
+  }
+  .task-form-btn {
+    padding: 0.5rem 1.1rem; border-radius: 2rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+    font-weight: 500; cursor: pointer; letter-spacing: 0.04em;
+    transition: all 0.2s; border: 1px solid transparent;
+  }
+  .task-form-btn.primary {
+    background: var(--sage); color: white;
+  }
+  .task-form-btn.primary:hover { background: var(--sage-dark); }
+  .task-form-btn.secondary {
+    background: transparent; color: var(--ink-soft);
+    border-color: rgba(107,143,113,0.25);
+  }
+  .task-form-btn.secondary:hover {
+    background: var(--cream); border-color: rgba(107,143,113,0.4);
+  }
+
+  /* Tools panel */
+  .tools-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+  .tool-card {
+    background: white; border-radius: 16px;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid rgba(107,143,113,0.12);
+    transition: all 0.25s;
+  }
+  .tool-card:hover {
+    border-color: rgba(107,143,113,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(28,43,30,0.04);
+  }
+  .tool-card-tag {
+    font-size: 0.7rem; color: var(--warm);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .tool-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+  .tool-card p {
+    font-size: 0.85rem; color: var(--ink-soft);
+    line-height: 1.55; font-weight: 300;
+    margin-bottom: 0.8rem;
+  }
+  .tool-card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--sage-pale);
+    font-size: 0.8rem;
+  }
+  .tool-card-cost { color: var(--sage); font-weight: 500; }
+  .tool-card-alt { color: var(--stone); font-size: 0.75rem; }
+
+  /* Footer */
+  footer {
+    background: var(--ink); color: var(--cream);
+    padding: 3rem 3rem 2rem; margin-top: 4rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; color: var(--sage-light);
+    margin-bottom: 0.4rem;
+  }
+  .footer-logo span { color: var(--warm-light); }
+  .footer-tag {
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--stone);
+    margin-bottom: 1.5rem;
+  }
+  .footer-note {
+    font-size: 0.78rem; color: rgba(250,248,244,0.5);
+    line-height: 1.7; max-width: 520px; margin: 0 auto 1rem;
+    font-weight: 300;
+  }
+  .footer-copy {
+    font-size: 0.72rem; color: rgba(250,248,244,0.35);
+    letter-spacing: 0.08em;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: var(--ink); color: white;
+    padding: 0.9rem 1.5rem; border-radius: 2rem;
+    font-size: 0.85rem; box-shadow: 0 8px 30px rgba(28,43,30,0.2);
+    z-index: 500; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0.9rem 1.5rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .nav-context { display: none; }
+    .hero { padding: 7rem 1.5rem 2rem; }
+    .progress-wrap, .tabs-wrap { padding: 0 1.5rem; }
+    main { padding: 0 1.5rem 4rem; }
+    .progress-bar-outer { padding: 1.4rem 1.3rem; }
+    .progress-stats { gap: 1.2rem; }
+    .panel-intro { padding: 1.5rem 1.6rem; }
+    .panel-intro h2 { font-size: 1.4rem; }
+    .section-header h3 { font-size: 1.2rem; }
+    .task-form-row { grid-template-columns: 1fr; }
+    .task-actions { opacity: 1; }
+    footer { padding: 2rem 1.5rem 1.5rem; }
+  }
+  @media (max-width: 500px) {
+    .hero { padding: 6.5rem 1.2rem 1.5rem; }
+    .progress-wrap, .tabs-wrap, main { padding: 0 1.2rem; }
+    main { padding-bottom: 3rem; }
+    .progress-bar-outer { padding: 1.2rem; }
+    .progress-stats { gap: 1rem; }
+    .progress-stat-num { font-size: 1.2rem; }
+    .progress-stat-label { font-size: 0.65rem; }
+    .tab { padding: 0.8rem 0.9rem; font-size: 0.75rem; }
+    .task { padding: 0.8rem 0.95rem; gap: 0.7rem; }
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">Eira<span>Nova</span></div>
+    <div class="gate-sub">Intern oppstart</div>
+    <h2 class="gate-title">Velkommen</h2>
+    <p class="gate-desc">Denne siden er kun for medgrunnleggere i EiraNova AS.</p>
+    <input type="password" id="gate-pw" class="gate-input" placeholder="Passord" autocomplete="off">
+    <button class="gate-btn" id="gate-btn">Logg inn</button>
+    <div class="gate-error" id="gate-error"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav" style="display:none">
+  <div class="nav-left">
+    <a href="#" class="nav-logo">Eira<span>Nova</span></a>
+    <span class="nav-context">Oppstart</span>
+  </div>
+  <ul class="nav-links">
+    <li><a data-tab="oversikt">Oversikt</a></li>
+    <li><a data-tab="plan">Plan</a></li>
+    <li><a data-tab="compliance">Compliance</a></li>
+    <li><a data-tab="stack">Stack</a></li>
+    <li><button class="nav-reset" id="reset-btn">Nullstill</button></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Meny">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a data-tab="oversikt">Oversikt</a>
+  <a data-tab="plan">Plan</a>
+  <a data-tab="compliance">Compliance</a>
+  <a data-tab="stack">Stack</a>
+  <a id="reset-btn-mobile" style="color: var(--alert);">Nullstill fremdrift</a>
+</div>
+
+<div id="app" style="display:none">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">Fra AS til første kunde</span>
+    <h1>Oppstartsplan<br>& <em>compliance</em></h1>
+    <p class="hero-sub">Praktisk arbeidsplan for de tre medgrunnleggerne mens EiraNova-plattformen utvikles. Kom i gang med manuell drift, bygg kundebase, og samle reell erfaring som gjør appen bedre når den lanseres.</p>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-bar-outer">
+    <div class="progress-bar-top">
+      <div class="progress-label">Samlet fremdrift</div>
+      <div class="progress-stats">
+        <div><span class="progress-stat-num" id="stat-plan">0</span><span class="progress-stat-label">Plan</span></div>
+        <div><span class="progress-stat-num" id="stat-comp">0</span><span class="progress-stat-label">Compliance</span></div>
+        <div><span class="progress-stat-num" id="stat-total">0%</span><span class="progress-stat-label">Totalt</span></div>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="oversikt">Oversikt</button>
+    <button class="tab" data-tab="plan">Plan <span class="tab-count" id="count-plan">0</span></button>
+    <button class="tab" data-tab="compliance">Compliance <span class="tab-count" id="count-comp">0</span></button>
+    <button class="tab" data-tab="stack">Stack</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ───────── OVERSIKT ───────── -->
+<section class="panel active" data-panel="oversikt">
+  <div class="panel-intro">
+    <span class="panel-intro-tag">Hvorfor denne planen</span>
+    <h2>Appen er et verktøy. Driften starter nå.</h2>
+    <p>EiraNova-plattformen er et skaleringsverktøy — ikke en forutsetning for å levere tjenester. De tre medgrunnleggerne kan starte å ta imot oppdrag parallelt med at appen utvikles. Det gir inntekter fra dag én, og reell brukererfaring som styrer hvilke funksjoner appen faktisk trenger.</p>
+  </div>
+
+  <div class="panel-intro" style="background: var(--sage-pale); border-color: rgba(107,143,113,0.25);">
+    <span class="panel-intro-tag" style="color: var(--sage-dark);">Tre likeverdige grunnleggere</span>
+    <h2 style="color: var(--sage-dark);">Delt ansvar, delt lærekurve</h2>
+    <p style="color: var(--ink);">Alle tre medgrunnleggerne er likeverdige eiere og autoriserte sykepleiere. Fordeling av operative oppgaver (kundekontakt, journalføring, markedsføring, økonomi) gjøres internt og oppdateres her i planen etter hvert som rollene krystalliserer seg. Ingen "daglig leder" — alle tre står på samme linje.</p>
+  </div>
+
+  <div class="section-header">
+    <h3>Fire faser over åtte uker</h3>
+    <div class="section-meta">Hver fase låser opp neste</div>
+  </div>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-card-tag">Fase 1 · Uke 1–2</div>
+      <h4>Grunnmur</h4>
+      <p>Selskap, bank, forsikring, regnskap. Juridisk og finansielt fundament på plass. Ingen kundekontakt ennå.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Fase 2 · Uke 3–4</div>
+      <h4>Verktøy & prosesser</h4>
+      <p>Booking, journalsystem, betaling, tjenestekatalog. Alt manuelt, men strukturert. Prising låst.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Fase 3 · Uke 5–6</div>
+      <h4>Klar for kunder</h4>
+      <p>Compliance godkjent, melding til Statsforvalteren sendt, forsikring aktiv. Soft launch av markedsføring.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Fase 4 · Uke 7–8+</div>
+      <h4>Drift & læring</h4>
+      <p>Pilotkunder, journalføring, ukentlig app-feedback til Richard. Evaluering og justering.</p>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <h3>Hvorfor compliance før kunder?</h3>
+    <div class="section-meta"><strong>Lovkrav, ikke formalitet</strong></div>
+  </div>
+  <div class="critical">
+    <div class="critical-icon">!</div>
+    <div class="critical-content">
+      <h4>Compliance er ikke forhandlingsbart</h4>
+      <p>Helsetjenester — også ikke-medisinsk hjemmehjelp levert av autoriserte sykepleiere — reguleres av helse- og omsorgstjenesteloven, helsepersonelloven, GDPR artikkel 9 (særlige kategorier) og forskrift om ledelse og kvalitetsforbedring. Brudd kan utløse pålegg, tvangsmulkt, inndragning av autorisasjon, og GDPR-bot opp til 4% av omsetning. Compliance-fanen må være 100% før første betalende kunde.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── PLAN ───────── -->
+<section class="panel" data-panel="plan">
+  <div class="panel-intro">
+    <span class="panel-intro-tag">Konkret oppstartsplan</span>
+    <h2>Uke for uke til første kunde</h2>
+    <p>Huk av oppgavene etter hvert som de fullføres. Legg til egne oppgaver per uke med «+»-knappen. Rediger eller slett oppgaver ved å holde over dem. Alt lagres automatisk i denne nettleseren.</p>
+  </div>
+  <div id="plan-sections"></div>
+</section>
+
+<!-- ───────── COMPLIANCE ───────── -->
+<section class="panel" data-panel="compliance">
+  <div class="panel-intro">
+    <span class="panel-intro-tag">Compliance-sjekkliste</span>
+    <h2>Alt må være grønt før første kunde</h2>
+    <p>Dette er ikke en formalitet — det er et lovkrav etter norsk helselovgivning og GDPR. Ingen betalende kunder før alle punkter er avkrysset. Tilpass gjerne med egne oppgaver som reflekterer deres konkrete situasjon.</p>
+  </div>
+  <div class="critical">
+    <div class="critical-icon">!</div>
+    <div class="critical-content">
+      <h4>Kritisk</h4>
+      <p>Å levere helsetjenester uten oppfylte krav kan føre til pålegg, tvangsmulkt, inndragning av autorisasjon og erstatningsansvar. Personvernbrudd kan medføre bot opp til 20 mill. EUR eller 4% av omsetning. Konsulter jurist med helserett-kompetanse før oppstart.</p>
+    </div>
+  </div>
+  <div id="compliance-sections"></div>
+</section>
+
+<!-- ───────── STACK ───────── -->
+<section class="panel" data-panel="stack">
+  <div class="panel-intro">
+    <span class="panel-intro-tag">Operativ stack</span>
+    <h2>Verktøy for manuell drift</h2>
+    <p>Total månedlig driftskostnad ligger rundt 1 500–2 500 kr for første 3 måneder. Tripletex er master for regnskap iht. plattform-arkitekturen — unngå å bytte system senere.</p>
+  </div>
+  <div class="tools-grid" id="stack-grid"></div>
+
+  <div class="section-header">
+    <h3>Første kunder — hvor kommer de fra?</h3>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-card-tag">Kanal 1</div>
+      <h4>Eget nettverk</h4>
+      <p>Tidligere kolleger fra hjemmetjenesten, lokalmiljø i Moss/Fredrikstad/Sarpsborg. Personlige anbefalinger er gull i oppstart.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Kanal 2</div>
+      <h4>Fastleger</h4>
+      <p>Personlig besøk hos 10+ fastleger i området. Presenter tjenesten som avlastning for pårørende og forebygging.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Kanal 3</div>
+      <h4>B2B-partnere</h4>
+      <p>Sykehjem, kommunal hjemmetjeneste, forsikringsselskap (If, Gjensidige har omsorgsforsikringer). Langsiktige partneravtaler.</p>
+    </div>
+    <div class="tool-card">
+      <div class="tool-card-tag">Kanal 4</div>
+      <h4>Facebook lokalt</h4>
+      <p>Målrettet annonsering mot pårørende (50+ i Østfold/Akershus). Budsjett 3 000–5 000 kr for test. Pårørende er beslutningstakere.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-logo">Eira<span>Nova</span></div>
+  <div class="footer-tag">Intern · Oppstart</div>
+  <p class="footer-note">Fremdriften på denne siden lagres i din nettleser (localStorage). Den synkroniseres ikke automatisk mellom dere tre — avklar i ukentlig sync. For deling: eksporter status ved behov.</p>
+  <div class="footer-copy">EiraNova AS · <span id="year"></span></div>
+</footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═════════════════════════════════════════════════════════
+// CONFIG
+// ═════════════════════════════════════════════════════════
+const GATE_PASSWORD = 'eiranova2026';
+const STORAGE_KEY = 'eiranova-oppstart-v1';
+
+// ═════════════════════════════════════════════════════════
+// DEFAULT TASKS
+// ═════════════════════════════════════════════════════════
+const PLAN_SECTIONS = [
+  {
+    id: 'plan-w1', phase: 'Fase 1', title: 'Uke 1 · Selskap og bank', meta: 'Grunnmur på plass',
+    tasks: [
+      { id: 'p-w1-1', text: 'Ferdigstill AS-registrering i Brønnøysund, bekreft org.nr. mottatt', area: 'Selskap', owner: 'Alle tre' },
+      { id: 'p-w1-2', text: 'Oppstartsmøte DNB — bedriftskonto, LIS (likviditetsservice), Vipps Bedrift', area: 'Bank', owner: 'Alle tre' },
+      { id: 'p-w1-3', text: 'Velg regnskapssystem og engasjer regnskapsfører (Tripletex anbefales iht. arkitektur)', area: 'Regnskap', owner: 'Én tildelt' },
+      { id: 'p-w1-4', text: 'Innhent tilbud på yrkesansvarsforsikring (If, Gjensidige, Tryg)', area: 'Forsikring', owner: 'Én tildelt' },
+      { id: 'p-w1-5', text: 'Vurder MVA-registrering (helsetjenester fritatt, men kan være aktuelt)', area: 'Skatt', owner: 'Regnskapsfører' },
+    ]
+  },
+  {
+    id: 'plan-w2', phase: 'Fase 1', title: 'Uke 2 · Juridisk fundament', meta: 'Avtaler og compliance-start',
+    tasks: [
+      { id: 'p-w2-1', text: 'Aksjonæravtale mellom de tre medgrunnleggerne (likeverdige 33,3% eierandeler)', area: 'Aksjonæravtale', owner: 'Alle tre + jurist' },
+      { id: 'p-w2-2', text: 'IP-lisensavtale signert (Richard → EiraNova AS) for plattformbruk', area: 'IP', owner: 'Alle tre + Richard' },
+      { id: 'p-w2-3', text: 'Start arbeid med ROS-analyse (se compliance-fanen)', area: 'Compliance', owner: 'Én tildelt + input fra alle' },
+      { id: 'p-w2-4', text: 'Start internkontrollsystem — mal fra Helsedirektoratet', area: 'Compliance', owner: 'Én tildelt' },
+      { id: 'p-w2-5', text: 'Verifiser at post@eiranova.no og individuelle @eiranova.no-adresser fungerer', area: 'Domene', owner: 'Richard' },
+    ]
+  },
+  {
+    id: 'plan-w3', phase: 'Fase 2', title: 'Uke 3 · Operativ stack', meta: 'Verktøy i drift',
+    tasks: [
+      { id: 'p-w3-1', text: 'Sett opp Calendly eller SimplyBook.me med tjenestekatalog', area: 'Booking', owner: 'Én tildelt' },
+      { id: 'p-w3-2', text: 'Delt Google Calendar «EiraNova Drift» for oppdrag og tilgjengelighet', area: 'Kalender', owner: 'Alle tre' },
+      { id: 'p-w3-3', text: 'Velg og aktiver journalsystem (Infodoc / Pridok / WebMed) — aldri Google Docs', area: 'Journal', owner: 'Alle tre' },
+      { id: 'p-w3-4', text: 'Aktiver Vipps Bedrift og Stripe (når org.nr. er aktivt)', area: 'Betaling', owner: 'Én tildelt' },
+      { id: 'p-w3-5', text: 'Fakturamal i Tripletex (helsetjenester fritatt MVA)', area: 'Faktura', owner: 'Regnskapsfører' },
+      { id: 'p-w3-6', text: 'OneDrive Business / SharePoint for pasientdata — aldri Google Drive', area: 'Lagring', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'plan-w4', phase: 'Fase 2', title: 'Uke 4 · Prising og dokumentasjon', meta: 'Klar for compliance-fasen',
+    tasks: [
+      { id: 'p-w4-1', text: 'Prissett tjenestekatalog — konkurranseanalyse mot Stendi, Aleris, lokale aktører', area: 'Prising', owner: 'Alle tre' },
+      { id: 'p-w4-2', text: 'Samtykkeskjema for behandling og personvern', area: 'Samtykke', owner: 'Én tildelt + jurist' },
+      { id: 'p-w4-3', text: 'Tjenestevilkår inkl. 48-timers kanselleringsregel', area: 'Vilkår', owner: 'Én tildelt + jurist' },
+      { id: 'p-w4-4', text: 'Personvernerklæring publisert på marketing-siden', area: 'Personvern', owner: 'Richard + alle tre' },
+      { id: 'p-w4-5', text: 'Prosedyrebok: hygiene, dokumentasjon, avviksrapportering, taushetsplikt', area: 'Fag', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'plan-w5', phase: 'Fase 3', title: 'Uke 5 · Compliance låst', meta: 'Siste stopp før kunder',
+    tasks: [
+      { id: 'p-w5-1', text: 'Send melding til Statsforvalteren om oppstart av privat helsetjeneste', area: 'Statsforvalter', owner: 'Én tildelt' },
+      { id: 'p-w5-2', text: 'Bekreftelse fra Statsforvalteren mottatt og arkivert', area: 'Statsforvalter', owner: 'Én tildelt' },
+      { id: 'p-w5-3', text: 'ROS-analyse fullført og arkivert', area: 'Compliance', owner: 'Alle tre' },
+      { id: 'p-w5-4', text: 'Internkontrollsystem godkjent og implementert', area: 'Compliance', owner: 'Alle tre' },
+      { id: 'p-w5-5', text: 'Databehandleravtaler signert med ALLE leverandører', area: 'GDPR', owner: 'Én tildelt' },
+      { id: 'p-w5-6', text: 'Yrkesansvarsforsikring aktiv — dokument arkivert', area: 'Forsikring', owner: 'Alle tre' },
+      { id: 'p-w5-7', text: 'Bekreft at alle tres autorisasjoner er aktive i Helsepersonellregisteret (HPR)', area: 'HPR', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'plan-w6', phase: 'Fase 3', title: 'Uke 6 · Soft launch', meta: 'Markedsføring starter',
+    tasks: [
+      { id: 'p-w6-1', text: 'Legg til «Book time»-knapp på marketing-siden → Calendly', area: 'Marketing', owner: 'Richard' },
+      { id: 'p-w6-2', text: 'Publiser prisliste og tjenestekatalog på marketing-siden', area: 'Marketing', owner: 'Alle tre' },
+      { id: 'p-w6-3', text: 'Kontakt eget profesjonelle nettverk (tidligere kolleger)', area: 'Nettverk', owner: 'Alle tre individuelt' },
+      { id: 'p-w6-4', text: 'Personlige besøk hos 10 fastleger i Moss/Fredrikstad/Sarpsborg', area: 'Fastleger', owner: 'Delt mellom alle tre' },
+      { id: 'p-w6-5', text: 'Kontakt lokale sykehjem og forsikringsselskap (If, Gjensidige omsorg)', area: 'B2B', owner: 'Én tildelt' },
+      { id: 'p-w6-6', text: 'Opprett Google Business-profil og Facebook-side for EiraNova AS', area: 'Digital', owner: 'Én tildelt' },
+      { id: 'p-w6-7', text: 'Test lokal Facebook-annonsering — budsjett 3 000–5 000 kr', area: 'Annonsering', owner: 'Én tildelt' },
+    ]
+  },
+  {
+    id: 'plan-w7', phase: 'Fase 4', title: 'Uke 7 · Første oppdrag', meta: 'Pilotkunder',
+    tasks: [
+      { id: 'p-w7-1', text: 'Mål: 3–5 pilotkunder med reduserte priser mot skriftlig tilbakemelding', area: 'Pilot', owner: 'Alle tre' },
+      { id: 'p-w7-2', text: 'Standard onboarding-rutine: samtykke, helsestatus, pårørende, nøkkelhåndtering', area: 'Onboarding', owner: 'Alle tre' },
+      { id: 'p-w7-3', text: 'Journalføring samme dag som oppdrag (dokumentasjonsplikt, helsepersonelloven § 39)', area: 'Journal', owner: 'Alle tre' },
+      { id: 'p-w7-4', text: 'Avvikslogg i bruk fra dag én (internkontrollkrav)', area: 'Avvik', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'plan-w8', phase: 'Fase 4', title: 'Uke 8 · Evaluering og rytme', meta: 'Fast ukentlig drift',
+    tasks: [
+      { id: 'p-w8-1', text: 'Tilbakemeldingssamtale etter 2 uker med hver pilotkunde', area: 'Kunder', owner: 'Alle tre' },
+      { id: 'p-w8-2', text: 'Ukentlig rapport til Richard: friksjon, tidsbruk, kundebehov (→ app-utvikling)', area: 'App-sync', owner: 'Alle tre → Richard' },
+      { id: 'p-w8-3', text: 'Første fakturakjøring via Tripletex — test at alt flyter', area: 'Økonomi', owner: 'Regnskapsfører' },
+      { id: 'p-w8-4', text: 'Vurder rekruttering av flere sykepleiere (hvis etterspørsel > kapasitet)', area: 'Skalering', owner: 'Alle tre' },
+    ]
+  },
+];
+
+const COMPLIANCE_SECTIONS = [
+  {
+    id: 'c-01', phase: '1', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk',
+    tasks: [
+      { id: 'c-01-1', text: 'AS registrert i Brønnøysund med gyldig org.nr.', area: 'Aksjeloven', owner: 'Alle tre' },
+      { id: 'c-01-2', text: 'Registrert i Arbeidsgiverregisteret (når første ansettelse)', area: 'Folketrygdloven § 24', owner: 'Alle tre' },
+      { id: 'c-01-3', text: 'Alle tres sykepleierautorisasjon aktiv i Helsepersonellregisteret (HPR)', area: 'Helsepersonelloven § 48', owner: 'Alle tre' },
+      { id: 'c-01-4', text: 'HPR-verifisering dokumentert (skjermbilde i arkiv)', area: 'Intern kontroll', owner: 'Alle tre' },
+      { id: 'c-01-5', text: 'Aksjonæravtale signert (tre likeverdige medgrunnleggere)', area: 'Aksjeloven', owner: 'Alle tre' },
+      { id: 'c-01-6', text: 'IP-lisensavtale signert (Richard → EiraNova AS)', area: 'Åndsverkloven', owner: 'Alle tre + Richard' },
+    ]
+  },
+  {
+    id: 'c-02', phase: '2', title: 'Melding til myndigheter', meta: 'Før første kunde',
+    tasks: [
+      { id: 'c-02-1', text: 'Melding til Statsforvalteren om oppstart av privat helsetjeneste', area: 'HOL § 5-4', owner: 'Én tildelt' },
+      { id: 'c-02-2', text: 'Bekreftelse fra Statsforvalteren mottatt og arkivert', area: 'Dokumentasjon', owner: 'Én tildelt' },
+      { id: 'c-02-3', text: 'Vurdert om tjenesten krever godkjenning (ikke bare melding)', area: 'HOL § 5-4', owner: 'Alle tre + jurist' },
+    ]
+  },
+  {
+    id: 'c-03', phase: '3', title: 'Internkontroll og kvalitet', meta: 'Forskrift om ledelse',
+    tasks: [
+      { id: 'c-03-1', text: 'Internkontrollsystem etablert', area: 'Forskrift om ledelse', owner: 'Alle tre' },
+      { id: 'c-03-2', text: 'Dokumentert ansvarsfordeling mellom de tre grunnleggerne', area: 'Forskrift § 6', owner: 'Alle tre' },
+      { id: 'c-03-3', text: 'Prosedyre for avvikshåndtering', area: 'Forskrift § 7', owner: 'Alle tre' },
+      { id: 'c-03-4', text: 'Avvikslogg operativ (fra dag én)', area: 'Forskrift § 8', owner: 'Alle tre' },
+      { id: 'c-03-5', text: 'Prosedyre for medikamenthåndtering (hvis relevant)', area: 'Helsepersonelloven § 4', owner: 'Alle tre' },
+      { id: 'c-03-6', text: 'Prosedyre for hygiene og smittevern', area: 'Smittevernloven', owner: 'Alle tre' },
+      { id: 'c-03-7', text: 'Prosedyre for akuttsituasjoner (HLR, 113, pårørendevarsling)', area: 'Helsepersonelloven § 7', owner: 'Alle tre' },
+      { id: 'c-03-8', text: 'Årlig evaluering og forbedring planlagt', area: 'Forskrift § 8', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'c-04', phase: '4', title: 'Personvern og GDPR', meta: 'Helsedata = særlig kategori',
+    tasks: [
+      { id: 'c-04-1', text: 'ROS-analyse (risikovurdering) gjennomført og dokumentert', area: 'GDPR art. 35', owner: 'Alle tre' },
+      { id: 'c-04-2', text: 'Personvernerklæring publisert på nettside', area: 'GDPR art. 13', owner: 'Alle tre + Richard' },
+      { id: 'c-04-3', text: 'Samtykkeskjema for behandling utarbeidet', area: 'GDPR art. 9 (2)(a)', owner: 'Alle tre + jurist' },
+      { id: 'c-04-4', text: 'Databehandleravtale: journalsystem', area: 'GDPR art. 28', owner: 'Én tildelt' },
+      { id: 'c-04-5', text: 'Databehandleravtale: booking-system (Calendly)', area: 'GDPR art. 28', owner: 'Én tildelt' },
+      { id: 'c-04-6', text: 'Databehandleravtale: Google Workspace', area: 'GDPR art. 28', owner: 'Én tildelt' },
+      { id: 'c-04-7', text: 'Databehandleravtale: Microsoft (OneDrive/SharePoint)', area: 'GDPR art. 28', owner: 'Én tildelt' },
+      { id: 'c-04-8', text: 'Databehandleravtale: Tripletex', area: 'GDPR art. 28', owner: 'Én tildelt' },
+      { id: 'c-04-9', text: 'Behandlingsprotokoll ført (hva lagres, hvor, hvor lenge)', area: 'GDPR art. 30', owner: 'Alle tre' },
+      { id: 'c-04-10', text: 'Lagringstid definert per datakategori (journal = min. 10 år)', area: 'Pasientjournalforskriften', owner: 'Alle tre' },
+      { id: 'c-04-11', text: 'Rutine for innsyn, retting og sletting', area: 'GDPR art. 15–17', owner: 'Alle tre' },
+      { id: 'c-04-12', text: 'Rutine for avviksmelding til Datatilsynet (72 timer)', area: 'GDPR art. 33', owner: 'Alle tre' },
+      { id: 'c-04-13', text: 'Vurdert om DPIA (konsekvensvurdering) kreves', area: 'GDPR art. 35', owner: 'Alle tre + jurist' },
+    ]
+  },
+  {
+    id: 'c-05', phase: '5', title: 'Dokumentasjon og journalføring', meta: 'Helsepersonelloven § 39',
+    tasks: [
+      { id: 'c-05-1', text: 'Elektronisk pasientjournalsystem valgt og i drift', area: 'HPL § 39', owner: 'Alle tre' },
+      { id: 'c-05-2', text: 'IKKE bruk av Google Docs, OneNote e.l. for pasientdata', area: 'GDPR + journalforskriften', owner: 'Alle tre' },
+      { id: 'c-05-3', text: 'Journal føres samme dag som oppdrag', area: 'HPL § 39–40', owner: 'Alle tre' },
+      { id: 'c-05-4', text: 'Tilgangskontroll: kun autorisert helsepersonell har tilgang', area: 'Pasientjournalforskriften § 13', owner: 'Alle tre' },
+      { id: 'c-05-5', text: 'Logg over journaltilgang aktivert', area: 'Pasientjournalforskriften § 14', owner: 'Alle tre' },
+      { id: 'c-05-6', text: '2FA aktivert på alle systemer med pasientdata', area: 'Normen for informasjonssikkerhet', owner: 'Alle tre + Richard' },
+    ]
+  },
+  {
+    id: 'c-06', phase: '6', title: 'Forsikring og økonomi', meta: 'Dekning og regnskap',
+    tasks: [
+      { id: 'c-06-1', text: 'Yrkesansvarsforsikring aktiv (alle tre dekket)', area: 'HPL § 20', owner: 'Alle tre' },
+      { id: 'c-06-2', text: 'Forsikringsdokument arkivert og tilgjengelig', area: 'Dokumentasjon', owner: 'Én tildelt' },
+      { id: 'c-06-3', text: 'Innholdsforsikring (utstyr, PC, medisinsk utstyr)', area: 'Anbefalt', owner: 'Én tildelt' },
+      { id: 'c-06-4', text: 'Regnskapssystem operativt (Tripletex anbefalt)', area: 'Bokføringsloven', owner: 'Regnskapsfører' },
+      { id: 'c-06-5', text: 'Regnskapsfører engasjert', area: 'Anbefalt for AS', owner: 'Alle tre' },
+      { id: 'c-06-6', text: 'Helsetjenester er fritatt MVA — bekreftet med regnskapsfører', area: 'MVA-loven § 3-2', owner: 'Regnskapsfører' },
+    ]
+  },
+  {
+    id: 'c-07', phase: '7', title: 'Avtaler med kunder', meta: 'Forbrukerrettigheter',
+    tasks: [
+      { id: 'c-07-1', text: 'Tjenestevilkår publisert og tilgjengelig', area: 'Avtaleretten', owner: 'Alle tre + jurist' },
+      { id: 'c-07-2', text: 'Prisliste transparent og publisert', area: 'Markedsføringsloven', owner: 'Alle tre' },
+      { id: 'c-07-3', text: 'Kanselleringsregler tydelige (48-timers regel)', area: 'Forbrukerkjøpsloven', owner: 'Alle tre' },
+      { id: 'c-07-4', text: 'Klageadgang beskrevet (Statsforvalter + Pasientombud)', area: 'Pasientrettighetsloven', owner: 'Alle tre' },
+      { id: 'c-07-5', text: 'Taushetsplikt bekreftet skriftlig overfor kunde', area: 'HPL § 21', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'c-08', phase: '8', title: 'Operasjonell beredskap', meta: 'Faglig og sikkerhet',
+    tasks: [
+      { id: 'c-08-1', text: 'Nødprosedyre ved akutt forverring (113, pårørende, fastlege)', area: 'HPL § 7', owner: 'Alle tre' },
+      { id: 'c-08-2', text: 'Oppdatert liste over pårørendekontakter per kunde', area: 'Pasientjournal', owner: 'Alle tre' },
+      { id: 'c-08-3', text: 'Medisinsk utstyr kalibrert og kontrollert', area: 'Produsentanbefaling', owner: 'Alle tre' },
+      { id: 'c-08-4', text: 'HLR-sertifisering aktiv (alle tre, gyldig 12 mnd)', area: 'Faglig anbefaling', owner: 'Alle tre' },
+      { id: 'c-08-5', text: 'Politiattest innhentet for alle tre (krav ved arbeid i private hjem)', area: 'Politiregisterloven', owner: 'Alle tre' },
+      { id: 'c-08-6', text: 'Sikkerhetsrutine for alenearbeid (check-in/out ved oppdrag)', area: 'Arbeidsmiljøloven § 4-3', owner: 'Alle tre' },
+    ]
+  },
+  {
+    id: 'c-09', phase: '9', title: 'Markedsføring', meta: 'Helsepersonelloven § 13',
+    tasks: [
+      { id: 'c-09-1', text: 'Markedsføring er sannferdig og ikke villedende', area: 'HPL § 13', owner: 'Alle tre' },
+      { id: 'c-09-2', text: 'Ingen påstander om medisinske effekter uten faglig grunnlag', area: 'HPL + markedsføringsloven', owner: 'Alle tre' },
+      { id: 'c-09-3', text: 'Kundeuttalelser krever skriftlig samtykke', area: 'GDPR + markedsføringsloven', owner: 'Alle tre' },
+      { id: 'c-09-4', text: 'Cookie-erklæring og samtykkemekanisme på nettside', area: 'Ekomloven § 2-7b', owner: 'Richard' },
+    ]
+  },
+];
+
+const STACK_ITEMS = [
+  { tag: 'Booking', name: 'Calendly', desc: 'Booking-link med tjenestekatalog. Kundene velger tid og tjeneste selv.', cost: '~150 kr/mnd', alt: 'SimplyBook.me' },
+  { tag: 'Kalender', name: 'Google Workspace', desc: 'Delt «EiraNova Drift»-kalender mellom de tre grunnleggerne.', cost: '~80 kr/bruker', alt: 'Allerede aktiv' },
+  { tag: 'Journal', name: 'Infodoc / Pridok', desc: 'Elektronisk pasientjournal. Oppfyller helsepersonelloven § 39.', cost: '~500–1 200 kr', alt: 'WebMed' },
+  { tag: 'Regnskap', name: 'Tripletex', desc: 'Master for alt regnskap iht. plattform-arkitektur. B2C og B2B.', cost: '~400 kr/mnd', alt: 'Fiken / PowerOffice' },
+  { tag: 'Betaling', name: 'Vipps Bedrift', desc: 'Enkel betaling for kunder. 1,75% + 2 kr per transaksjon.', cost: 'Transaksjonsbasert', alt: 'Stripe' },
+  { tag: 'Lagring', name: 'OneDrive Business', desc: 'Kryptert sky for avtaler, prosedyrer, dokumentasjon. Aldri pasientdata utenfor journal.', cost: 'Inkl. Workspace', alt: 'SharePoint' },
+  { tag: 'Forsikring', name: 'Yrkesansvar', desc: 'Lovpålagt for alle tre autoriserte sykepleiere.', cost: '~300–600 kr', alt: 'If / Gjensidige / Tryg' },
+  { tag: 'Marketing', name: 'eiranova-marketing.vercel.app', desc: 'Marketing-siden med «Book time»-knapp til Calendly.', cost: 'Gratis (Vercel)', alt: 'Allerede live' },
+];
+
+// ═════════════════════════════════════════════════════════
+// STATE MANAGEMENT
+// ═════════════════════════════════════════════════════════
+const state = {
+  checked: {},         // { taskId: true }
+  customTasks: {},     // { sectionId: [ {id, text, area, owner} ] }
+  deletedDefaults: {}, // { taskId: true }
+  editedDefaults: {},  // { taskId: {text, area, owner} }
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      Object.assign(state, saved);
+    }
+  } catch (e) { console.warn('Kunne ikke laste state', e); }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { console.warn('Kunne ikke lagre state', e); }
+}
+
+// ═════════════════════════════════════════════════════════
+// GATE
+// ═════════════════════════════════════════════════════════
+const gate = document.getElementById('gate');
+const gatePw = document.getElementById('gate-pw');
+const gateBtn = document.getElementById('gate-btn');
+const gateError = document.getElementById('gate-error');
+
+function unlock() {
+  gate.style.display = 'none';
+  document.getElementById('main-nav').style.display = 'flex';
+  document.getElementById('app').style.display = 'block';
+  sessionStorage.setItem('eiranova-oppstart-unlocked', '1');
+  render();
+}
+
+function tryUnlock() {
+  if (gatePw.value === GATE_PASSWORD) {
+    unlock();
+  } else {
+    gateError.textContent = 'Feil passord. Prøv igjen.';
+    gatePw.value = '';
+    gatePw.focus();
+  }
+}
+
+gateBtn.addEventListener('click', tryUnlock);
+gatePw.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+if (sessionStorage.getItem('eiranova-oppstart-unlocked') === '1') {
+  unlock();
+} else {
+  setTimeout(() => gatePw.focus(), 100);
+}
+
+// ═════════════════════════════════════════════════════════
+// NAV & TABS
+// ═════════════════════════════════════════════════════════
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tabName));
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('[data-tab]').forEach(el => {
+  el.addEventListener('click', e => {
+    e.preventDefault();
+    switchTab(el.dataset.tab);
+  });
+});
+
+// Reset
+function confirmReset() {
+  if (confirm('Er du sikker på at du vil nullstille all fremdrift? Dette kan ikke angres.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    state.checked = {};
+    state.customTasks = {};
+    state.deletedDefaults = {};
+    state.editedDefaults = {};
+    render();
+    showToast('Fremdrift nullstilt');
+  }
+}
+document.getElementById('reset-btn').addEventListener('click', confirmReset);
+document.getElementById('reset-btn-mobile').addEventListener('click', confirmReset);
+
+// ═════════════════════════════════════════════════════════
+// RENDER
+// ═════════════════════════════════════════════════════════
+function allTasksForSection(section) {
+  const defaults = section.tasks
+    .filter(t => !state.deletedDefaults[t.id])
+    .map(t => {
+      const edit = state.editedDefaults[t.id];
+      return edit ? { ...t, ...edit, _default: true } : { ...t, _default: true };
+    });
+  const customs = (state.customTasks[section.id] || []).map(t => ({ ...t, _custom: true }));
+  return [...defaults, ...customs];
+}
+
+function renderTask(task) {
+  const done = !!state.checked[task.id];
+  const customClass = task._custom ? ' custom' : '';
+  const doneClass = done ? ' done' : '';
+  return `
+    <div class="task${doneClass}${customClass}" data-id="${task.id}">
+      <div class="task-check" data-action="toggle">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <div class="task-body" data-action="toggle">
+        <div class="task-text">${escapeHtml(task.text)}</div>
+        <div class="task-meta">
+          ${task.area ? `<span class="task-meta-item"><strong>${escapeHtml(task.area)}</strong></span>` : ''}
+          ${task.owner ? `<span class="task-meta-item">${escapeHtml(task.owner)}</span>` : ''}
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="task-action" data-action="edit" title="Rediger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        </button>
+        <button class="task-action delete" data-action="delete" title="Slett">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function renderSection(section) {
+  const tasks = allTasksForSection(section);
+  const phaseTag = section.phase ? `<span class="phase-tag">${escapeHtml(section.phase)}</span>` : '';
+  return `
+    <div class="section-header">
+      <h3>${phaseTag}${escapeHtml(section.title)}</h3>
+      <div class="section-meta">${escapeHtml(section.meta || '')}</div>
+    </div>
+    <div class="tasks" data-section="${section.id}">
+      ${tasks.map(renderTask).join('')}
+    </div>
+    <button class="add-task" data-add-section="${section.id}">
+      <span class="add-task-icon">+</span>
+      <span>Legg til egen oppgave</span>
+    </button>
+  `;
+}
+
+function render() {
+  // Plan
+  document.getElementById('plan-sections').innerHTML =
+    PLAN_SECTIONS.map(renderSection).join('');
+  // Compliance
+  document.getElementById('compliance-sections').innerHTML =
+    COMPLIANCE_SECTIONS.map(renderSection).join('');
+  // Stack
+  document.getElementById('stack-grid').innerHTML = STACK_ITEMS.map(s => `
+    <div class="tool-card">
+      <div class="tool-card-tag">${escapeHtml(s.tag)}</div>
+      <h4>${escapeHtml(s.name)}</h4>
+      <p>${escapeHtml(s.desc)}</p>
+      <div class="tool-card-footer">
+        <span class="tool-card-cost">${escapeHtml(s.cost)}</span>
+        <span class="tool-card-alt">Alt: ${escapeHtml(s.alt)}</span>
+      </div>
+    </div>
+  `).join('');
+  updateProgress();
+  document.getElementById('year').textContent = new Date().getFullYear();
+}
+
+function updateProgress() {
+  const planTasks = PLAN_SECTIONS.flatMap(allTasksForSection);
+  const compTasks = COMPLIANCE_SECTIONS.flatMap(allTasksForSection);
+  const planDone = planTasks.filter(t => state.checked[t.id]).length;
+  const compDone = compTasks.filter(t => state.checked[t.id]).length;
+  const total = planTasks.length + compTasks.length;
+  const done = planDone + compDone;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('stat-plan').textContent = `${planDone}/${planTasks.length}`;
+  document.getElementById('stat-comp').textContent = `${compDone}/${compTasks.length}`;
+  document.getElementById('stat-total').textContent = `${pct}%`;
+  document.getElementById('progress-fill').style.width = `${pct}%`;
+  document.getElementById('count-plan').textContent = `${planDone}/${planTasks.length}`;
+  document.getElementById('count-comp').textContent = `${compDone}/${compTasks.length}`;
+}
+
+// ═════════════════════════════════════════════════════════
+// TASK INTERACTIONS
+// ═════════════════════════════════════════════════════════
+function findTask(taskId) {
+  for (const section of [...PLAN_SECTIONS, ...COMPLIANCE_SECTIONS]) {
+    const def = section.tasks.find(t => t.id === taskId);
+    if (def) {
+      const edit = state.editedDefaults[taskId];
+      return { section, task: edit ? { ...def, ...edit } : def, isCustom: false };
+    }
+    const custom = (state.customTasks[section.id] || []).find(t => t.id === taskId);
+    if (custom) return { section, task: custom, isCustom: true };
+  }
+  return null;
+}
+
+function toggleTask(taskId) {
+  state.checked[taskId] = !state.checked[taskId];
+  if (!state.checked[taskId]) delete state.checked[taskId];
+  saveState();
+  // Optimistic UI: just toggle the class
+  const el = document.querySelector(`.task[data-id="${taskId}"]`);
+  if (el) el.classList.toggle('done', !!state.checked[taskId]);
+  updateProgress();
+}
+
+function deleteTask(taskId) {
+  const found = findTask(taskId);
+  if (!found) return;
+  if (!confirm(`Slette oppgaven «${found.task.text}»?`)) return;
+  if (found.isCustom) {
+    state.customTasks[found.section.id] = state.customTasks[found.section.id].filter(t => t.id !== taskId);
+  } else {
+    state.deletedDefaults[taskId] = true;
+  }
+  delete state.checked[taskId];
+  delete state.editedDefaults[taskId];
+  saveState();
+  render();
+  showToast('Oppgave slettet');
+}
+
+function showTaskForm(sectionId, existingTask) {
+  const isEdit = !!existingTask;
+  const formId = `form-${sectionId}-${Date.now()}`;
+  const html = `
+    <div class="task-form" id="${formId}">
+      <input type="text" class="task-form-input" data-field="text"
+        placeholder="Beskriv oppgaven" value="${existingTask ? escapeHtmlAttr(existingTask.text) : ''}">
+      <div class="task-form-row">
+        <input type="text" class="task-form-input" data-field="area"
+          placeholder="Område (valgfritt)" value="${existingTask ? escapeHtmlAttr(existingTask.area || '') : ''}">
+        <input type="text" class="task-form-input" data-field="owner"
+          placeholder="Ansvarlig (valgfritt)" value="${existingTask ? escapeHtmlAttr(existingTask.owner || '') : ''}">
+      </div>
+      <div class="task-form-actions">
+        <button class="task-form-btn secondary" data-form-action="cancel">Avbryt</button>
+        <button class="task-form-btn primary" data-form-action="save">${isEdit ? 'Lagre' : 'Legg til'}</button>
+      </div>
+    </div>
+  `;
+
+  if (isEdit) {
+    const taskEl = document.querySelector(`.task[data-id="${existingTask.id}"]`);
+    if (!taskEl) return;
+    taskEl.insertAdjacentHTML('afterend', html);
+    taskEl.style.display = 'none';
+  } else {
+    const btn = document.querySelector(`[data-add-section="${sectionId}"]`);
+    if (!btn) return;
+    btn.insertAdjacentHTML('beforebegin', html);
+    btn.style.display = 'none';
+  }
+
+  const form = document.getElementById(formId);
+  form.querySelector('[data-field="text"]').focus();
+
+  form.addEventListener('click', e => {
+    const action = e.target.closest('[data-form-action]')?.dataset.formAction;
+    if (!action) return;
+    if (action === 'cancel') {
+      form.remove();
+      if (isEdit) {
+        const taskEl = document.querySelector(`.task[data-id="${existingTask.id}"]`);
+        if (taskEl) taskEl.style.display = '';
+      } else {
+        const btn = document.querySelector(`[data-add-section="${sectionId}"]`);
+        if (btn) btn.style.display = '';
+      }
+    } else if (action === 'save') {
+      const text = form.querySelector('[data-field="text"]').value.trim();
+      const area = form.querySelector('[data-field="area"]').value.trim();
+      const owner = form.querySelector('[data-field="owner"]').value.trim();
+      if (!text) { form.querySelector('[data-field="text"]').focus(); return; }
+      if (isEdit) {
+        if (existingTask._custom || !existingTask._default) {
+          // Custom task — update in customTasks
+          const arr = state.customTasks[sectionId] || [];
+          const idx = arr.findIndex(t => t.id === existingTask.id);
+          if (idx >= 0) arr[idx] = { ...arr[idx], text, area, owner };
+        } else {
+          // Default task — store override
+          state.editedDefaults[existingTask.id] = { text, area, owner };
+        }
+        showToast('Oppgave oppdatert');
+      } else {
+        const newTask = {
+          id: `custom-${sectionId}-${Date.now()}`,
+          text, area, owner,
+        };
+        if (!state.customTasks[sectionId]) state.customTasks[sectionId] = [];
+        state.customTasks[sectionId].push(newTask);
+        showToast('Oppgave lagt til');
+      }
+      saveState();
+      render();
+    }
+  });
+
+  form.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+      e.preventDefault();
+      form.querySelector('[data-form-action="save"]').click();
+    } else if (e.key === 'Escape') {
+      form.querySelector('[data-form-action="cancel"]').click();
+    }
+  });
+}
+
+// Event delegation on main content
+document.addEventListener('click', e => {
+  // Add task
+  const addBtn = e.target.closest('[data-add-section]');
+  if (addBtn) {
+    showTaskForm(addBtn.dataset.addSection);
+    return;
+  }
+  // Task actions
+  const actionEl = e.target.closest('[data-action]');
+  if (actionEl) {
+    const taskEl = actionEl.closest('.task');
+    if (!taskEl) return;
+    const taskId = taskEl.dataset.id;
+    const action = actionEl.dataset.action;
+    if (action === 'toggle') {
+      toggleTask(taskId);
+    } else if (action === 'delete') {
+      deleteTask(taskId);
+    } else if (action === 'edit') {
+      const found = findTask(taskId);
+      if (found) {
+        const taskForForm = found.isCustom
+          ? { ...found.task, _custom: true }
+          : { ...found.task, _default: true };
+        showTaskForm(found.section.id, taskForForm);
+      }
+    }
+  }
+});
+
+// ═════════════════════════════════════════════════════════
+// HELPERS
+// ═════════════════════════════════════════════════════════
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function escapeHtmlAttr(str) { return escapeHtml(str); }
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// ═════════════════════════════════════════════════════════
+// INIT
+// ═════════════════════════════════════════════════════════
+loadState();
+if (sessionStorage.getItem('eiranova-oppstart-unlocked') === '1') render();
+</script>
+
+</body>
+</html>
