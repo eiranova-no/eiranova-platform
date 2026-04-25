@@ -67,6 +67,17 @@
       "description": "Per handoff 8. april 2026 er følgende ikke testet ferdig: nurse-onboarding 4 steg (isNy=true), kunde-registrering full flyt, B2B-flyter, admin-modaler (ReactDOM.createPortal), journal-toggle og B2B-toggle.",
       "status": "open",
       "action": "Richard fullfører UX-testing på localhost (porter 3001-3003) før K-DB-001 starter. Se testsjekkliste i EIRANOVA_HANDOFF.md seksjon 4."
+    },
+    {
+      "id": "D-007",
+      "contract": "K-DB-001",
+      "date": "2026-04-25",
+      "reported_by": "Cursor (implementasjon)",
+      "severity": "low",
+      "title": "K-DB-001 spec (T-001–T-006) hadde tre implementasjonshull: forward-ref, handle_new_user, ufullstendig RLS",
+      "description": "Spesifikasjonen i docs/CURSOR-INSTRUKSJON.md hadde: (1) `oppdrag` med FK mot `b2b_organisasjoner`/`b2b_brukere` før disse var opprettet — løst ved å opprette b2b-tabellene i 001 Core før `oppdrag`. (2) Kontrakten nevnte `handle_new_user()` trigger men den stod ikke i T-005 SQL — implementert i 005_rls. (3) T-005 viste RLS for 8 tabeller, men kriterium krever RLS på hele skjemaet — alle øvrige tabeller får ENABLE ROW LEVEL SECURITY og policies etter mønster (egne data / lesetabell for innloggede / koordinator+admin / vurderinger). I implementasjons runbooken referert som «D-001»-avvik, men logget som D-007 pga. eksisterende D-001 i denne filen (append-only).",
+      "status": "resolved",
+      "action": "Løst i `supabase/migrations/20260425120000_001_core.sql` (b2b før `oppdrag`), `20260425120004_005_rls.sql` (trigger + utvidet RLS). Ingen omskriving av T-001–T-004/T-006 utover rekkefølge og nødvendig tillegg i RLS + trigger."
     }
   ]
 }
