@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-10",
+  "last_updated": "2026-04-25",
   "updated_by": "Claude (Technical Architect)",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
@@ -128,7 +128,8 @@
       "id": "K-DB-001",
       "title": "Supabase Databaseskjema — Komplett Fundament",
       "type": "feature",
-      "status": "ready",
+      "status": "merged",
+      "merged_at": "2026-04-25",
       "spec_path": "docs/contracts/active/K-DB-001.md",
       "goal": "Etabler komplett databaseskjema: alle enums, 20+ tabeller, RLS-policies, hjelpe-funksjoner, seed-data. Alt er spesifisert i CURSOR-INSTRUKSJON.md §T-001 til §T-006. Frankfurt (eu-central-1) er non-negotiable.",
       "in_scope": [
@@ -177,7 +178,7 @@
       "id": "K-AUTH-001",
       "title": "Auth — Kunder (e-post + passord)",
       "type": "feature",
-      "status": "planned",
+      "status": "ready",
       "spec_path": "docs/contracts/active/K-AUTH-001.md",
       "goal": "Koble prototype-auth til ekte Supabase Auth for kunder. E-post + passord med glemt passord via reset-e-post. INGEN Magic Link. INGEN Google OAuth for kunder. Komplett ny konto-flyt: push-tillatelse → samtykke → onboarding → hjem.",
       "in_scope": [
