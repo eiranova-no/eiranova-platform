@@ -10,8 +10,8 @@
 
 | | |
 |---|---|
-| **Progress** | 6% → MVP Launch |
-| **Aktiv kontrakt** | Ingen — **K-DB-001** (klar / ready; se kø) |
+| **Progress** | 9% → MVP Launch |
+| **Aktiv kontrakt** | Ingen — **K-AUTH-001** (klar / ready; se kø) |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 
