@@ -80,6 +80,30 @@
       "action": "Løst i `supabase/migrations/20260425120000_001_core.sql` (b2b før `oppdrag`), `20260425120004_005_rls.sql` (trigger + utvidet RLS). Ingen omskriving av T-001–T-004/T-006 utover rekkefølge og nødvendig tillegg i RLS + trigger."
     },
     {
+      "id": "D-008",
+      "contract": "K-AUTH-001",
+      "date": "2026-04-25",
+      "reported_by": "Cursor (implementasjon)",
+      "severity": "low",
+      "title": "Google OAuth-knapp i prototype-Login (privatkunde) strid med auth-regel — ingen Google for kunder",
+      "description": "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx viste «Fortsett med Google» for privatkunde, i strid med docs/CURSOR-INSTRUKSJON.md (ingen Google OAuth for kunder). Fjernet i K-AUTH-001.",
+      "status": "resolved",
+      "discovered_in": "K-AUTH-001",
+      "resolved_in": "K-AUTH-001"
+    },
+    {
+      "id": "D-009",
+      "contract": "K-AUTH-001",
+      "date": "2026-04-25",
+      "reported_by": "Cursor (implementasjon)",
+      "severity": "low",
+      "title": "Pårørende-relasjon spørres ikke i onboarding steg 0 (prototype)",
+      "description": "Feltet parorende.relasjon er TEXT NULL i public.parorende. Onboarding steg 0 oppretter rad med relasjon null (bevisst Fase 0). Full inndata for relasjon bør behandles i K-PROFIL-001.",
+      "status": "open",
+      "discovered_in": "K-AUTH-001",
+      "defer_to": "K-PROFIL-001"
+    },
+    {
       "id": "D-010",
       "contract": "K-AUTH-001",
       "date": "2026-04-25",
