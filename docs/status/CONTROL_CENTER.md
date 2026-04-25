@@ -4,7 +4,7 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-04-25
-**Progress:** 9% → MVP Launch
+**Progress:** 13% → MVP Launch
 
 ---
 
@@ -16,9 +16,7 @@ Ingen aktiv kontrakt.
 
 ## ✅ READY CONTRACTS
 
-| ID | Title | Type | Dependencies | Goal |
-|----|-------|------|--------------|------|
-| **K-AUTH-001** | Auth — Kunder (e-post + passord) | feature | K-DB-001 ✅ | Koble prototype-auth til ekte Supabase Auth for kunder. E-post + passord med gle... |
+Ingen klare kontrakter.
 
 ---
 
@@ -26,9 +24,9 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies |
 |----|-------|------|--------------|
-| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 |
-| K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 |
-| K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 |
+| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 ✅ |
+| K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 ✅ |
+| K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 ✅ |
 | K-TJENESTE-001 | Tjenestekatalog — Backend & Admin CRUD | feature | K-ROUTE-001 |
 | K-BESTILL-001 | Bestillingsflyt — 4 Steg Komplett | feature | K-TJENESTE-001, K-GDPR-001 |
 | K-BETALING-002 | Betaling — Stripe Kortbetaling | feature | K-BETALING-001 |
@@ -69,6 +67,7 @@ Ingen aktiv kontrakt.
 | ID | Title | Merged |
 |----|-------|--------|
 | K-DB-001 | Supabase Databaseskjema — Komplett Fundament | 2026-04-25 |
+| K-AUTH-001 | Auth — Kunder (e-post + passord) | 2026-04-25 |
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | 2026-04-10 |
 | K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | 2026-04-10 |
 
