@@ -6,6 +6,7 @@
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
 | K-DB-001 | Supabase Databaseskjema — Komplett Fundament | feature | 2026-04-25 |
+| K-AUTH-001 | Auth — Kunder (e-post + passord) | feature | 2026-04-25 |
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | infra | 2026-04-10 |
 | K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | governance | 2026-04-10 |
 

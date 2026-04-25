@@ -12,6 +12,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **K-DB-001:** Supabase-migrasjoner under `supabase/migrations/` (001 core, 002 betaling/B2B, 003 personal, 004 config/GDPR, 005 RLS inkl. `handle_new_user` på `auth.users`, 006 seed), `supabase/config.toml` fra `supabase init`, og `docs/DATA_MODEL.md` med oversikt over tabellgrupper, enums og RLS-mønstre. Oppdaget avvik (D-007) i `DISCOVERIES.json` — løst i denne koden.
 
 ### Changed
+- `docs/contracts/CONTRACT_QUEUE.json`: K-AUTH-001 markert `merged` (`merged_at` 2026-04-25); `pnpm generate-cc` regenererte `CONTROL_CENTER.md` og `MERGED_HISTORY.md`.
 - apps/oppstart/ oppgradert fra localStorage til Supabase realtime sync.
   Nytt Supabase-prosjekt eiranova-oppstart (eu-central-1), separate tabeller
   for tasks/completions/comments. Tre-brukerlogg (Lise/Therese/Jeanett) med

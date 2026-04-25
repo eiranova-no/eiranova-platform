@@ -178,7 +178,8 @@
       "id": "K-AUTH-001",
       "title": "Auth — Kunder (e-post + passord)",
       "type": "feature",
-      "status": "ready",
+      "status": "merged",
+      "merged_at": "2026-04-25",
       "spec_path": "docs/contracts/active/K-AUTH-001.md",
       "goal": "Koble prototype-auth til ekte Supabase Auth for kunder. E-post + passord med glemt passord via reset-e-post. INGEN Magic Link. INGEN Google OAuth for kunder. Komplett ny konto-flyt: push-tillatelse → samtykke → onboarding → hjem.",
       "in_scope": [
