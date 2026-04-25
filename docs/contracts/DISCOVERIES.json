@@ -78,6 +78,19 @@
       "description": "Spesifikasjonen i docs/CURSOR-INSTRUKSJON.md hadde: (1) `oppdrag` med FK mot `b2b_organisasjoner`/`b2b_brukere` før disse var opprettet — løst ved å opprette b2b-tabellene i 001 Core før `oppdrag`. (2) Kontrakten nevnte `handle_new_user()` trigger men den stod ikke i T-005 SQL — implementert i 005_rls. (3) T-005 viste RLS for 8 tabeller, men kriterium krever RLS på hele skjemaet — alle øvrige tabeller får ENABLE ROW LEVEL SECURITY og policies etter mønster (egne data / lesetabell for innloggede / koordinator+admin / vurderinger). I implementasjons runbooken referert som «D-001»-avvik, men logget som D-007 pga. eksisterende D-001 i denne filen (append-only).",
       "status": "resolved",
       "action": "Løst i `supabase/migrations/20260425120000_001_core.sql` (b2b før `oppdrag`), `20260425120004_005_rls.sql` (trigger + utvidet RLS). Ingen omskriving av T-001–T-004/T-006 utover rekkefølge og nødvendig tillegg i RLS + trigger."
+    },
+    {
+      "id": "D-010",
+      "contract": "K-AUTH-001",
+      "date": "2026-04-25",
+      "reported_by": "Review (post-K-DB-001)",
+      "severity": "low",
+      "title": "FK-indekser manglet etter K-DB-001 — Postgres lager ikke FK-indekser automatisk",
+      "description": "Foreign key-kolonner hadde hverken eksplisitte indekser (kun PK/UNIQUE får det automatisk). Løst med forward-only `20260425130000_007_fk_indexes.sql` (chore/fk-indexes). Teller i Studio: 30 nye `idx_%`-indekser i public fra denne migrasjonen (tidligere sjekkliste sa 27; faktisk antall følger T-001b-SQL).",
+      "status": "resolved",
+      "discovered_in": "post-K-DB-001 review",
+      "resolved_in": "chore/fk-indexes",
+      "action": "Kjørt `supabase db push` etter merge til dev; `SELECT count(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname LIKE 'idx_%';` bør vise +30 nye navn jf. migrasjon 007."
     }
   ]
 }
