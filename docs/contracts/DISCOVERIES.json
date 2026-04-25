@@ -115,6 +115,18 @@
       "discovered_in": "post-K-DB-001 review",
       "resolved_in": "chore/fk-indexes",
       "action": "Kjørt `supabase db push` etter merge til dev; `SELECT count(*) FROM pg_indexes WHERE schemaname = 'public' AND indexname LIKE 'idx_%';` bør vise +30 nye navn jf. migrasjon 007."
+    },
+    {
+      "id": "D-011",
+      "contract": "K-AUTH-001",
+      "date": "2026-04-25",
+      "reported_by": "Richard / review",
+      "severity": "low",
+      "title": "handle_new_user() leste ikke raw_user_meta_data — full_name gikk tapt ved signUp",
+      "description": "K-DB-001 sin handle_new_user() satt kun id, email, role. Verdier fra supabase.auth.signUp({ options: { data: { full_name } } }) ligger i auth.users.raw_user_meta_data. Forward-only fiks i 20260425140000_008_fix_handle_new_user.sql.",
+      "status": "resolved",
+      "discovered_in": "K-AUTH-001",
+      "resolved_in": "K-AUTH-001"
     }
   ]
 }

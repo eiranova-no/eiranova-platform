@@ -82,6 +82,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: messageFromAuthError(error) };
       }
       if (data.session?.user?.id) {
+        // Backup: handle_new_user() trigger (008) populates full_name from raw_user_meta_data.
+        // This UPDATE is idempotent and covers edge cases where the row still lacks full_name.
         const { error: uerr } = await supabase
           .from("users")
           .update({ full_name: fullName })
