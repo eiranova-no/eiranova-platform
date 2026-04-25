@@ -7,6 +7,9 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+- **K-DB-001:** Supabase-migrasjoner under `supabase/migrations/` (001 core, 002 betaling/B2B, 003 personal, 004 config/GDPR, 005 RLS inkl. `handle_new_user` på `auth.users`, 006 seed), `supabase/config.toml` fra `supabase init`, og `docs/DATA_MODEL.md` med oversikt over tabellgrupper, enums og RLS-mønstre. Oppdaget avvik (D-007) i `DISCOVERIES.json` — løst i denne koden.
+
 ### Changed
 - apps/oppstart/ oppgradert fra localStorage til Supabase realtime sync.
   Nytt Supabase-prosjekt eiranova-oppstart (eu-central-1), separate tabeller
