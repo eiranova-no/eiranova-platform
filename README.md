@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **Progress** | 13% → MVP Launch |
-| **Aktiv kontrakt** | Ingen — neste i kø: **K-AUTH-002** (Auth — sykepleiere / Google Workspace @eiranova.no; se kø) |
+| **Aktiv kontrakt** | Ingen — **K-AUTH-002** står som **ready** (Auth — sykepleiere / Google @eiranova.no). Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md); sett til `active` når arbeid starter. |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 

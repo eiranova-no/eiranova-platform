@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-04-25",
-  "updated_by": "Claude (Technical Architect)",
+  "updated_by": "Richard (PO) — K-AUTH-002 satt til ready",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "status_taxonomy": [
@@ -228,7 +228,7 @@
       "id": "K-AUTH-002",
       "title": "Auth — Sykepleiere (Google Workspace @eiranova.no)",
       "type": "feature",
-      "status": "planned",
+      "status": "ready",
       "spec_path": "docs/contracts/active/K-AUTH-002.md",
       "goal": "Google Workspace (@eiranova.no) innlogging for sykepleiere med hd-begrensning og rollebasert ruting. B2B koordinator og bruker/pasient via Bedriftskunde-flyt.",
       "in_scope": [

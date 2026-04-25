@@ -16,7 +16,9 @@ Ingen aktiv kontrakt.
 
 ## ✅ READY CONTRACTS
 
-Ingen klare kontrakter.
+| ID | Title | Type | Dependencies | Goal |
+|----|-------|------|--------------|------|
+| **K-AUTH-002** | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 ✅ | Google Workspace (@eiranova.no) innlogging for sykepleiere med hd-begrensning og... |
 
 ---
 
@@ -24,7 +26,6 @@ Ingen klare kontrakter.
 
 | ID | Title | Type | Dependencies |
 |----|-------|------|--------------|
-| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 ✅ |
 | K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 ✅ |
 | K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 ✅ |
 | K-TJENESTE-001 | Tjenestekatalog — Backend & Admin CRUD | feature | K-ROUTE-001 |
