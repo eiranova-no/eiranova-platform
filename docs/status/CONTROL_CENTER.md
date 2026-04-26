@@ -3,14 +3,16 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-04-25
-**Progress:** 13% → MVP Launch
+**Last generated:** 2026-04-26
+**Progress:** 12% → MVP Launch
 
 ---
 
 ## 🟢 ACTIVE CONTRACT
 
-Ingen aktiv kontrakt.
+| ID | Title | Type | Goal |
+|----|-------|------|------|
+| **K-ENV-002** | Env-guard & Middleware Hardening | governance | Fjerne non-null-assertions for env-vars i kunde-app og innføre requireEnv-helper... |
 
 ---
 

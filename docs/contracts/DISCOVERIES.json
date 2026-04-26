@@ -127,6 +127,30 @@
       "status": "resolved",
       "discovered_in": "K-AUTH-001",
       "resolved_in": "K-AUTH-001"
+    },
+    {
+      "id": "D-012",
+      "contract": "K-ENV-002",
+      "date": "2026-04-26",
+      "reported_by": "Claude (Technical Architect) / K-ENV-002",
+      "severity": "low",
+      "title": "Prototype-fil bruker process.env direkte",
+      "description": "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx (linje ~9300) leser NEXT_PUBLIC_APP_ENV og NEXT_PUBLIC_DATA_SOURCE direkte fra process.env. Bør refaktoreres til samme env-helper-mønster som de tre appene før produksjon.",
+      "status": "open",
+      "discovered_in": "K-ENV-002",
+      "action": "Egen kontrakt før prod-launch"
+    },
+    {
+      "id": "D-013",
+      "contract": "K-ENV-002",
+      "date": "2026-04-26",
+      "reported_by": "Claude (Technical Architect) / K-ENV-002",
+      "severity": "low",
+      "title": "Mangler typecheck-script per app",
+      "description": "Ingen av de tre appene har typecheck-script i package.json. Type-sjekk skjer kun via next build. Bør legge til 'typecheck': 'tsc --noEmit' for raskere CI-feedback.",
+      "status": "open",
+      "discovered_in": "K-ENV-002",
+      "action": "Egen mini-kontrakt"
     }
   ]
 }
