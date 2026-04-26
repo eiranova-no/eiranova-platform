@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-04-26",
-  "updated_by": "K-ENV-002 active — env-guard & middleware hardening",
+  "updated_by": "K-ENV-002 merged 2026-04-26 — env-guard & middleware hardening",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "status_taxonomy": [
@@ -128,7 +128,8 @@
       "id": "K-ENV-002",
       "title": "Env-guard & Middleware Hardening",
       "type": "governance",
-      "status": "active",
+      "status": "merged",
+      "merged_at": "2026-04-26",
       "spec_path": "docs/contracts/active/K-ENV-002.md",
       "goal": "Fjerne non-null-assertions for env-vars i kunde-app og innføre requireEnv-helper. Hindrer fremtidig MIDDLEWARE_INVOCATION_FAILED ved manglende env-konfigurasjon.",
       "in_scope": [
