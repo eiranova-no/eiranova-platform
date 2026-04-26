@@ -309,6 +309,56 @@
       ]
     },
     {
+      "id": "K-LAUNCH-001",
+      "title": "Production Cut-over: Plattform til main",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-LAUNCH-001.md",
+      "goal": "Etabler strikt branch-modell ved lansering: main→Production→prod-Supabase, dev→Preview→dev-Supabase. Avvikle marketing og oppstart som standalone-apper.",
+      "in_scope": [
+        "Konsolidering av dev og main historikk",
+        "Vercel Production Branch endring til main for kunde/nurse/admin",
+        "Vercel Production env-vars med prod-Supabase",
+        "Branch protection på main",
+        "Custom domener verifisering",
+        "Avvikling av marketing og oppstart Vercel-prosjekter",
+        "Sletting av apps/marketing og apps/oppstart fra repo"
+      ],
+      "out_of_scope": [
+        "Feature-utvikling",
+        "Migrering av brukerdata fra dev til prod",
+        "Marketing-content for lanseringen"
+      ],
+      "deliverables": [
+        "Production-deploy fra main for alle tre plattform-apper",
+        "Branch protection aktivert på main",
+        "Oppdatert docs/ENVIRONMENTS.md",
+        "Pre-launch checklist gjennomført"
+      ],
+      "acceptance_criteria": [
+        "app.eiranova.no, nurse.eiranova.no, admin.eiranova.no returnerer 200/307 fra main",
+        "Alle tre apper treffer prod-Supabase",
+        "EnvBadge skjult i Production",
+        "Branch protection aktivert på main",
+        "dev→Preview fungerer fortsatt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-AUTH-002",
+        "K-DB-001",
+        "K-GDPR-001",
+        "K-PROFIL-001",
+        "K-BESTILL-001",
+        "K-OPPDRAG-001"
+      ],
+      "risks": [
+        "DNS-propagering opp til 24 timer",
+        "Hardkodede dev-URL-er kan feile i Production",
+        "Vipps/Stripe/Tripletex blokkert uten org.nr.",
+        "Prod-Supabase RLS må verifiseres før lansering"
+      ]
+    },
+    {
       "id": "K-GDPR-001",
       "title": "GDPR — Samtykke, Soft-delete & Dataportabilitet",
       "type": "governance",
