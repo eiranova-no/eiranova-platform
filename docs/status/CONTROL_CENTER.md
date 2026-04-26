@@ -26,6 +26,7 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies |
 |----|-------|------|--------------|
+| K-LAUNCH-001 | Production Cut-over: Plattform til main | governance | K-AUTH-002, K-DB-001 ✅, K-GDPR-001, K-PROFIL-001, K-BESTILL-001, K-OPPDRAG-001 |
 | K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 ✅ |
 | K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 ✅ |
 | K-TJENESTE-001 | Tjenestekatalog — Backend & Admin CRUD | feature | K-ROUTE-001 |
