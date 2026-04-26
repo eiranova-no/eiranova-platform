@@ -4,15 +4,13 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-04-26
-**Progress:** 12% → MVP Launch
+**Progress:** 15% → MVP Launch
 
 ---
 
 ## 🟢 ACTIVE CONTRACT
 
-| ID | Title | Type | Goal |
-|----|-------|------|------|
-| **K-ENV-002** | Env-guard & Middleware Hardening | governance | Fjerne non-null-assertions for env-vars i kunde-app og innføre requireEnv-helper... |
+Ingen aktiv kontrakt.
 
 ---
 
@@ -69,6 +67,7 @@
 
 | ID | Title | Merged |
 |----|-------|--------|
+| K-ENV-002 | Env-guard & Middleware Hardening | 2026-04-26 |
 | K-DB-001 | Supabase Databaseskjema — Komplett Fundament | 2026-04-25 |
 | K-AUTH-001 | Auth — Kunder (e-post + passord) | 2026-04-25 |
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | 2026-04-10 |
