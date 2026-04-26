@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-04-26",
-  "updated_by": "K-ENV-002 merged 2026-04-26 — env-guard & middleware hardening",
+  "updated_by": "K-DB-002 active 2026-04-26 — prod migration + production env",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "status_taxonomy": [
@@ -213,6 +213,52 @@
       "risks": [
         "oppdrag-tabell refererer b2b_organisasjoner — b2b-tabellen må opprettes før oppdrag",
         "HPR-nummer må valideres mot Helsedirektoratets register — stub i Fase 0"
+      ]
+    },
+    {
+      "id": "K-DB-002",
+      "title": "Prod-Supabase Migration & Production Environment Activation",
+      "type": "infrastructure",
+      "status": "active",
+      "spec_path": "docs/contracts/active/K-DB-002.md",
+      "goal": "Migrere prod-Supabase til samme schema som dev. Sette Production env-vars i Vercel for alle tre plattform-prosjekter. Verifisere at både Preview og Production fungerer mot sine respektive Supabase-prosjekter. Lukker gap etter K-ENV-002 og K-DB-001.",
+      "in_scope": [
+        "supabase db push mot prod-Supabase (8 migrasjoner)",
+        "Verifisering av 26 tabeller og RLS-policies på prod",
+        "Production env-vars i Vercel for kunde/nurse/admin",
+        "Redeploy alle tre prosjekter med riktige Production-vars",
+        "End-to-end verifisering med curl + browser",
+        "Oppdatering av docs/ENVIRONMENTS.md"
+      ],
+      "out_of_scope": [
+        "Endring av Vercel Production Branch (K-LAUNCH-001)",
+        "Branch protection på main",
+        "Custom domener",
+        "Avvikling av marketing/oppstart-apper",
+        "Backup-strategi for prod-Supabase",
+        "Automatisert migrasjons-pipeline"
+      ],
+      "deliverables": [
+        "Migrert prod-Supabase med 26 tabeller",
+        "Production env-vars satt i alle tre Vercel-prosjekter",
+        "Verifiserte 200/307-respons på alle tre Production-URL",
+        "Oppdatert ENVIRONMENTS.md"
+      ],
+      "acceptance_criteria": [
+        "prod-Supabase har 26 tabeller identisk med dev",
+        "RLS-policies aktivert på prod-Supabase",
+        "app/nurse/admin.eiranova.no returnerer 200/307",
+        "Production viser ingen EnvBadge",
+        "Preview viser fortsatt EnvBadge",
+        "Ingen regresjon på dev-Supabase"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-DB-001", "K-ENV-002"],
+      "risks": [
+        "Migrasjons-feil hvis prod ikke er helt tomt",
+        "Rate limiting under db push",
+        "Cache-issues ved Vercel redeploy",
+        "EnvBadge-logikk må verifiseres etter deploy"
       ]
     },
     {

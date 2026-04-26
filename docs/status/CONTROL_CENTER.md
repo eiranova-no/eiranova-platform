@@ -4,13 +4,15 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-04-26
-**Progress:** 15% → MVP Launch
+**Progress:** 14% → MVP Launch
 
 ---
 
 ## 🟢 ACTIVE CONTRACT
 
-Ingen aktiv kontrakt.
+| ID | Title | Type | Goal |
+|----|-------|------|------|
+| **K-DB-002** | Prod-Supabase Migration & Production Environment Activation | infrastructure | Migrere prod-Supabase til samme schema som dev. Sette Production env-vars i Verc... |
 
 ---
 
