@@ -7,6 +7,9 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+- **Prototype:** Fjernet duplikat `EnvBadge` fra `EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx` (SSR-gren returnerte alltid `development`/`dev`). Kunde-, sykepleier- og admin-apper bruker kun `EnvBadge` fra layout (`lib/env`); prod skjules når `NEXT_PUBLIC_APP_ENV === production` (fiks for feil merke på nurse/admin.eiranova.no).
+
 ### Added
 - **K-AUTH-001 (kunde-app):** Supabase Auth med `@supabase/ssr` (browser- og server-klient, `middleware` med `PROTECTED_PATHS` og `?gate=`), `AuthProvider` + `useAuth`, genererte `database.types.ts`, ruter for login/onboarding (push, samtykke), glemt/reset passord, og `KundePrototypeShell` som kobler URL ↔ prototype-skjerm. Resend/SMTP og norske auth-maller konfigureres i dashboard (se `docs/contracts/active/K-AUTH-001.md` T-001). Oppdagelser: D-008 (fjernet Google-knapp privatkunde, resolved), D-009 (pårørende `relasjon` utsatt til K-PROFIL-001, open).
 - **K-DB-001:** Supabase-migrasjoner under `supabase/migrations/` (001 core, 002 betaling/B2B, 003 personal, 004 config/GDPR, 005 RLS inkl. `handle_new_user` på `auth.users`, 006 seed), `supabase/config.toml` fra `supabase init`, og `docs/DATA_MODEL.md` med oversikt over tabellgrupper, enums og RLS-mønstre. Oppdaget avvik (D-007) i `DISCOVERIES.json` — løst i denne koden.
