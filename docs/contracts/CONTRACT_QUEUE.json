@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-25",
-  "updated_by": "Richard (PO) — K-AUTH-002 satt til ready",
+  "last_updated": "2026-04-26",
+  "updated_by": "K-ENV-002 active — env-guard & middleware hardening",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "status_taxonomy": [
@@ -122,6 +122,46 @@
       "risks": [
         "DNS-propagering kan ta opptil 24 timer",
         "Domeneshop krever korrekte CNAME/A-records for Vercel"
+      ]
+    },
+    {
+      "id": "K-ENV-002",
+      "title": "Env-guard & Middleware Hardening",
+      "type": "governance",
+      "status": "active",
+      "spec_path": "docs/contracts/active/K-ENV-002.md",
+      "goal": "Fjerne non-null-assertions for env-vars i kunde-app og innføre requireEnv-helper. Hindrer fremtidig MIDDLEWARE_INVOCATION_FAILED ved manglende env-konfigurasjon.",
+      "in_scope": [
+        "lib/env.ts med requireEnv per app",
+        "Erstatt process.env.X! med env.X i kunde-app",
+        "EnvBadge per app",
+        ".env.example i repo-root",
+        "tsconfig + next-env.d.ts i nurse/admin"
+      ],
+      "out_of_scope": [
+        "Vercel/Supabase-konfigurasjon",
+        "Branch protection / main-opprettelse",
+        "Endring av prototype-filen",
+        "Implementering av Supabase i nurse/admin"
+      ],
+      "deliverables": [
+        "apps/{kunde,nurse,admin}-app/lib/env.ts",
+        "apps/{kunde,nurse,admin}-app/components/EnvBadge.tsx",
+        ".env.example",
+        "Oppdatert middleware.ts og lib/supabase/* i kunde-app",
+        "Oppdatert .github/workflows/ci.yml"
+      ],
+      "acceptance_criteria": [
+        "Ingen process.env.X! i kunde-app",
+        "requireEnv kaster med klar melding ved manglende env",
+        "EnvBadge returnerer null i production",
+        "pnpm build grønt for alle tre apper"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-ENV-001", "K-AUTH-001"],
+      "risks": [
+        "Prototype-filen bruker fortsatt process.env direkte (egen oppgave)",
+        "typecheck-script mangler per app (egen oppgave)"
       ]
     },
     {

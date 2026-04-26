@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EnvBadge } from "@/components/EnvBadge";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
 import { PrototypeStyles } from "./prototype-styles";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body style={{ margin: 0 }}>
         <PrototypeStyles />
         <AuthProvider>{children}</AuthProvider>
+        <EnvBadge />
       </body>
     </html>
   );
