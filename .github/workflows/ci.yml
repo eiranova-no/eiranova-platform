@@ -52,6 +52,29 @@ jobs:
           NEXT_PUBLIC_APP_ENV: preview
           NEXT_PUBLIC_DATA_SOURCE: dev
 
+  verify-mock-data:
+    name: Verify mock-data codegen drift
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Regenerate prototype-fixtures and fail on diff
+        run: pnpm verify:mock-data-generated
+
   validate-queue:
     name: Validate CONTRACT_QUEUE
     runs-on: ubuntu-latest
