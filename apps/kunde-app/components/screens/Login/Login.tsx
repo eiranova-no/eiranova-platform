@@ -26,6 +26,7 @@ export function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const gate = searchParams.get("gate");
+  const returUrl = searchParams.get("returUrl");
   const { signIn, signUp, user, loading } = useAuth();
   const { toast, ToastContainer } = useLandingToast();
 
@@ -50,16 +51,19 @@ export function Login() {
       .select("address")
       .eq("id", session.user.id)
       .single();
+    const postAuthPath =
+      (gate && gate.startsWith("/") && !gate.startsWith("/login") ? gate : null) ??
+      (returUrl && returUrl.startsWith("/") && !returUrl.startsWith("/login") ? returUrl : null);
     if (u?.address) {
-      if (gate && gate.startsWith("/") && !gate.startsWith("/login")) {
-        router.replace(gate);
+      if (postAuthPath) {
+        router.replace(postAuthPath);
         return;
       }
       router.replace("/");
     } else {
       router.replace("/onboarding/samtykke");
     }
-  }, [gate, router]);
+  }, [gate, returUrl, router]);
 
   useEffect(() => {
     if (!loading && user) {
