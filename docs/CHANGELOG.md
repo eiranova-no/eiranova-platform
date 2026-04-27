@@ -8,6 +8,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
+- **K-REFACTOR-001 (kunde-app, Fase B1 Steg 7):** Flerstegs `Onboarding` i `components/screens/Onboarding/Onboarding.tsx` (intern `useState` for steg). Navigasjon ut: `onExitToHome` → `router.push("/")` (Hopp over / fallback), `onFerdig` → `router.push("/")`. Ingen prototype-import på `/onboarding`.
 - **K-REFACTOR-001 (kunde-app, Fase B1 Steg 6):** `PushTillatelse` i `components/screens/PushTillatelse/PushTillatelse.tsx`; `onboarding/push` bruker migrert `PushTillatelse` (ikke prototype-import). `kundeOnValg` / `onNav` som før.
 - **K-REFACTOR-001 (kunde-app, Fase B1 Steg 5):** `Samtykke` i `components/screens/Samtykke/Samtykke.tsx`; `onboarding/samtykke` bruker migrert `Samtykke` (lokal `PH`-subset for Les-skjermer, ikke prototype-import). `onNav("epost-bekreftelse")` ruter til `/epost-bekreftelse`.
 - **K-REFACTOR-001 (kunde-app, Fase B1 Steg 4):** `EpostBekreftelse` i `components/screens/EpostBekreftelse/EpostBekreftelse.tsx`; rute `/epost-bekreftelse` med `searchParams.epost` som `regEpost`. «Send på nytt» kaller `supabase.auth.resend` (signup) med samme `emailRedirectTo` som i `signUp`.
