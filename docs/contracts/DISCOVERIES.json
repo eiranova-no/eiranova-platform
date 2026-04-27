@@ -151,6 +151,18 @@
       "status": "open",
       "discovered_in": "K-ENV-002",
       "action": "Egen mini-kontrakt"
+    },
+    {
+      "id": "D-014",
+      "contract": "K-ENV-001",
+      "date": "2026-04-27",
+      "reported_by": "Richard / Vercel-konsoll",
+      "severity": "low",
+      "title": "Vercel anbefaler migrering til nye DNS-records (vercel-dns-017.com)",
+      "description": "Vercel utvider sine IP-områder og anbefaler at alle tre EiraNova-domener (app, nurse, admin) bytter CNAME-target fra det gamle delte cname.vercel-dns.com (peker på 76.76.21.21) til prosjekt-spesifikke targets på vercel-dns-017.com. Gamle records fortsetter å fungere per Vercels egen bekreftelse, men det finnes ingen offentlig sunset-dato. Bør håndteres som planlagt vedlikehold før produksjon, ikke under tidspress når de eventuelt deprecates.",
+      "status": "open",
+      "discovered_in": "post-K-ENV-001 ops review",
+      "action": "Egen kontrakt K-DNS-001 opprettet. Utføres i et planlagt vindu FØR første eksterne kunde tas inn."
     }
   ]
 }

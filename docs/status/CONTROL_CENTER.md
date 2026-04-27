@@ -3,7 +3,7 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-04-26
+**Last generated:** 2026-04-27
 **Progress:** 14% → MVP Launch
 
 ---
@@ -21,6 +21,7 @@
 | ID | Title | Type | Dependencies | Goal |
 |----|-------|------|--------------|------|
 | **K-AUTH-002** | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 ✅ | Google Workspace (@eiranova.no) innlogging for sykepleiere med hd-begrensning og... |
+| **K-DNS-001** | Vercel CNAME-migrering til nye DNS-records | infra | K-ENV-001 ✅ | Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.n... |
 
 ---
 
