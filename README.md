@@ -10,8 +10,8 @@
 
 | | |
 |---|---|
-| **Progress** | 16% → MVP Launch |
-| **Aktiv kontrakt** | **K-ENV-003** (tredelt deployment: `main`/prod, `dev`/staging.*, feature previews). **K-REFACTOR-001** er **paused** under omleggingen. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
+| **Progress** | 18% → MVP Launch |
+| **Aktiv kontrakt** | **K-REFACTOR-001** (avvikle prototype-som-master — Fase C nurse-app m.m.). **K-ENV-003** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 
