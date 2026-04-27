@@ -199,6 +199,17 @@
       "status": "open",
       "discovered_in": "K-REFACTOR-001 Fase A",
       "action": "Fase B: legg inn ved første reelle import per app; dokumentert i docs/refactor/K-REFACTOR-001-fase-a-discovery.md."
+    },
+    {
+      "id": "D-018",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor (Fase B1 Steg 0)",
+      "severity": "low",
+      "title": "CSS-modul-deklarasjon dupliseres per app",
+      "description": "Fase B1 Steg 0 introduserte apps/kunde-app/eiranova-ui-css.d.ts for å la TypeScript akseptere `import \"@eiranova/ui/styles/global.css\"`. Når nurse-app og admin-app wire-es opp i Fase C/D, vil samme deklarasjon trenges der også. Bør konsolideres til pakken selv.",
+      "status": "open",
+      "action": "I Fase C eller D: flytt deklarasjon til packages/ui (enten som `declare module \"*.css\"` i src/index.ts, eller egen styles.d.ts inkludert i exports). Slett app-lokale .d.ts-filer."
     }
   ]
 }
