@@ -187,6 +187,18 @@
       "status": "triaged",
       "discovered_in": "K-REFACTOR-001 Fase A",
       "action": "Hold codegen + CI; utvid packages/ui med utsatte komponenter per skjerm i Fase B–D."
+    },
+    {
+      "id": "D-017",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Richard / Fase A PR-forberedelse",
+      "severity": "low",
+      "title": "Next.js-apper må sette transpilePackages for @eiranova/ui og @eiranova/mock-data",
+      "description": "Pakkene leveres som kilde-TS uten dist-/prebuild-steg (intensjonelt). Når en app første gang importerer fra pakkene, må next.config.mjs inneholde transpilePackages: [\"@eiranova/ui\", \"@eiranova/mock-data\"] (eller tilsvarende) slik at Next transpilerer TypeScript fra workspace-pakker. Uten dette er resolusjons-/byggfeil sannsynlig. Global CSS fra pakken: import \"@eiranova/ui/styles/global.css\" i layout etter samme mønster; verifiser i app-kontekst i Fase B.",
+      "status": "open",
+      "discovered_in": "K-REFACTOR-001 Fase A",
+      "action": "Fase B: legg inn ved første reelle import per app; dokumentert i docs/refactor/K-REFACTOR-001-fase-a-discovery.md."
     }
   ]
 }

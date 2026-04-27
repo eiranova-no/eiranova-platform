@@ -1,6 +1,9 @@
 /**
  * Design tokens aligned with EiraNova prototype (`C` in HANDOFF) and .cursorrules.
  * Use these from TS instead of hardcoding hex in new components.
+ *
+ * Export convention: flat named exports from @eiranova/ui (`colors`, future `spacing`, …),
+ * not a namespace object — see docs/refactor/K-REFACTOR-001-fase-a-discovery.md §8.
  */
 export const colors = {
   green: "#4A7C6F",
