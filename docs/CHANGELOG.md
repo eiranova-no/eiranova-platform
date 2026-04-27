@@ -7,6 +7,9 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Changed
+- **Kø (`chore/queue-update-K-REFACTOR-001`):** K-DB-002 merget (`merged_at` 2026-04-26). K-REFACTOR-001 opprettet og satt **active** (avvikle prototype-som-master). K-ROUTE-001 revidert til Next.js middleware (status **blocked** inntil refactor). K-AUTH-002 satt **blocked** på K-REFACTOR-001 + K-ROUTE-001. D-001 i `DISCOVERIES.json` oppdatert (triaged, peker på K-REFACTOR-001). `schema_notes` for valgfri `blocked_reason` i `CONTRACT_QUEUE.json`. `pnpm generate-cc` regenererte `CONTROL_CENTER.md` og `MERGED_HISTORY.md`.
+
 ### Fixed
 - **Prototype:** Fjernet duplikat `EnvBadge` fra `EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx` (SSR-gren returnerte alltid `development`/`dev`). Kunde-, sykepleier- og admin-apper bruker kun `EnvBadge` fra layout (`lib/env`); prod skjules når `NEXT_PUBLIC_APP_ENV === production` (fiks for feil merke på nurse/admin.eiranova.no).
 
