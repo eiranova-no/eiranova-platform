@@ -221,6 +221,17 @@
       "description": "I prototypen kaller `onNav(\"bestill\", serviceType)` slik at `bestillPreselect` i App-state settes før `kundeRouterPush(\"/bestill\")`. Migrert Landing (Steg 1) bruker `router.push(\"/bestill\")` uten query/state; modalens «Bestill denne tjenesten» navigerer derfor til bestill uten forhåndsvalgt tjeneste. Full paritet krever URL-param (f.eks. ?tjeneste=) eller delt state når `KundePrototypeShell` erstattes på /bestill i Fase B2.",
       "status": "open",
       "action": "Løses når Bestill-ruten migreres (Fase B2) med lesing av searchParams og/eller fjernelse av prototype-shell for den ruten."
+    },
+    {
+      "id": "D-020",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor (Fase B1 Steg 8)",
+      "severity": "low",
+      "title": "getServerSession() bruker auth.getSession() i RSC",
+      "description": "apps/kunde-app/lib/auth/server.ts henter sesjon med supabase.auth.getSession() etter mønster brukeren ba om. Supabase anbefaler ofte auth.getUser() på server for å validere JWT mot Auth-server; getSession() leser primært fra lagret cookie uten alltid å revalidere. For strengere sikkerhet i beskyttede server actions kan getUser() innføres eller supplementere. Middleware bruker allerede getUser().",
+      "status": "open",
+      "action": "Vurder ved hardening: bytt eller suppler med getUser() i getServerSession, eller dokumenter at valget er bevisst for kun «Landing vs Hjem»-branching."
     }
   ]
 }
