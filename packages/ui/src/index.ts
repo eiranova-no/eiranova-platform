@@ -6,3 +6,5 @@ export {
 } from "./tokens";
 
 export { cn, hasFullNameTwoWords, isValidEmail } from "./lib";
+
+export { useViewportMin768 } from "./hooks/useViewportMin768";
