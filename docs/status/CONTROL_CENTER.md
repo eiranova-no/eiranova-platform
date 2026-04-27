@@ -4,7 +4,7 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-04-27
-**Progress:** 16% → MVP Launch
+**Progress:** 18% → MVP Launch
 
 ---
 
@@ -12,15 +12,13 @@
 
 | ID | Title | Type | Goal |
 |----|-------|------|------|
-| **K-ENV-003** | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | infra | Etabler en klart adskilt tredelt deployment-modell for kunde-app, nurse-app og a... |
+| **K-REFACTOR-001** | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | refactor | Fjern apps/prototype/ som runtime-kilde. Hver app blir selvstendig Next.js App R... |
 
 ---
 
 ## ⏸️ PAUSED CONTRACTS
 
-| ID | Title | Paused reason |
-|----|-------|---------------|
-| K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | Pause under K-ENV-003 deployment-omlegging |
+Ingen pausede kontrakter.
 
 ---
 
@@ -79,11 +77,11 @@
 
 | ID | Title | Merged |
 |----|-------|--------|
+| K-ENV-003 | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | 2026-04-28 |
 | K-ENV-002 | Env-guard & Middleware Hardening | 2026-04-26 |
 | K-DB-002 | Prod-Supabase Migration & Production Environment Activation | 2026-04-26 |
 | K-DB-001 | Supabase Databaseskjema — Komplett Fundament | 2026-04-25 |
 | K-AUTH-001 | Auth — Kunder (e-post + passord) | 2026-04-25 |
-| K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | 2026-04-10 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 

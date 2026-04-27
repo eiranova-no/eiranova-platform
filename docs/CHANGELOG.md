@@ -8,6 +8,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
+- K-ENV-003 markert som merged i kø. K-REFACTOR-001 satt tilbake til active. Klar for Fase C (nurse-app skjerm-migrering).
 - K-ENV-003 fullført: tredelt deployment-modell etablert. main → production-domener (app.eiranova.no, nurse.eiranova.no, admin.eiranova.no), dev → staging-domener (staging.app.eiranova.no, staging.nurse.eiranova.no, staging.admin.eiranova.no), feature/* → preview. Vercel Production Branch endret fra dev til main for alle tre apper.
 - **Kø (`chore/queue-update-K-ENV-003`):** K-ENV-003 lagt til som **active** (tredelt deployment: `main` + prod-Supabase, `dev` + staging.* + dev-Supabase, `feature/*` previews). K-REFACTOR-001 satt **paused** med `paused_reason` under K-ENV-003. Status `paused` i `CONTRACT_QUEUE.json` `status_taxonomy`; `pnpm generate-cc` / `pnpm queue` støtter pausede kontrakter. Spec: `docs/contracts/active/K-ENV-003.md`.
 - **K-REFACTOR-001 (kunde-app, Fase B2, fullført):** Bestill-flyt i App Router (`app/bestill/*`, `BestillFlowContext` med `sessionStorage`-backup), Betaling, Bekreftelse, `?tjeneste=`-prefill (D-019). Fjernet `KundePrototypeShell` og `app/prototype-styles.tsx` (Steg 5). Oppdagelser D-019/D-021/D-023–D-025 avklart i `DISCOVERIES.json`. Flyt verifisert: Hjem → Bestill → Betaling → Bekreftelse → Mine.

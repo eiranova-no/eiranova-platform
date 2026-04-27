@@ -5,6 +5,7 @@
 
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
+| K-ENV-003 | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | infra | 2026-04-28 |
 | K-ENV-002 | Env-guard & Middleware Hardening | governance | 2026-04-26 |
 | K-DB-002 | Prod-Supabase Migration & Production Environment Activation | infra | 2026-04-26 |
 | K-DB-001 | Supabase Databaseskjema — Komplett Fundament | feature | 2026-04-25 |
