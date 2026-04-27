@@ -1,5 +1,9 @@
-import { KundePrototypeShell } from "@/components/KundePrototypeShell";
+import { Landing } from "@/components/screens/Landing/Landing";
 
-export default function KundeHjem() {
-  return <KundePrototypeShell />;
+export default function HomePage() {
+  return (
+    <div className="pw pw-app">
+      <Landing />
+    </div>
+  );
 }
