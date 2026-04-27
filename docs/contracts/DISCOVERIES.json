@@ -263,8 +263,9 @@
       "severity": "low",
       "title": "Betaling (kunde) navigerer til /bestill/bekreftelse etter mock-betaling",
       "description": "Migrert `Betaling.tsx` følger prototype-tidsavbrudd (1,8s) deretter `router.push(\"/bestill/bekreftelse\")`. Siden `app/bestill/bekreftelse/page.tsx` opprettes i Fase B2 Steg 4; inntil da gir en full navigasjon 404, som forventet i delt arbeidsflyt.",
-      "status": "triaged",
-      "action": "Løses når Steg 4 (Bekreftelse) merges; ingen app-endring nødvendig utover den ruten."
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2 Steg 4",
+      "action": "Løst: `app/bestill/bekreftelse/page.tsx` + `Bekreftelse.tsx` (2026-04-28). Bestillingsflyt end-to-end uten 404 etter betaling (mock)."
     }
   ]
 }
