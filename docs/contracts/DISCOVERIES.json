@@ -243,6 +243,17 @@
       "description": "Diagnose (ikke fikset i app ennå). Hjem.tsx er ren: onNav for bestill kaller kun router.push til /bestill eller /bestill?tjeneste= (ingen lenke til samtykke). KundePrototypeShell+Prototype reagerer ikke på URL ?tjeneste=; bestillPreselect settes bare via prototype navTo (D-019). Eksplisitt navigasjon til Ruten /onboarding/samtykke i kodebasen: Login onAfterSignIn når bruker mangler users.address; onboarding/push etter valg. Hypotese for symptomet: (1) Middleware uten session på /bestill → /login?gate=… → innlogging/økt → onAfterSignIn → samtykke ved manglende adresse, deretter manuell vei til bestill. (2) Bruker med ufullført profil. (3) Prototype navTo(«samtykke») gjelder bare PushTillatelse uten kundeOnValg, ikke Hjem-URL. Verifiser i nettverkpanel rekkefølge redirect og om address er satt for testbruker.",
       "status": "open",
       "action": "Før B1→dev-merge: avklar faktisk nettverksrekkefølge; vurder lese ?tjeneste= i bestill (eller migrere Bestill uten shell); vurder om kunder uten adresse skal nå /bestill uten å passere samtykke, eller sikre session på /bestill uten re-login."
+    },
+    {
+      "id": "D-022",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase B2 Steg 2)",
+      "severity": "low",
+      "title": "Bestill-flyt: React Context for ordre mellom /bestill, /bestill/betaling og /bestill/bekreftelse",
+      "description": "Kunde-app: `app/bestill/layout.tsx` wrapper hele /bestill-segmentet med `BestillFlowProvider` (`BestillFlowContext.tsx`) som bærer `BestillOrdreState` (tjeneste, dato, tidspunkt, adresse, sykepleierNavn — null betyr EiraNova velger). Multi-step-wizarden fyller state før navigasjon til betaling. Vurder Supabase-persistert ordre-id og server-state når K-BESTILL-001 implementeres.",
+      "status": "triaged",
+      "action": "Dokumentert valg; ingen endring nødvendig før bestilling lagres i database."
     }
   ]
 }
