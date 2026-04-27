@@ -266,6 +266,18 @@
       "status": "resolved",
       "resolved_in": "K-REFACTOR-001 Fase B2 Steg 4",
       "action": "Løst: `app/bestill/bekreftelse/page.tsx` + `Bekreftelse.tsx` (2026-04-28). Bestillingsflyt end-to-end uten 404 etter betaling (mock)."
+    },
+    {
+      "id": "D-024",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase B2, Bestill sessionStorage-fiks)",
+      "severity": "low",
+      "title": "BestillFlowContext: sessionStorage som backup for ordre",
+      "description": "BestillFlowContext bruker sessionStorage som backup for å overleve provider remount og race conditions ved navigasjon.",
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2 (Fiks 2)",
+      "action": "Vurder Supabase-persistert ordre når K-BESTILL-001 implementeres."
     }
   ]
 }

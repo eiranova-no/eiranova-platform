@@ -4,6 +4,8 @@ import { createContext, useCallback, useContext, useState, type ReactNode } from
 
 import type { KundeFacingService } from "@eiranova/mock-data";
 
+const STORAGE_KEY = "bestill-ordre-v1";
+
 /**
  * Delvis utfylt bestilling, synket til Betaling/Bekreftelse (når de migreres) via layout-provider.
  * `sykepleierNavn === null` betyr «EiraNova velger for meg».
@@ -24,6 +26,23 @@ const defaultState: BestillOrdreState = {
   sykepleierNavn: null,
 };
 
+function readOrdreFromStorage(): BestillOrdreState {
+  if (typeof window === "undefined") {
+    return defaultState;
+  }
+  try {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (!stored) return defaultState;
+    const parsed = JSON.parse(stored) as BestillOrdreState;
+    if (parsed && typeof parsed === "object") {
+      return parsed;
+    }
+    return defaultState;
+  } catch {
+    return defaultState;
+  }
+}
+
 interface BestillFlowContextValue {
   ordre: BestillOrdreState;
   setOrdre: (partial: Partial<BestillOrdreState>) => void;
@@ -33,14 +52,31 @@ interface BestillFlowContextValue {
 const BestillFlowContext = createContext<BestillFlowContextValue | null>(null);
 
 export function BestillFlowProvider({ children }: { children: ReactNode }) {
-  const [ordre, setOrdreState] = useState<BestillOrdreState>(defaultState);
+  const [ordre, setOrdreState] = useState<BestillOrdreState>(() => readOrdreFromStorage());
 
   const setOrdre = useCallback((partial: Partial<BestillOrdreState>) => {
-    setOrdreState((prev) => ({ ...prev, ...partial }));
+    setOrdreState((prev) => {
+      const next: BestillOrdreState = { ...prev, ...partial };
+      if (typeof window !== "undefined") {
+        try {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch {
+          /* quota / private mode */
+        }
+      }
+      return next;
+    });
   }, []);
 
   const resetOrdre = useCallback(() => {
-    setOrdreState(defaultState);
+    setOrdreState({ ...defaultState });
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
   }, []);
 
   return (
