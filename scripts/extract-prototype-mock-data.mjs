@@ -1,6 +1,8 @@
 /**
  * Generates packages/mock-data/src/generated/prototype-fixtures.ts from the HANDOFF prototype.
- * Run from repo root: node scripts/extract-prototype-mock-data.mjs
+ * Run from repo root: pnpm --filter @eiranova/mock-data generate
+ * (or: node scripts/extract-prototype-mock-data.mjs)
+ * After changing output shape, commit the file; CI runs pnpm verify:mock-data-generated.
  */
 import fs from "fs";
 import path from "path";
