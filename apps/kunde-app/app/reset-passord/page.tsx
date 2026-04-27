@@ -2,9 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { C } from "../../../prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx";
+import { colors } from "@eiranova/ui";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
+
+const C = colors;
 
 export default function ResetPassordPage() {
   const router = useRouter();
