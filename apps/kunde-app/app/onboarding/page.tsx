@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import { Onboarding } from "../../../prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx";
+
+import { Onboarding } from "@/components/screens/Onboarding/Onboarding";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -10,7 +11,9 @@ export default function OnboardingHovedPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const onNav = useCallback(() => {}, []);
+  const onExitToHome = useCallback(() => {
+    void router.push("/");
+  }, [router]);
 
   const kundeOnboarding = useMemo(
     () => ({
@@ -56,7 +59,7 @@ export default function OnboardingHovedPage() {
         return {};
       },
       onFerdig: () => {
-        router.push("/");
+        void router.push("/");
       },
     }),
     [router, user?.id],
@@ -75,7 +78,7 @@ export default function OnboardingHovedPage() {
 
   return (
     <div className="pw-app">
-      <Onboarding onNav={onNav} kundeOnboarding={kundeOnboarding} />
+      <Onboarding kundeOnboarding={kundeOnboarding} onExitToHome={onExitToHome} />
     </div>
   );
 }

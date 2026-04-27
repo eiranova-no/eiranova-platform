@@ -199,6 +199,50 @@
       "status": "open",
       "discovered_in": "K-REFACTOR-001 Fase A",
       "action": "Fase B: legg inn ved første reelle import per app; dokumentert i docs/refactor/K-REFACTOR-001-fase-a-discovery.md."
+    },
+    {
+      "id": "D-018",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor (Fase B1 Steg 0)",
+      "severity": "low",
+      "title": "CSS-modul-deklarasjon dupliseres per app",
+      "description": "Fase B1 Steg 0 introduserte apps/kunde-app/eiranova-ui-css.d.ts for å la TypeScript akseptere `import \"@eiranova/ui/styles/global.css\"`. Når nurse-app og admin-app wire-es opp i Fase C/D, vil samme deklarasjon trenges der også. Bør konsolideres til pakken selv.",
+      "status": "open",
+      "action": "I Fase C eller D: flytt deklarasjon til packages/ui (enten som `declare module \"*.css\"` i src/index.ts, eller egen styles.d.ts inkludert i exports). Slett app-lokale .d.ts-filer."
+    },
+    {
+      "id": "D-019",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor (Fase B1 Steg 1)",
+      "severity": "low",
+      "title": "Landing → Bestill uten tjeneste-prefill fra modal",
+      "description": "I prototypen kaller `onNav(\"bestill\", serviceType)` slik at `bestillPreselect` i App-state settes før `kundeRouterPush(\"/bestill\")`. Migrert Landing (Steg 1) bruker `router.push(\"/bestill\")` uten query/state; modalens «Bestill denne tjenesten» navigerer derfor til bestill uten forhåndsvalgt tjeneste. Full paritet krever URL-param (f.eks. ?tjeneste=) eller delt state når `KundePrototypeShell` erstattes på /bestill i Fase B2.",
+      "status": "open",
+      "action": "Løses når Bestill-ruten migreres (Fase B2) med lesing av searchParams og/eller fjernelse av prototype-shell for den ruten."
+    },
+    {
+      "id": "D-020",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor (Fase B1 Steg 8)",
+      "severity": "low",
+      "title": "getServerSession() bruker auth.getSession() i RSC",
+      "description": "apps/kunde-app/lib/auth/server.ts henter sesjon med supabase.auth.getSession() etter mønster brukeren ba om. Supabase anbefaler ofte auth.getUser() på server for å validere JWT mot Auth-server; getSession() leser primært fra lagret cookie uten alltid å revalidere. For strengere sikkerhet i beskyttede server actions kan getUser() innføres eller supplementere. Middleware bruker allerede getUser().",
+      "status": "open",
+      "action": "Vurder ved hardening: bytt eller suppler med getUser() i getServerSession, eller dokumenter at valget er bevisst for kun «Landing vs Hjem»-branching."
+    },
+    {
+      "id": "D-021",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Richard (Fase B1) / Cursor diagnose",
+      "severity": "medium",
+      "title": "Fra Hjem: Bestill/modal-CTA oppleves som om bruker sendes via /onboarding/samtykke før /bestill",
+      "description": "Diagnose (ikke fikset i app ennå). Hjem.tsx er ren: onNav for bestill kaller kun router.push til /bestill eller /bestill?tjeneste= (ingen lenke til samtykke). KundePrototypeShell+Prototype reagerer ikke på URL ?tjeneste=; bestillPreselect settes bare via prototype navTo (D-019). Eksplisitt navigasjon til Ruten /onboarding/samtykke i kodebasen: Login onAfterSignIn når bruker mangler users.address; onboarding/push etter valg. Hypotese for symptomet: (1) Middleware uten session på /bestill → /login?gate=… → innlogging/økt → onAfterSignIn → samtykke ved manglende adresse, deretter manuell vei til bestill. (2) Bruker med ufullført profil. (3) Prototype navTo(«samtykke») gjelder bare PushTillatelse uten kundeOnValg, ikke Hjem-URL. Verifiser i nettverkpanel rekkefølge redirect og om address er satt for testbruker.",
+      "status": "open",
+      "action": "Før B1→dev-merge: avklar faktisk nettverksrekkefølge; vurder lese ?tjeneste= i bestill (eller migrere Bestill uten shell); vurder om kunder uten adresse skal nå /bestill uten å passere samtykke, eller sikre session på /bestill uten re-login."
     }
   ]
 }

@@ -1,5 +1,17 @@
-import { KundePrototypeShell } from "@/components/KundePrototypeShell";
+import { redirect } from "next/navigation";
 
-export default function ProfilPage() {
-  return <KundePrototypeShell />;
+import { KundeProfil } from "@/components/screens/KundeProfil/KundeProfil";
+import { getServerSession } from "@/lib/auth/server";
+
+export default async function ProfilPage() {
+  const session = await getServerSession();
+  if (!session) {
+    redirect("/login?returUrl=" + encodeURIComponent("/profil"));
+  }
+
+  return (
+    <div className="pw-app">
+      <KundeProfil />
+    </div>
+  );
 }
