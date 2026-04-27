@@ -264,7 +264,7 @@
       "title": "Betaling (kunde) navigerer til /bestill/bekreftelse etter mock-betaling",
       "description": "Migrert `Betaling.tsx` følger prototype-tidsavbrudd (1,8s) deretter `router.push(\"/bestill/bekreftelse\")`. Siden `app/bestill/bekreftelse/page.tsx` opprettes i Fase B2 Steg 4; inntil da gir en full navigasjon 404, som forventet i delt arbeidsflyt.",
       "status": "triaged",
-      "action": "Løses når Steg 4 (Bekreffelse) merges; ingen app-endring nødvendig utover den ruten."
+      "action": "Løses når Steg 4 (Bekreftelse) merges; ingen app-endring nødvendig utover den ruten."
     }
   ]
 }
