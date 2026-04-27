@@ -211,9 +211,11 @@ const outFile = path.join(
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 
 let out = `/**
- * AUTO-GENERATED FILE — do not edit by hand.
+ * AUTO-GENERATED — do not edit manually.
+ * Regenerate: pnpm --filter @eiranova/mock-data generate
+ * (equivalent: node scripts/extract-prototype-mock-data.mjs from repo root)
  * Source: apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
- * Regenerate: node scripts/extract-prototype-mock-data.mjs
+ * Drift check: pnpm verify:mock-data-generated (also runs in CI)
  */
 
 `;

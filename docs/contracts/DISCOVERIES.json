@@ -163,6 +163,30 @@
       "status": "open",
       "discovered_in": "post-K-ENV-001 ops review",
       "action": "Egen kontrakt K-DNS-001 opprettet. Utføres i et planlagt vindu FØR første eksterne kunde tas inn."
+    },
+    {
+      "id": "D-015",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Richard / K-REFACTOR-001 review",
+      "severity": "medium",
+      "title": "Next build krever NEXT_PUBLIC_SUPABASE_* for nurse-app og admin-app (runtime-env lekker til build)",
+      "description": "next build feiler når NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY mangler, fordi Supabase-klient eller tilhørende moduler leser process.env ved modul-last. Miljøvariabler er i utgangspunktet runtime; build bør ikke kreve hemmeligheter eller preview-URL for å kompilere. Pre-eksisterende før Fase A; CI har allerede secrets/placeholders. Mulige retninger: lib/env.ts med eksplisitte build-time fallbacks for compile-only, lazy createBrowserClient etter mount, eller dokumentert dummy-env kun for build (mindre ønskelig).",
+      "status": "open",
+      "discovered_in": "K-REFACTOR-001 Fase A verify",
+      "action": "Adresseres i egen opprydding — kandidat sammen med kunde-app / delt lib i Fase B eller dedikert chore etter avtale."
+    },
+    {
+      "id": "D-016",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-27",
+      "reported_by": "Cursor / K-REFACTOR-001 Fase A",
+      "severity": "low",
+      "title": "Mock-data codegen: prototype-fixtures.ts er eneste utdata — kontrakt og drift-sjekk",
+      "description": "packages/mock-data/src/generated/prototype-fixtures.ts genereres av scripts/extract-prototype-mock-data.mjs fra HANDOFF-prototypen. Kontrakt: etter endring i prototype som påvirker eksporterte mocks/helpers, kjør pnpm --filter @eiranova/mock-data generate og commit. Filen skal ikke redigeres manuelt. CI-jobb verify-mock-data regenererer og feiler ved git diff (pnpm verify:mock-data-generated). Implementasjonsnote: erstatning av C.* mot hex må bruke lengste nøkkel først (C.sky før C.skyBg gir korrupte literaler). Fase A utsatte delte prototype-komponenter (PH, Bdg, BNav, DeskNav, ModalPortal, TjenesteMerinfoModal, KundeNavShell, NurseBottomNav) til packages/ui når første migrerte skjerm trenger dem — ikke dupliser ad hoc i app. Narrativ: docs/refactor/K-REFACTOR-001-fase-a-discovery.md. Viewport/SSR: useViewportMin768 er useEffect-basert for hydreringsparitet. Global UI styres av én global.css i packages/ui for klasse-paritet.",
+      "status": "triaged",
+      "discovered_in": "K-REFACTOR-001 Fase A",
+      "action": "Hold codegen + CI; utvid packages/ui med utsatte komponenter per skjerm i Fase B–D."
     }
   ]
 }
