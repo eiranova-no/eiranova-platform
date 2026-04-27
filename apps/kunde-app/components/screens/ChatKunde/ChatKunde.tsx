@@ -116,7 +116,7 @@ export function ChatKunde() {
         mine: "/mine",
         "chat-kunde": "/chat",
         "kunde-profil": "/profil",
-        "kunde-avtale-detalj": "/mine",
+        "kunde-avtale-detalj": "/mine?vis=avtale",
         "kunde-oppdrag-detalj": meta?.orderId ? `/mine?order=${encodeURIComponent(meta.orderId)}` : "/mine",
       };
       void router.push(paths[id] ?? "/");

@@ -219,8 +219,9 @@
       "severity": "low",
       "title": "Landing → Bestill uten tjeneste-prefill fra modal",
       "description": "I prototypen kaller `onNav(\"bestill\", serviceType)` slik at `bestillPreselect` i App-state settes før `kundeRouterPush(\"/bestill\")`. Migrert Landing (Steg 1) bruker `router.push(\"/bestill\")` uten query/state; modalens «Bestill denne tjenesten» navigerer derfor til bestill uten forhåndsvalgt tjeneste. Full paritet krever URL-param (f.eks. ?tjeneste=) eller delt state når `KundePrototypeShell` erstattes på /bestill i Fase B2.",
-      "status": "open",
-      "action": "Løses når Bestill-ruten migreres (Fase B2) med lesing av searchParams og/eller fjernelse av prototype-shell for den ruten."
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2 Steg 2",
+      "action": "Løst: `?tjeneste=` fra Landing/Hjem + `searchParams` i Bestill; prototype-shell for /bestill fjernet i Fase B2 Steg 5."
     },
     {
       "id": "D-020",
@@ -241,8 +242,56 @@
       "severity": "medium",
       "title": "Fra Hjem: Bestill/modal-CTA oppleves som om bruker sendes via /onboarding/samtykke før /bestill",
       "description": "Diagnose (ikke fikset i app ennå). Hjem.tsx er ren: onNav for bestill kaller kun router.push til /bestill eller /bestill?tjeneste= (ingen lenke til samtykke). KundePrototypeShell+Prototype reagerer ikke på URL ?tjeneste=; bestillPreselect settes bare via prototype navTo (D-019). Eksplisitt navigasjon til Ruten /onboarding/samtykke i kodebasen: Login onAfterSignIn når bruker mangler users.address; onboarding/push etter valg. Hypotese for symptomet: (1) Middleware uten session på /bestill → /login?gate=… → innlogging/økt → onAfterSignIn → samtykke ved manglende adresse, deretter manuell vei til bestill. (2) Bruker med ufullført profil. (3) Prototype navTo(«samtykke») gjelder bare PushTillatelse uten kundeOnValg, ikke Hjem-URL. Verifiser i nettverkpanel rekkefølge redirect og om address er satt for testbruker.",
-      "status": "open",
-      "action": "Før B1→dev-merge: avklar faktisk nettverksrekkefølge; vurder lese ?tjeneste= i bestill (eller migrere Bestill uten shell); vurder om kunder uten adresse skal nå /bestill uten å passere samtykke, eller sikre session på /bestill uten re-login."
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2",
+      "action": "E2E verifisert: Hjem → /bestill (med ?tjeneste=) uten feilrute. Innlogging uten adresse følger fortsatt til onboarding/samtykke (forventet). Brukere uten `users.address`: se `Login` / onboarding-produktvalg; ikke en Bestill-CTA-bug."
+    },
+    {
+      "id": "D-022",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase B2 Steg 2)",
+      "severity": "low",
+      "title": "Bestill-flyt: React Context for ordre mellom /bestill, /bestill/betaling og /bestill/bekreftelse",
+      "description": "Kunde-app: `app/bestill/layout.tsx` wrapper hele /bestill-segmentet med `BestillFlowProvider` (`BestillFlowContext.tsx`) som bærer `BestillOrdreState` (tjeneste, dato, tidspunkt, adresse, sykepleierNavn — null betyr EiraNova velger). Multi-step-wizarden fyller state før navigasjon til betaling. Vurder Supabase-persistert ordre-id og server-state når K-BESTILL-001 implementeres.",
+      "status": "triaged",
+      "action": "Dokumentert valg; ingen endring nødvendig før bestilling lagres i database."
+    },
+    {
+      "id": "D-023",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase B2 Steg 3)",
+      "severity": "low",
+      "title": "Betaling (kunde) navigerer til /bestill/bekreftelse etter mock-betaling",
+      "description": "Migrert `Betaling.tsx` følger prototype-tidsavbrudd (1,8s) deretter `router.push(\"/bestill/bekreftelse\")`. Siden `app/bestill/bekreftelse/page.tsx` opprettes i Fase B2 Steg 4; inntil da gir en full navigasjon 404, som forventet i delt arbeidsflyt.",
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2 Steg 4",
+      "action": "Løst: `app/bestill/bekreftelse/page.tsx` + `Bekreftelse.tsx` (2026-04-28). Bestillingsflyt end-to-end uten 404 etter betaling (mock)."
+    },
+    {
+      "id": "D-024",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase B2, Bestill sessionStorage-fiks)",
+      "severity": "low",
+      "title": "BestillFlowContext: sessionStorage som backup for ordre",
+      "description": "BestillFlowContext bruker sessionStorage som backup for å overleve provider remount og race conditions ved navigasjon.",
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2 (Fiks 2)",
+      "action": "Vurder Supabase-persistert ordre når K-BESTILL-001 implementeres."
+    },
+    {
+      "id": "D-025",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Bekreftelse «Til mine bestillinger»)",
+      "severity": "low",
+      "title": "Bekreftelse: race mellom resetOrdre og guard useEffect",
+      "description": "Bekreftelse-skjerm hadde race mellom resetOrdre og guard useEffect. Løst med navigerer-flag som hopper over guard ved bevisst exit.",
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2",
+      "action": "Ingen; kodefiks i `Bekreftelse.tsx`."
     }
   ]
 }
