@@ -14,16 +14,19 @@ const C = colors;
 
 type Fane = "profil" | "betaling" | "personvern";
 
-function ProfilHeader({
+export function ProfilHeader({
   title,
   onBack,
   backLabel,
   centerTitle = false,
+  slim = false,
 }: {
   title: string;
   onBack: () => void;
   backLabel: string;
   centerTitle?: boolean;
+  /** Tighter top padding to match prototype `PH` slim. */
+  slim?: boolean;
 }) {
   const titleStr = String(title);
   const showTitle = titleStr.trim().length > 0;
@@ -40,7 +43,7 @@ function ProfilHeader({
   return (
     <div
       style={{
-        padding: "12px 14px",
+        padding: slim ? "10px 14px" : "12px 14px",
         display: "flex",
         alignItems: "center",
         gap: 9,
