@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import "@eiranova/ui/styles/global.css";
 import { EnvBadge } from "@/components/EnvBadge";
 import { AuthProvider } from "@/lib/auth/AuthProvider";
-import { PrototypeStyles } from "./prototype-styles";
 
 export const metadata: Metadata = {
   title: "EiraNova Kunde",
@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang="no">
       <body style={{ margin: 0 }}>
-        <PrototypeStyles />
         <AuthProvider>{children}</AuthProvider>
         <EnvBadge />
       </body>

@@ -7,6 +7,8 @@
     "start": "next start -H 127.0.0.1 -p 3001"
   },
   "dependencies": {
+    "@eiranova/mock-data": "workspace:*",
+    "@eiranova/ui": "workspace:*",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.104.1",
     "next": "^15.3.1",
