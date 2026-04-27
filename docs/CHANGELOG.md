@@ -8,6 +8,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 
 ### Changed
+- **K-REFACTOR-001 (kunde-app, Fase B1 Steg 5):** `Samtykke` i `components/screens/Samtykke/Samtykke.tsx`; `onboarding/samtykke` bruker migrert `Samtykke` (lokal `PH`-subset for Les-skjermer, ikke prototype-import). `onNav("epost-bekreftelse")` ruter til `/epost-bekreftelse`.
 - **K-REFACTOR-001 (kunde-app, Fase B1 Steg 4):** `EpostBekreftelse` i `components/screens/EpostBekreftelse/EpostBekreftelse.tsx`; rute `/epost-bekreftelse` med `searchParams.epost` som `regEpost`. «Send på nytt» kaller `supabase.auth.resend` (signup) med samme `emailRedirectTo` som i `signUp`.
 - **K-REFACTOR-001 (kunde-app, Fase B1 Steg 3):** `GlemtPassord` flyttet fra prototype til `components/screens/GlemtPassord/GlemtPassord.tsx`; `/glemt-passord` bruker `useAuth().resetPassword` (Supabase `resetPasswordForEmail` med `redirectTo` til `/reset-passord`). Ingen `nurseMode` i kunde-app.
 - **Kø (`chore/queue-update-K-REFACTOR-001`):** K-DB-002 merget (`merged_at` 2026-04-26). K-REFACTOR-001 opprettet og satt **active** (avvikle prototype-som-master). K-ROUTE-001 revidert til Next.js middleware (status **blocked** inntil refactor). K-AUTH-002 satt **blocked** på K-REFACTOR-001 + K-ROUTE-001. D-001 i `DISCOVERIES.json` oppdatert (triaged, peker på K-REFACTOR-001). `schema_notes` for valgfri `blocked_reason` i `CONTRACT_QUEUE.json`. `pnpm generate-cc` regenererte `CONTROL_CENTER.md` og `MERGED_HISTORY.md`.

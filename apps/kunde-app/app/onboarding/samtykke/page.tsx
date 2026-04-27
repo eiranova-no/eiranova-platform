@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { Samtykke } from "../../../../prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx";
+
+import { Samtykke } from "@/components/screens/Samtykke/Samtykke";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -10,9 +11,14 @@ export default function OnboardingSamtykkePage() {
   const router = useRouter();
   const { user, loading } = useAuth();
 
-  const onNav = useCallback(() => {
-    // prototype fallback; kunde bruker kundeOnFortsett
-  }, []);
+  const onNav = useCallback(
+    (skjerm: string) => {
+      if (skjerm === "epost-bekreftelse") {
+        void router.push("/epost-bekreftelse");
+      }
+    },
+    [router],
+  );
 
   const kundeOnFortsett = useCallback(
     async (s: { gdpr: boolean; vilkaar: boolean; markedsf: boolean }) => {
