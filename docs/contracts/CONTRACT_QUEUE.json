@@ -1,15 +1,17 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-10",
-  "updated_by": "Claude (Technical Architect)",
+  "last_updated": "2026-04-27",
+  "updated_by": "chore/queue-update-K-ENV-003: K-ENV-003 active, K-REFACTOR-001 paused",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
+  "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
   "status_taxonomy": [
     "merged",
     "active",
     "ready",
     "planned",
     "blocked",
+    "paused",
     "superseded"
   ],
   "contracts": [
@@ -125,10 +127,52 @@
       ]
     },
     {
+      "id": "K-ENV-002",
+      "title": "Env-guard & Middleware Hardening",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-04-26",
+      "spec_path": "docs/contracts/active/K-ENV-002.md",
+      "goal": "Fjerne non-null-assertions for env-vars i kunde-app og innføre requireEnv-helper. Hindrer fremtidig MIDDLEWARE_INVOCATION_FAILED ved manglende env-konfigurasjon.",
+      "in_scope": [
+        "lib/env.ts med requireEnv per app",
+        "Erstatt process.env.X! med env.X i kunde-app",
+        "EnvBadge per app",
+        ".env.example i repo-root",
+        "tsconfig + next-env.d.ts i nurse/admin"
+      ],
+      "out_of_scope": [
+        "Vercel/Supabase-konfigurasjon",
+        "Branch protection / main-opprettelse",
+        "Endring av prototype-filen",
+        "Implementering av Supabase i nurse/admin"
+      ],
+      "deliverables": [
+        "apps/{kunde,nurse,admin}-app/lib/env.ts",
+        "apps/{kunde,nurse,admin}-app/components/EnvBadge.tsx",
+        ".env.example",
+        "Oppdatert middleware.ts og lib/supabase/* i kunde-app",
+        "Oppdatert .github/workflows/ci.yml"
+      ],
+      "acceptance_criteria": [
+        "Ingen process.env.X! i kunde-app",
+        "requireEnv kaster med klar melding ved manglende env",
+        "EnvBadge returnerer null i production",
+        "pnpm build grønt for alle tre apper"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-ENV-001", "K-AUTH-001"],
+      "risks": [
+        "Prototype-filen bruker fortsatt process.env direkte (egen oppgave)",
+        "typecheck-script mangler per app (egen oppgave)"
+      ]
+    },
+    {
       "id": "K-DB-001",
       "title": "Supabase Databaseskjema — Komplett Fundament",
       "type": "feature",
-      "status": "ready",
+      "status": "merged",
+      "merged_at": "2026-04-25",
       "spec_path": "docs/contracts/active/K-DB-001.md",
       "goal": "Etabler komplett databaseskjema: alle enums, 20+ tabeller, RLS-policies, hjelpe-funksjoner, seed-data. Alt er spesifisert i CURSOR-INSTRUKSJON.md §T-001 til §T-006. Frankfurt (eu-central-1) er non-negotiable.",
       "in_scope": [
@@ -174,10 +218,175 @@
       ]
     },
     {
+      "id": "K-DB-002",
+      "title": "Prod-Supabase Migration & Production Environment Activation",
+      "type": "infra",
+      "status": "merged",
+      "merged_at": "2026-04-26",
+      "spec_path": "docs/contracts/active/K-DB-002.md",
+      "goal": "Migrere prod-Supabase til samme schema som dev. Sette Production env-vars i Vercel for alle tre plattform-prosjekter. Verifisere at både Preview og Production fungerer mot sine respektive Supabase-prosjekter. Lukker gap etter K-ENV-002 og K-DB-001.",
+      "in_scope": [
+        "supabase db push mot prod-Supabase (8 migrasjoner)",
+        "Verifisering av 26 tabeller og RLS-policies på prod",
+        "Production env-vars i Vercel for kunde/nurse/admin",
+        "Redeploy alle tre prosjekter med riktige Production-vars",
+        "End-to-end verifisering med curl + browser",
+        "Oppdatering av docs/ENVIRONMENTS.md"
+      ],
+      "out_of_scope": [
+        "Endring av Vercel Production Branch (K-LAUNCH-001)",
+        "Branch protection på main",
+        "Custom domener",
+        "Avvikling av marketing/oppstart-apper",
+        "Backup-strategi for prod-Supabase",
+        "Automatisert migrasjons-pipeline"
+      ],
+      "deliverables": [
+        "Migrert prod-Supabase med 26 tabeller",
+        "Production env-vars satt i alle tre Vercel-prosjekter",
+        "Verifiserte 200/307-respons på alle tre Production-URL",
+        "Oppdatert ENVIRONMENTS.md"
+      ],
+      "acceptance_criteria": [
+        "prod-Supabase har 26 tabeller identisk med dev",
+        "RLS-policies aktivert på prod-Supabase",
+        "app/nurse/admin.eiranova.no returnerer 200/307",
+        "Production viser ingen EnvBadge",
+        "Preview viser fortsatt EnvBadge",
+        "Ingen regresjon på dev-Supabase"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-DB-001", "K-ENV-002"],
+      "risks": [
+        "Migrasjons-feil hvis prod ikke er helt tomt",
+        "Rate limiting under db push",
+        "Cache-issues ved Vercel redeploy",
+        "EnvBadge-logikk må verifiseres etter deploy"
+      ]
+    },
+    {
+      "id": "K-ENV-003",
+      "title": "Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview",
+      "type": "infra",
+      "status": "active",
+      "spec_path": "docs/contracts/active/K-ENV-003.md",
+      "goal": "Etabler en klart adskilt tredelt deployment-modell for kunde-app, nurse-app og admin-app: production-domener på main + prod-Supabase, staging.* på dev + dev-Supabase, PR-previews på feature/* + dev-Supabase.",
+      "in_scope": [
+        "docs/contracts/active/K-ENV-003.md",
+        "CONTRACT_QUEUE.json: K-ENV-003 active, K-REFACTOR-001 paused under arbeidet",
+        "docs/ENVIRONMENTS.md: tredelt modell (etter Vercel/DNS)",
+        "docs/CHANGELOG.md [Unreleased]",
+        "Richard: Vercel Production Branch main (3 prosjekter), staging.* domener, Domeneshop CNAME"
+      ],
+      "out_of_scope": [
+        "Endringer i prod-Supabase data utover eksisterende schema",
+        "prod-Supabase auth-konfigurasjon (egen kontrakt ved behov)",
+        "oppstart og marketing Vercel-prosjekter",
+        "Migrering av eksisterende dev-data til prod-Supabase",
+        "Branch protection-regler på main"
+      ],
+      "deliverables": [
+        "docs/contracts/active/K-ENV-003.md",
+        "docs/contracts/CONTRACT_QUEUE.json oppdatert",
+        "docs/contracts/DISCOVERIES.json (ved behov)",
+        "docs/ENVIRONMENTS.md oppdatert",
+        "docs/CHANGELOG.md oppdatert",
+        "Vercel-konfigurasjon og Domeneshop DNS manuelt oppdatert"
+      ],
+      "acceptance_criteria": [
+        "main oppdatert med kode fra dev",
+        "Alle tre Vercel-prosjekter: Production Branch = main",
+        "app/nurse/admin.eiranova.no serverer fra main",
+        "staging.* serverer fra dev",
+        "Production bruker prod-Supabase env-vars; staging bruker dev-Supabase env-vars",
+        "SSL gyldig på alle 6 domener",
+        "ENVIRONMENTS.md reflekterer modellen",
+        "K-REFACTOR-001 paused under K-ENV-003, deretter active etter merge"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-INFRA-001",
+        "K-ENV-001",
+        "K-ENV-002",
+        "K-DB-002"
+      ],
+      "risks": [
+        "Vercel snudd før dev→main gir gammel kode i production — rekkefølge kritisk",
+        "prod-Supabase auth kan mangle — akseptert pre-launch",
+        "DNS/SSL-forsinkelse for staging.*"
+      ]
+    },
+    {
+      "id": "K-REFACTOR-001",
+      "title": "Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app",
+      "type": "refactor",
+      "status": "paused",
+      "paused_reason": "Pause under K-ENV-003 deployment-omlegging",
+      "spec_path": "docs/contracts/active/K-REFACTOR-001.md",
+      "goal": "Fjern apps/prototype/ som runtime-kilde. Hver app blir selvstendig Next.js App Router-applikasjon med egne typede komponenter og ekte ruter. Prototypen flyttes til docs/ux-reference/ som read-only UX-referanse. Ingen UX-endringer — pixel-parity er akseptkriterium.",
+      "in_scope": [
+        "Opprett packages/ui (tokens, global.css, helpers, felles komponenter, hooks)",
+        "Opprett packages/mock-data (alle mock-data fra prototypen)",
+        "Splitt ~50 React-komponenter til apps/kunde-app, nurse-app, admin-app — én skjerm per fil, alle TypeScript",
+        "Erstatt forcedScreen-mekanismen med ekte Next.js App Router-ruting",
+        "Erstatt <style>{CSS}</style>-injection med standard CSS-import i app/layout.tsx",
+        "Slett KundePrototypeShell.tsx, prototype-styles.tsx og direkte prototype-imports",
+        "Flytt prototypen til docs/ux-reference/ som read-only referanse, slett apps/prototype/",
+        "Konverter alt til TypeScript med eksplisitte prop-interfaces — ingen any, ingen @ts-ignore"
+      ],
+      "out_of_scope": [
+        "UX-endringer (discovery, ikke kode)",
+        "Supabase-erstatninger av mock-data",
+        "Nye features",
+        "Redesign / restyling",
+        "Auth-endringer ut over det som kreves for ruteguardene",
+        "Endringer i marketing eller oppstart apper",
+        "Migrering til Tailwind / CSS Modules"
+      ],
+      "deliverables": [
+        "packages/ui/ (ny pakke)",
+        "packages/mock-data/ (ny pakke)",
+        "apps/kunde-app/components/screens/*.tsx + apps/kunde-app/app/**/page.tsx",
+        "apps/nurse-app/components/screens/*.tsx + apps/nurse-app/app/**/page.tsx",
+        "apps/admin-app/components/screens/*.tsx + apps/admin-app/app/**/page.tsx",
+        "docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx (flyttet)",
+        "docs/ux-reference/README.md (ny)",
+        "pnpm-workspace.yaml (oppdatert)",
+        "docs/ARCHITECTURE.md (oppdatert)",
+        "docs/CHANGELOG.md (oppdatert)",
+        "DISCOVERIES.json (D-001 → resolved)"
+      ],
+      "acceptance_criteria": [
+        "apps/prototype/ finnes ikke i workspace",
+        "Ingen .tsx/.ts-fil i de tre appene importerer fra apps/prototype/ eller docs/ux-reference/",
+        "pnpm typecheck grønn på alle tre apper",
+        "pnpm build grønn på alle tre apper",
+        "Alle eksisterende ruter visuelt identiske med Git-tag pre-refactor-K-REFACTOR-001",
+        "Hver skjerm er egen .tsx-fil med eksplisitte prop-typer (ingen any, ingen @ts-ignore)",
+        "Ingen <style>{CSS}</style>-injection — global CSS via import i app/layout.tsx",
+        "Bundle per rute reduseres — kunde-app / faller fra ~660KB til <100KB",
+        "D-001 markert resolved med referanse til denne kontrakten",
+        "docs/ARCHITECTURE.md reflekterer ny struktur"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-INFRA-001",
+        "K-AUTH-001",
+        "K-DB-002"
+      ],
+      "risks": [
+        "Skjult kryss-komponent-state bryter ved splitting — mitigeres med discovery-først-regel og Context per app",
+        "Pixel-drift — mitigeres med pre-tag og commit per skjerm",
+        "Cursor 'forbedrer' UX underveis — eksplisitt regel: ingen UX-endringer",
+        "K-AUTH-002 starter parallelt — markert blocked til K-REFACTOR-001 merged"
+      ]
+    },
+    {
       "id": "K-AUTH-001",
       "title": "Auth — Kunder (e-post + passord)",
       "type": "feature",
-      "status": "planned",
+      "status": "merged",
+      "merged_at": "2026-04-25",
       "spec_path": "docs/contracts/active/K-AUTH-001.md",
       "goal": "Koble prototype-auth til ekte Supabase Auth for kunder. E-post + passord med glemt passord via reset-e-post. INGEN Magic Link. INGEN Google OAuth for kunder. Komplett ny konto-flyt: push-tillatelse → samtykke → onboarding → hjem.",
       "in_scope": [
@@ -226,7 +435,7 @@
       "id": "K-AUTH-002",
       "title": "Auth — Sykepleiere (Google Workspace @eiranova.no)",
       "type": "feature",
-      "status": "planned",
+      "status": "blocked",
       "spec_path": "docs/contracts/active/K-AUTH-002.md",
       "goal": "Google Workspace (@eiranova.no) innlogging for sykepleiere med hd-begrensning og rollebasert ruting. B2B koordinator og bruker/pasient via Bedriftskunde-flyt.",
       "in_scope": [
@@ -258,11 +467,110 @@
       ],
       "user_stories": [],
       "dependencies": [
-        "K-AUTH-001"
+        "K-AUTH-001",
+        "K-DB-002",
+        "K-REFACTOR-001",
+        "K-ROUTE-001"
       ],
       "risks": [
         "Google Workspace OAuth krever korrekt callback-URL i Google Cloud Console",
         "hd-parameter begrenser til @eiranova.no — verifiser at Google Workspace er satt opp"
+      ],
+      "blocked_reason": "Avventer K-REFACTOR-001 (App Router / ingen prototype-import) og K-ROUTE-001 (Next.js middleware + routing-fundament)."
+    },
+    {
+      "id": "K-LAUNCH-001",
+      "title": "Production Cut-over: Plattform til main",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": "docs/contracts/active/K-LAUNCH-001.md",
+      "goal": "Etabler strikt branch-modell ved lansering: main→Production→prod-Supabase, dev→Preview→dev-Supabase. Avvikle marketing og oppstart som standalone-apper.",
+      "in_scope": [
+        "Konsolidering av dev og main historikk",
+        "Vercel Production Branch endring til main for kunde/nurse/admin",
+        "Vercel Production env-vars med prod-Supabase",
+        "Branch protection på main",
+        "Custom domener verifisering",
+        "Avvikling av marketing og oppstart Vercel-prosjekter",
+        "Sletting av apps/marketing og apps/oppstart fra repo"
+      ],
+      "out_of_scope": [
+        "Feature-utvikling",
+        "Migrering av brukerdata fra dev til prod",
+        "Marketing-content for lanseringen"
+      ],
+      "deliverables": [
+        "Production-deploy fra main for alle tre plattform-apper",
+        "Branch protection aktivert på main",
+        "Oppdatert docs/ENVIRONMENTS.md",
+        "Pre-launch checklist gjennomført"
+      ],
+      "acceptance_criteria": [
+        "app.eiranova.no, nurse.eiranova.no, admin.eiranova.no returnerer 200/307 fra main",
+        "Alle tre apper treffer prod-Supabase",
+        "EnvBadge skjult i Production",
+        "Branch protection aktivert på main",
+        "dev→Preview fungerer fortsatt"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-AUTH-002",
+        "K-DB-001",
+        "K-GDPR-001",
+        "K-PROFIL-001",
+        "K-BESTILL-001",
+        "K-OPPDRAG-001"
+      ],
+      "risks": [
+        "DNS-propagering opp til 24 timer",
+        "Hardkodede dev-URL-er kan feile i Production",
+        "Vipps/Stripe/Tripletex blokkert uten org.nr.",
+        "Prod-Supabase RLS må verifiseres før lansering"
+      ]
+    },
+    {
+      "id": "K-DNS-001",
+      "title": "Vercel CNAME-migrering til nye DNS-records",
+      "type": "infra",
+      "status": "ready",
+      "spec_path": "docs/contracts/active/K-DNS-001.md",
+      "goal": "Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.no fra cname.vercel-dns.com til Vercels nye prosjekt-spesifikke vercel-dns-017.com-targets. Fjerner 'DNS Change Recommended'-varsel og fjerner teknisk gjeld før produksjon.",
+      "in_scope": [
+        "CNAME-oppdatering for app.eiranova.no i Domeneshop",
+        "CNAME-oppdatering for nurse.eiranova.no i Domeneshop",
+        "CNAME-oppdatering for admin.eiranova.no i Domeneshop",
+        "dig-verifisering av propagering",
+        "Refresh + smoke-test i Vercel for alle tre prosjekter",
+        "Markere D-014 som resolved"
+      ],
+      "out_of_scope": [
+        "Endringer i Vercel-konfigurasjon utover Refresh-knappen",
+        "SSL-fornyelse (Vercel automatisk)",
+        "Andre DNS-records enn de tre subdomenene (MX/TXT/SPF/DKIM urørt)",
+        "Apex-domenet eiranova.no",
+        "Kode- eller env-endringer"
+      ],
+      "deliverables": [
+        "Tre oppdaterte CNAME-records i Domeneshop",
+        "Vercel viser 'Valid Configuration' uten 'DNS Change Recommended' på alle tre prosjekter",
+        "DISCOVERIES.json: D-014 → resolved",
+        "CONTRACT_QUEUE.json: K-DNS-001 → merged",
+        "CONTROL_CENTER.md regenerert"
+      ],
+      "acceptance_criteria": [
+        "dig app.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "dig nurse.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "dig admin.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "Vercel: 'DNS Change Recommended'-varsel borte på alle tre prosjekter",
+        "Alle tre URL-er laster 200 OK i incognito",
+        "Ingen EnvBadge synlig på produksjonsdomenene"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-ENV-001"],
+      "risks": [
+        "DNS-propagering kan ta opptil 30 min — gjør i rolig tidsvindu",
+        "Feiltastet CNAME tar domenet ned — bruk copy-paste fra Vercel, ikke manuell skriving",
+        "Skal IKKE utføres etter at første eksterne kunde er onboardet"
       ]
     },
     {
@@ -313,36 +621,51 @@
     },
     {
       "id": "K-ROUTE-001",
-      "title": "navTo-guard & Routing Fundament",
+      "title": "App Router middleware — auth-guards og rolle-ruting",
       "type": "feature",
-      "status": "planned",
+      "status": "blocked",
       "spec_path": "docs/contracts/active/K-ROUTE-001.md",
-      "goal": "Beskytt bestill, mine, kunde-profil, oppdrag-i-gang, chat-kunde med navTo-guard. LoginGate-komponent for uinnloggede. Grunnlag for all videre navigasjon.",
+      "goal": "Etabler Next.js middleware-basert auth-guard på tvers av alle tre apper. Beskytt bestill, mine, kunde-profil, oppdrag-i-gang, chat-kunde med middleware-redirect til /login med returUrl. LoginGate-komponent for in-page-redirect. IngenInvitasjonInfo for B2B-ruter uten invitasjon. Forutsetter at K-REFACTOR-001 har erstattet prototype-tab-navigasjon med ekte App Router.",
       "in_scope": [
-        "PROTECTED-array med alle beskyttede skjerm-IDer",
-        "navTo() med innloggingssjekk og pendingNav-state",
-        "LoginGate-komponent: vis login-skjerm med returadresse",
-        "IngenInvitasjonInfo for B2B-ruter uten invitasjon",
-        "Redirect etter innlogging til pendingNav"
+        "apps/kunde-app/middleware.ts: PROTECTED_PATHS-sjekk → redirect til /login?returUrl=<path>",
+        "apps/nurse-app/middleware.ts: krev autentisert nurse-sesjon for alle ruter unntatt /login og /glemt-passord",
+        "apps/admin-app/middleware.ts: krev autentisert admin-rolle for alle ruter unntatt /login",
+        "LoginGate-komponent: vis login-form med returUrl, redirect ved suksess",
+        "IngenInvitasjonInfo-komponent for B2B-ruter uten gyldig invitasjon",
+        "Serverside Supabase-sjekk (createServerClient i middleware)",
+        "Cookie-basert sesjonshåndtering verifisert i Preview og Production"
       ],
       "out_of_scope": [
-        "Ekte Next.js App Router-struktur (prototype er tab-navigasjon)",
-        "Deep linking fra push-varsler (K-PUSH-001)"
+        "Deep linking fra push-varsler (K-PUSH-001)",
+        "Rolle-bytte for sykepleier som også er koordinator (K-AUTH-002)",
+        "MFA / step-up auth (senere kontrakt)"
       ],
       "deliverables": [
-        "Oppdatert prototype: navTo-guard komplett",
-        "Oppdatert prototype: LoginGate-komponent med pendingNav"
+        "apps/kunde-app/middleware.ts",
+        "apps/nurse-app/middleware.ts",
+        "apps/admin-app/middleware.ts",
+        "apps/kunde-app/components/LoginGate.tsx",
+        "apps/kunde-app/components/IngenInvitasjonInfo.tsx",
+        "Test: playwright spec for redirect-flyt"
       ],
       "acceptance_criteria": [
-        "Uinnlogget → klikk bestill → login-gate → etter login → bestill",
-        "Alle 5 PROTECTED-skjermer sjekker innlogging",
-        "B2B-ruter uten invitasjon → IngenInvitasjonInfo"
+        "Uinnlogget kunde → /bestill → redirect til /login?returUrl=/bestill → etter login → /bestill",
+        "Alle 5 PROTECTED_PATHS sjekker autentisering i middleware (server-side, ikke client-side)",
+        "B2B-ruter uten gyldig invitasjon → /b2b/ingen-invitasjon",
+        "Sykepleier uten @eiranova.no-domene → /login med feilmelding",
+        "Middleware-respons-tid < 50ms (lokalt, dev-Supabase)",
+        "Verifisert i både Preview (dev-Supabase) og Production (prod-Supabase)"
       ],
       "user_stories": [],
       "dependencies": [
-        "K-AUTH-001"
+        "K-AUTH-001",
+        "K-REFACTOR-001"
       ],
-      "risks": []
+      "risks": [
+        "Middleware-cookie-håndtering med Supabase SSR — krever createServerClient mønster",
+        "Edge runtime begrensninger på Vercel for middleware — verifiser at Supabase-klienten fungerer i edge"
+      ],
+      "blocked_reason": "Avventer K-REFACTOR-001: ekte App Router uten prototype-tab-navigasjon. Spesifikajon kan justeres etter refactor-landing."
     },
     {
       "id": "K-TJENESTE-001",

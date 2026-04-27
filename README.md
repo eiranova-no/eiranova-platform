@@ -10,8 +10,8 @@
 
 | | |
 |---|---|
-| **Progress** | 0% → MVP Launch |
-| **Aktiv kontrakt** | Ingen (neste: K-INFRA-001) |
+| **Progress** | 16% → MVP Launch |
+| **Aktiv kontrakt** | **K-ENV-003** (tredelt deployment: `main`/prod, `dev`/staging.*, feature previews). **K-REFACTOR-001** er **paused** under omleggingen. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 

@@ -724,7 +724,11 @@ function useToast(){
 }
 
 // ══ PUSH-TILLATELSE ═══════════════════════════════════════════
-function PushTillatelse({onNav}){
+function PushTillatelse({onNav,kundeOnValg}){
+  const handleValg=(allow)=>{
+    if(kundeOnValg)kundeOnValg(allow);
+    else onNav("samtykke");
+  };
   return(
     <div className="phone fu" style={{background:C.cream}}>
       <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 28px",textAlign:"center"}}>
@@ -747,10 +751,10 @@ function PushTillatelse({onNav}){
             </div>
           ))}
         </div>
-        <button onClick={()=>onNav("samtykke")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10}}>
+        <button onClick={()=>handleValg(true)} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10}}>
           🔔 Tillat varsler
         </button>
-        <button onClick={()=>onNav("samtykke")} style={{background:"none",border:"none",color:C.soft,fontSize:11,cursor:"pointer",fontFamily:"inherit",padding:"4px 0"}}>
+        <button onClick={()=>handleValg(false)} style={{background:"none",border:"none",color:C.soft,fontSize:11,cursor:"pointer",fontFamily:"inherit",padding:"4px 0"}}>
           Ikke nå — spør meg senere
         </button>
       </div>
@@ -759,10 +763,11 @@ function PushTillatelse({onNav}){
 }
 
 // ══ SAMTYKKE & VILKÅR ═══════════════════════════════════════════
-function Samtykke({onNav}){
+function Samtykke({onNav,kundeOnFortsett}){
   const[gdpr,setGdpr]=useState(false);
   const[vilkaar,setVilkaar]=useState(false);
   const[markedsf,setMarkedsf]=useState(false);
+  const[lagrerFeil,setLagrerFeil]=useState("");
   const[visGdpr,setVisGdpr]=useState(false);
   const[visVilkaar,setVisVilkaar]=useState(false);
   const kanFortsette=gdpr&&vilkaar;
@@ -862,7 +867,17 @@ function Samtykke({onNav}){
           </div>
         </div>
 
-        <button onClick={()=>kanFortsette&&onNav("epost-bekreftelse")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10,opacity:kanFortsette?1:.4}}>
+        {lagrerFeil&&<div style={{fontSize:11,color:C.danger,marginBottom:8}}>{lagrerFeil}</div>}
+        <button onClick={async()=>{
+          if(!kanFortsette)return;
+          if(kundeOnFortsett){
+            setLagrerFeil("");
+            const r=await kundeOnFortsett({gdpr,vilkaar,markedsf:markedsf});
+            if(r&&r.error)setLagrerFeil(r.error);
+            return;
+          }
+          onNav("epost-bekreftelse");
+        }} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,marginBottom:10,opacity:kanFortsette?1:.4}}>
           Godkjenn og fortsett →
         </button>
         <div style={{fontSize:9,color:C.soft,textAlign:"center",lineHeight:1.6}}>
@@ -898,11 +913,14 @@ function EpostBekreftelse({onNav,regEpost}){
 }
 
 // ══ ONBOARDING ════════════════════════════════════════════════
-function Onboarding({onNav}){
+function Onboarding({onNav,kundeOnboarding}){
   const[steg,setSteg]=useState(0);
   const[hvem,setHvem]=useState(null);       // "meg_selv" | "parorende"
   const[adresse,setAdresse]=useState("");
+  const[postnr,setPostnr]=useState("");
+  const[poststed,setPoststed]=useState("");
   const[navn,setNavn]=useState("");
+  const[obFeil,setObFeil]=useState("");
 
   const steger=[
     {id:"hvem",    tittel:"Hvem skal motta hjelp?", sub:"Vi tilpasser opplevelsen for deg"},
@@ -965,8 +983,8 @@ function Onboarding({onNav}){
               <label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:6}}>Gateadresse</label>
               <input value={adresse} onChange={e=>setAdresse(e.target.value)} className="inp" placeholder="Storgata 12" style={{marginBottom:8}}/>
               <div style={{display:"grid",gridTemplateColumns:"100px 1fr",gap:8}}>
-                <input className="inp" placeholder="1500"/>
-                <input className="inp" placeholder="Moss"/>
+                <input value={postnr} onChange={e=>setPostnr(e.target.value)} className="inp" placeholder="1500"/>
+                <input value={poststed} onChange={e=>setPoststed(e.target.value)} className="inp" placeholder="Moss"/>
               </div>
             </div>
             <div style={{background:C.greenXL,borderRadius:10,padding:"10px 13px",fontSize:10,color:C.navyMid,lineHeight:1.6}}>
@@ -990,13 +1008,45 @@ function Onboarding({onNav}){
       </div>
 
       {/* Navigasjon */}
+      {obFeil&&<div style={{padding:"0 22px 8px",fontSize:11,color:C.danger}}>{obFeil}</div>}
       <div style={{padding:"16px 22px 24px",flexShrink:0}}>
         {steg<steger.length-1?(
-          <button onClick={()=>(steg===0?hvem:adresse)?setSteg(s=>s+1):null} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:(steg===0?hvem:adresse)?1:.4}}>
+          <button onClick={async()=>{
+            setObFeil("");
+            if(steg===0){
+              if(!hvem)return;
+              if(hvem==="parorende"&&(!String(navn||"").trim())){
+                setObFeil("Skriv inn navn på pårørende.");
+                return;
+              }
+              if(kundeOnboarding?.onSteg0Neste){
+                const r=await kundeOnboarding.onSteg0Neste({hvem,navn:String(navn||"").trim()});
+                if(r&&r.error){setObFeil(r.error);return;}
+                setSteg(s=>s+1);
+                return;
+              }
+              if(hvem)setSteg(s=>s+1);
+            }else{
+              if(!String(adresse||"").trim()||!String(postnr||"").trim()||!String(poststed||"").trim()){
+                setObFeil("Fyll inn adresse, postnummer og poststed.");
+                return;
+              }
+              if(kundeOnboarding?.onSteg1Neste){
+                const r=await kundeOnboarding.onSteg1Neste({adresse:String(adresse).trim(),postnr:String(postnr).trim(),poststed:String(poststed).trim()});
+                if(r&&r.error){setObFeil(r.error);return;}
+                setSteg(s=>s+1);
+                return;
+              }
+              if(adresse)setSteg(s=>s+1);
+            }
+          }} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13,opacity:(steg===0?(hvem&&(hvem!=="parorende"||String(navn||"").trim())):(String(adresse||"").trim()&&String(postnr||"").trim()&&String(poststed||"").trim()))?1:.4}}>
             {steg===0?"Neste →":"Lagre adresse →"}
           </button>
         ):(
-          <button onClick={()=>onNav("hjem")} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>
+          <button onClick={()=>{
+            if(kundeOnboarding?.onFerdig)kundeOnboarding.onFerdig();
+            else onNav("hjem");
+          }} className="btn bp" style={{width:"100%",padding:"14px 0",fontSize:14,borderRadius:13}}>
             Bestill din første tjeneste →
           </button>
         )}
@@ -1006,12 +1056,12 @@ function Onboarding({onNav}){
 }
 
 // ══ GLEMT PASSORD ══════════════════════════════════════════════
-function GlemtPassord({onNav,nurseMode=false}){
+function GlemtPassord({onNav,nurseMode=false,kundeSendReset}){
   const[steg,setSteg]=useState("epost"); // epost | sendt
   const[epost,setEpost]=useState("");
   const[validerFeil,setValiderFeil]=useState("");
   const tilbakeLogin=()=>onNav(nurseMode?"nurse-login":"login");
-  const sendLenke=()=>{
+  const sendLenke=async()=>{
     setValiderFeil("");
     const e=String(epost).trim();
     if(!e){setValiderFeil("Skriv inn e-postadressen.");return;}
@@ -1024,6 +1074,11 @@ function GlemtPassord({onNav,nurseMode=false}){
       setValiderFeil("Ugyldig e-postformat.");
       return;
     }
+    if(kundeSendReset){
+      await kundeSendReset(e);
+      setSteg("sendt");
+      return;
+    }
     setSteg("sendt");
   };
   if(steg==="sendt")return(
@@ -1032,7 +1087,9 @@ function GlemtPassord({onNav,nurseMode=false}){
         <div style={{width:72,height:72,borderRadius:20,background:C.greenBg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:34,marginBottom:20}}>📧</div>
         <div className="fr" style={{fontSize:20,fontWeight:700,color:C.navy,marginBottom:8}}>Sjekk innboksen</div>
         <div style={{fontSize:13,fontWeight:600,color:C.navy,lineHeight:1.5,marginBottom:16,maxWidth:340}}>
-          Reset-lenke sendt til {epost}
+          {kundeSendReset
+            ? "Hvis e-posten er registrert hos oss, har vi sendt en lenke for å tilbakestille passordet."
+            : `Reset-lenke sendt til ${epost}`}
         </div>
         <div style={{background:C.greenXL,borderRadius:10,padding:"10px 14px",fontSize:10,color:C.navyMid,lineHeight:1.6,marginBottom:28,width:"100%"}}>
           Lenken er gyldig i 30 minutter. Sjekk spam-mappen hvis du ikke finner e-posten.
@@ -1776,7 +1833,7 @@ function Landing({onNav,services=DEFAULT_KUNDE_SERVICES,nurses=NURSES}){
   return desktop?<LandKundeDesktop onNav={onNav} services={services} nurses={nurses}/>:<LandKundeMobile onNav={onNav} services={services} nurses={nurses}/>;
 }
 
-function Login({onNav,onMockKundeLogin}){
+function Login({onNav,onMockKundeLogin,kundeAuth}){
   const[type,setType]=useState(null);
   const[bedriftMode,setBedriftMode]=useState(null);
   const[mode,setMode]=useState("login");
@@ -1785,6 +1842,7 @@ function Login({onNav,onMockKundeLogin}){
   const[fulltNavn,setFulltNavn]=useState("");
   const[kundeLoginFeil,setKundeLoginFeil]=useState("");
   const[regFeil,setRegFeil]=useState({fn:"",ep:"",pw:""});
+  const[regTrengerBekreftelse,setRegTrengerBekreftelse]=useState(false);
   const fullforKundeMock=()=>{
     setKundeLoginFeil("");
     if(onMockKundeLogin)onMockKundeLogin();
@@ -1839,34 +1897,59 @@ function Login({onNav,onMockKundeLogin}){
         <button type="button" disabled title="Kommer når EiraNova AS er registrert" style={{width:"100%",minHeight:48,padding:"12px 0",background:C.vipps,color:"white",border:"none",borderRadius:11,fontSize:14,fontWeight:600,opacity:.55,cursor:"not-allowed",display:"flex",alignItems:"center",justifyContent:"center",gap:7,fontFamily:"inherit",marginBottom:12}}>
           <span style={{fontSize:18,lineHeight:1}} aria-hidden>💜</span> Fortsett med Vipps
         </button>
-        <button type="button" onClick={()=>{klikkRegistrert();fullforKundeMock();}} style={{width:"100%",minHeight:48,padding:"12px 0",background:"white",color:"#1F1F1F",border:"1.5px solid #DADCE0",borderRadius:11,fontSize:14,fontWeight:500,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:9,marginBottom:12,fontFamily:"inherit",boxShadow:"0 1px 4px rgba(0,0,0,.08)"}}>
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
-          Fortsett med Google
-        </button>
         <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}><div style={{flex:1,height:1,background:C.border}}/><span style={{fontSize:10,color:C.soft}}>eller</span><div style={{flex:1,height:1,background:C.border}}/></div>
+        {regTrengerBekreftelse&&(
+          <div style={{background:C.greenXL,borderRadius:12,padding:"12px 14px",marginBottom:14,fontSize:12,color:C.navyMid,lineHeight:1.6,border:`1px solid ${C.border}`}}>
+            Vi har sendt en bekreftelseslenke til <strong style={{color:C.navy}}>{String(email).trim()}</strong>. Åpne lenken, deretter kan du logge inn. Sjekk spam-mappen hvis du ikke finner e-posten.
+          </div>
+        )}
         {mode==="register"&&<div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Fullt navn</label><input className="inp" placeholder="Ola Nordmann" value={fulltNavn} onChange={e=>{setFulltNavn(e.target.value);if(regFeil.fn)setRegFeil(r=>({...r,fn:""}));}}/>{regFeil.fn&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.fn}</div>}</div>}
         <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>E-post</label><input className="inp" type="email" placeholder="ola@example.com" value={email} onChange={e=>{setEmail(e.target.value);if(regFeil.ep)setRegFeil(r=>({...r,ep:""}));}}/>{mode==="register"&&regFeil.ep&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.ep}</div>}</div>
         <div style={{marginBottom:8}}><label style={{fontSize:10,fontWeight:600,color:C.navy,display:"block",marginBottom:3}}>Passord</label><input className="inp" type="password" placeholder="••••••••" value={password} onChange={e=>{setPassword(e.target.value);if(regFeil.pw)setRegFeil(r=>({...r,pw:""}));}}/>{mode==="register"&&regFeil.pw&&<div style={{fontSize:11,color:C.danger,marginTop:6}}>{regFeil.pw}</div>}</div>
         {mode==="login"&&(
           <>
             {kundeLoginFeil&&<div style={{fontSize:11,color:C.danger,marginBottom:8}}>{kundeLoginFeil}</div>}
-            <button type="button" onClick={()=>{
+            <button type="button" onClick={async()=>{
               klikkRegistrert();
               if(!email.trim()||!password.trim()){
                 setKundeLoginFeil("Skriv inn e-post og passord.");
+                return;
+              }
+              if(kundeAuth){
+                setKundeLoginFeil("");
+                const r=await kundeAuth.signIn(String(email).trim(),password);
+                if(r&&r.error){
+                  setKundeLoginFeil("E-post eller passord stemmer ikke.");
+                  return;
+                }
+                if(kundeAuth.onAfterSignIn)await kundeAuth.onAfterSignIn();
                 return;
               }
               fullforKundeMock();
             }} className="btn bp bf" style={{borderRadius:11}}>Logg inn</button>
           </>
         )}
-        {mode==="register"&&<button type="button" onClick={()=>{
+        {mode==="register"&&<button type="button" onClick={async()=>{
           const err={fn:"",ep:"",pw:""};
           if(!fulltNavnMinToOrd(fulltNavn))err.fn="Skriv fullt navn (minst to ord: fornavn og etternavn).";
           if(!erGyldigEpost(email))err.ep="Ugyldig e-postformat.";
           if(String(password).length<8)err.pw="Passord må ha minst 8 tegn.";
           if(err.fn||err.ep||err.pw){setRegFeil(err);return;}
           setRegFeil({fn:"",ep:"",pw:""});
+          setRegTrengerBekreftelse(false);
+          if(kundeAuth){
+            const r=await kundeAuth.signUp(String(email).trim(),password,fulltNavn);
+            if(r&&r.error){
+              setRegFeil({fn:"",ep:r.error,pw:""});
+              return;
+            }
+            if(r&&r.needsEmailConfirmation){
+              setRegTrengerBekreftelse(true);
+              return;
+            }
+            if(kundeAuth.onAfterSignUp)kundeAuth.onAfterSignUp();
+            return;
+          }
           onNav("push-tillatelse",undefined,{kundeRegEpost:String(email).trim()});
         }} className="btn bp bf" style={{borderRadius:11}}>Opprett konto</button>}
         {mode==="login"&&<div style={{textAlign:"center",marginTop:12}}><span onClick={()=>onNav("glemt-passord")} style={{fontSize:11,color:C.green,cursor:"pointer",fontWeight:600}}>Glemt passord?</span></div>}
@@ -9214,59 +9297,34 @@ const SCREENS={
   "b2b-login":B2BLogin,"b2b-onboarding":B2BOnboarding,"b2b-dashboard":B2BDashboard,"b2b-bestill":B2BBestill,"b2b-bruker":B2BBruker,"b2b-bruker-aktivering":B2BBrukerAktivering,"ingen-invitasjon":IngenInvitasjonInfo,"login-gate":LoginGate,
 };
 
-// ── EnvBadge ─────────────────────────────────────────────────────────────────
-const APP_ENV = typeof window !== 'undefined'
-  ? (process.env.NEXT_PUBLIC_APP_ENV || 'development')
-  : 'development'
-
-const DATA_SOURCE = typeof window !== 'undefined'
-  ? (process.env.NEXT_PUBLIC_DATA_SOURCE || 'dev')
-  : 'dev'
-
-function EnvBadge() {
-  if (APP_ENV === 'production') return null
-
-  const label = APP_ENV === 'preview'
-    ? `ENV: Preview | DATA: Supabase-Dev`
-    : `ENV: Local | DATA: Supabase-Dev`
-
-  return (
-    <div style={{
-      position: 'fixed',
-      bottom: 12,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 9999,
-      background: APP_ENV === 'preview' ? '#C4956A' : '#2563EB',
-      color: '#fff',
-      fontSize: 11,
-      fontFamily: 'DM Sans, sans-serif',
-      fontWeight: 600,
-      padding: '4px 12px',
-      borderRadius: 20,
-      letterSpacing: '0.03em',
-      pointerEvents: 'none',
-      whiteSpace: 'nowrap',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
-    }}>
-      {label}
-    </div>
-  )
-}
-// ─────────────────────────────────────────────────────────────────────────────
+const KUNDE_SCREEN_PATH={
+  hjem: "/",
+  landing: "/",
+  bestill: "/bestill",
+  mine: "/mine",
+  "kunde-profil": "/profil",
+  "kunde-avtale-detalj": "/",
+  "kunde-oppdrag-detalj": "/mine",
+  "oppdrag-i-gang": "/oppdrag-i-gang",
+  "chat-kunde": "/chat",
+  login: "/login",
+};
 
 export default function App({
   forcedTab=null,
   forcedScreen=null,
   showPrototypeToolbar=true,
+  kundeSessionActive=false,
+  kundeOnLogout,
+  kundeRouterPush,
 }){
   const defaultScreenByTab={kunde:"landing",nurse:"nurse-login",admin:"admin-panel"};
   const initialTab=forcedTab??"kunde";
   const initialScreen=forcedScreen??defaultScreenByTab[initialTab]??"landing";
   const[tab,setTab]=useState(initialTab);
   const[screen,setScreen]=useState(initialScreen);
+  const[loggedIn,setLoggedIn]=useState(()=>Boolean(kundeSessionActive));
   const[ap,setAp]=useState("dashboard");
-  const[loggedIn,setLoggedIn]=useState(false);
   const[nurseLoggedIn,setNurseLoggedIn]=useState(false);
   const[bestillPreselect,setBestillPreselect]=useState(null);
   const[nurseFocusOppdragId,setNurseFocusOppdragId]=useState(null);
@@ -9279,6 +9337,8 @@ export default function App({
   const[nursesCatalog,setNursesCatalog]=useState(()=>JSON.parse(JSON.stringify(NURSES)));
   const[ventendeProfilendringer,setVentendeProfilendringer]=useState([]);
   const customerServices=useMemo(()=>catalogTilKundeServices(tjenesterCatalog),[tjenesterCatalog]);
+  useEffect(()=>{ setLoggedIn(Boolean(kundeSessionActive)); },[kundeSessionActive]);
+  useEffect(()=>{ if(forcedScreen!=null)setScreen(forcedScreen); },[forcedScreen]);
   const onNurseProfilTilGodkjenning=useCallback(entry=>{
     setVentendeProfilendringer(v=>[...v,{...entry,id:`pe_${Date.now()}`}]);
   },[]);
@@ -9308,7 +9368,10 @@ export default function App({
   const navTo=(s,serviceType,opts)=>{
     const o=opts&&typeof opts==="object"?opts:null;
     if(o?.kundeRegEpost!=null)setKundeRegEpost(String(o.kundeRegEpost));
-    if(s==="logout"){setLoggedIn(false);setBestillPreselect(null);setKundeOrdreDetaljId(null);setScreen("login");return;}
+    if(s==="logout"){
+      if(kundeOnLogout){kundeOnLogout();return;}
+      setLoggedIn(false);setBestillPreselect(null);setKundeOrdreDetaljId(null);setScreen("login");return;
+    }
     if(s==="glemt-passord")setGlemtPassordNurseMode(false);
     const krevInnlogging=["bestill","mine","kunde-profil","kunde-avtale-detalj","kunde-oppdrag-detalj","oppdrag-i-gang","chat-kunde"];
     if(krevInnlogging.includes(s)&&!loggedIn){setScreen("login-gate");return;}
@@ -9320,6 +9383,9 @@ export default function App({
     if(dest==="kunde-oppdrag-detalj"&&o?.orderId!=null)setKundeOrdreDetaljId(String(o.orderId));
     else if(dest!=="kunde-oppdrag-detalj")setKundeOrdreDetaljId(null);
     setScreen(dest);
+    if(kundeRouterPush&&activeTab==="kunde"&&KUNDE_SCREEN_PATH[dest]){
+      kundeRouterPush(KUNDE_SCREEN_PATH[dest]);
+    }
     if(dest==="hjem"||dest==="onboarding")setLoggedIn(true);
     if(dest==="landing"&&o?.scrollTo){
       const sid=String(o.scrollTo).replace(/^#/,"");
@@ -9376,8 +9442,8 @@ export default function App({
             :<div style={{padding:40,textAlign:"center",color:C.soft}}>Skjerm: {screen}</div>}
         </div>
       }
-      {/* EnvBadge — vises kun i preview og local, ikke i production */}
-      <EnvBadge />
     </>
   );
 }
+
+export { CSS, C, PH, Login, PushTillatelse, Samtykke, Onboarding, GlemtPassord, Landing, Hjem };

@@ -3,6 +3,8 @@
   "private": true,
   "packageManager": "pnpm@9.15.1",
   "scripts": {
+    "typecheck:packages": "pnpm --filter @eiranova/ui typecheck && pnpm --filter @eiranova/mock-data typecheck",
+    "verify:mock-data-generated": "node scripts/verify-mock-data-generated.mjs",
     "dev:kunde": "pnpm --filter kunde-app dev",
     "dev:nurse": "pnpm --filter nurse-app dev",
     "dev:admin": "pnpm --filter admin-app dev",

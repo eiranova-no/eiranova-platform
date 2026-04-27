@@ -3,14 +3,24 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-04-10
-**Progress:** 6% → MVP Launch
+**Last generated:** 2026-04-27
+**Progress:** 16% → MVP Launch
 
 ---
 
 ## 🟢 ACTIVE CONTRACT
 
-Ingen aktiv kontrakt.
+| ID | Title | Type | Goal |
+|----|-------|------|------|
+| **K-ENV-003** | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | infra | Etabler en klart adskilt tredelt deployment-modell for kunde-app, nurse-app og a... |
+
+---
+
+## ⏸️ PAUSED CONTRACTS
+
+| ID | Title | Paused reason |
+|----|-------|---------------|
+| K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | Pause under K-ENV-003 deployment-omlegging |
 
 ---
 
@@ -18,7 +28,7 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies | Goal |
 |----|-------|------|--------------|------|
-| **K-DB-001** | Supabase Databaseskjema — Komplett Fundament | feature | K-INFRA-001 ✅ | Etabler komplett databaseskjema: alle enums, 20+ tabeller, RLS-policies, hjelpe-... |
+| **K-DNS-001** | Vercel CNAME-migrering til nye DNS-records | infra | K-ENV-001 ✅ | Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.n... |
 
 ---
 
@@ -26,10 +36,8 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Type | Dependencies |
 |----|-------|------|--------------|
-| K-AUTH-001 | Auth — Kunder (e-post + passord) | feature | K-DB-001 |
-| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | feature | K-AUTH-001 |
-| K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 |
-| K-ROUTE-001 | navTo-guard & Routing Fundament | feature | K-AUTH-001 |
+| K-LAUNCH-001 | Production Cut-over: Plattform til main | governance | K-AUTH-002, K-DB-001 ✅, K-GDPR-001, K-PROFIL-001, K-BESTILL-001, K-OPPDRAG-001 |
+| K-GDPR-001 | GDPR — Samtykke, Soft-delete & Dataportabilitet | governance | K-AUTH-001 ✅ |
 | K-TJENESTE-001 | Tjenestekatalog — Backend & Admin CRUD | feature | K-ROUTE-001 |
 | K-BESTILL-001 | Bestillingsflyt — 4 Steg Komplett | feature | K-TJENESTE-001, K-GDPR-001 |
 | K-BETALING-002 | Betaling — Stripe Kortbetaling | feature | K-BETALING-001 |
@@ -59,6 +67,8 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Blocked reason |
 |----|-------|----------------|
+| K-AUTH-002 | Auth — Sykepleiere (Google Workspace @eiranova.no) | Avventer K-REFACTOR-001 (App Router / ingen prototype-import) og K-ROUTE-001 (Next.js middleware + routing-fundament). |
+| K-ROUTE-001 | App Router middleware — auth-guards og rolle-ruting | Avventer K-REFACTOR-001: ekte App Router uten prototype-tab-navigasjon. Spesifikajon kan justeres etter refactor-landing. |
 | K-BETALING-001 | Betaling — Vipps ePayment | Venter på EiraNova AS org.nr. (Lise). Vipps krever organisasjonsnummer for produksjonsintegrasjon. Kan settes opp i Vipps Merchant Test uten org.nr. |
 | K-TRIPLETEX-001 | Tripletex — Regnskapsintegrasjon Master | Venter på EiraNova AS org.nr. for Tripletex-kontraktregistrering. Tripletex krever organisasjonsnummer. |
 | K-JOURNAL-001 | Intern Journal — NHN-sertifisert Pasientjournal | Starter IKKE uten: (1) godkjent helserettsadvokat, (2) Statsforvalteren registrering bekreftet, (3) NHN-sertifisering fullført, (4) journalansvarlig utpekt. Alle fire er lovpåkrevt. |
@@ -69,8 +79,11 @@ Ingen aktiv kontrakt.
 
 | ID | Title | Merged |
 |----|-------|--------|
+| K-ENV-002 | Env-guard & Middleware Hardening | 2026-04-26 |
+| K-DB-002 | Prod-Supabase Migration & Production Environment Activation | 2026-04-26 |
+| K-DB-001 | Supabase Databaseskjema — Komplett Fundament | 2026-04-25 |
+| K-AUTH-001 | Auth — Kunder (e-post + passord) | 2026-04-25 |
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | 2026-04-10 |
-| K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | 2026-04-10 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 

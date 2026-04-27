@@ -1,0 +1,16 @@
+{
+  "name": "@eiranova/mock-data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "generate": "node ../../scripts/extract-prototype-mock-data.mjs"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}

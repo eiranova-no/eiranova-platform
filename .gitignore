@@ -21,3 +21,4 @@ build/
 *.log
 supabase/.temp/
 .pnpm-home/
+.vercel

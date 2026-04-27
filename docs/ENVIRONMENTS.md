@@ -111,4 +111,18 @@ jobs:
 
 ---
 
+## Implementeringsstatus per 2026-04-26
+
+| Komponent | Status | Notat |
+|---|---|---|
+| Preview env-vars (alle tre apper) | ✅ Aktivert | dev-Supabase, satt i K-ENV-002 |
+| Production env-vars (alle tre apper) | 🟡 K-DB-002 | Aktiveres mot prod-Supabase |
+| dev-Supabase schema | ✅ Migrert | K-DB-001, 26 tabeller |
+| prod-Supabase schema | 🟡 K-DB-002 | Tomt per i dag, migreres |
+| Branch protection dev | ✅ Aktiv | dev-protection ruleset |
+| Branch protection main | ⏸ K-LAUNCH-001 | Settes ved produksjons-cut-over |
+| Production Branch | `dev` | Endres til `main` i K-LAUNCH-001 |
+
+---
+
 *EiraNova — AI Dev OS v1.1 · X Group AS / CoreX*

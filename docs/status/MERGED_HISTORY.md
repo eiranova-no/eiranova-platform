@@ -5,6 +5,10 @@
 
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
+| K-ENV-002 | Env-guard & Middleware Hardening | governance | 2026-04-26 |
+| K-DB-002 | Prod-Supabase Migration & Production Environment Activation | infra | 2026-04-26 |
+| K-DB-001 | Supabase Databaseskjema — Komplett Fundament | feature | 2026-04-25 |
+| K-AUTH-001 | Auth — Kunder (e-post + passord) | feature | 2026-04-25 |
 | K-INFRA-001 | Monorepo Foundation & GitHub Michelin-standard | infra | 2026-04-10 |
 | K-ENV-001 | Vercel Domenekonfiguration & Miljø-badges | governance | 2026-04-10 |
 
