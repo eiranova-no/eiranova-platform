@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { PushTillatelse } from "../../../../prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx";
+
+import { PushTillatelse } from "@/components/screens/PushTillatelse/PushTillatelse";
 import { useAuth } from "@/lib/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 
