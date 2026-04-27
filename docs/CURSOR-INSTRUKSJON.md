@@ -1580,3 +1580,56 @@ Etter Steg 1 gjelder alltid:
 ALDRI push produksjonskode direkte til main.
 ALDRI merge kontrakt til main uten at den er ferdig, testet og godkjent i dev.
 ```
+
+---
+
+## K-DNS-001 — Vercel CNAME-migrering til nye DNS-records
+
+> **Files-only kontrakt:** INGEN kodeendringer. Kun filer under `docs/` (spec, `CONTRACT_QUEUE.json`, `DISCOVERIES.json`, regenerert `CONTROL_CENTER.md`). Selve DNS-endringen utføres manuelt av Richard i Domeneshop og verifiseres i Vercel. Cursor skal ikke røre `apps/`, `.env*`, `vercel.json`, eller DNS via API/CLI.
+
+**Status:** ready | **Tid:** 15 min (Cursor) + 30–45 min (Richard utfører DNS) | **Avhenger av:** K-ENV-001 ✅
+
+**Type:** infra / governance
+
+### T-001 — Legg kontrakt-spec i `docs/contracts/active/`
+
+På branch `feature/K-DNS-001` (fra `dev`): plasser `K-DNS-001.md` som `docs/contracts/active/K-DNS-001.md`. Verifiser at innholdet matcher leveransen. Ikke modifiser spec uten eksplisitt OK (SPEC-PROTECTION).
+
+### T-002 — Oppdater `docs/contracts/CONTRACT_QUEUE.json`
+
+Legg inn kontrakt-objektet for `K-DNS-001` (etter `K-LAUNCH-001` eller der JSON forblir gyldig og lesbar). Oppdater top-level `last_updated` og `updated_by` jf. siste queue-oppdatering. Gyldig JSON — ingen trailing komma.
+
+### T-003 — Oppdater `docs/contracts/DISCOVERIES.json`
+
+Append `D-014` som siste element i `discoveries` (etter `D-013`). Ikke fjern eller endre eksisterende discoveries (append-only).
+
+### T-004 — Regenerer `CONTROL_CENTER.md`
+
+```bash
+pnpm generate-cc
+```
+
+Forvent K-DNS-001 under ready. Ved feil: sjekk JSON-syntaks i T-002 / T-003.
+
+### T-005 — Commit og PR mot `dev`
+
+Inkluder minst: `docs/contracts/active/K-DNS-001.md`, `docs/contracts/CONTRACT_QUEUE.json`, `docs/contracts/DISCOVERIES.json`, `docs/status/CONTROL_CENTER.md`. Commit-melding og PR-beskrivelse skal beskrive at dette kun er sporingsdokumentasjon; utførelse er manuell senere.
+
+### Akseptansekriterier (Cursor)
+
+- [ ] `docs/contracts/active/K-DNS-001.md` finnes og matcher spesifikasjon
+- [ ] `CONTRACT_QUEUE.json` og `DISCOVERIES.json` parser som JSON
+- [ ] K-DNS-001 har status `ready`; D-014 har status `open` til migrering er utført
+- [ ] `pnpm generate-cc` uten feil; `CONTROL_CENTER.md` lister K-DNS-001 som ready
+- [ ] Ingen endringer i `apps/`, `supabase/`, `.env*`, `vercel.json`, `package.json`
+- [ ] Ikke sett K-DNS-001 til `active`/`merged` eller lukk D-014 før Richard har utført DNS manuelt
+
+### Hva Cursor ikke skal gjøre
+
+- Endre DNS via Vercel API eller Vercel CLI, eller installere CLI for dette
+- Endre kode, env-filer eller Vercel-prosjektkonfig i repo
+- Endre K-DNS-001-status til `merged` eller D-014 til `resolved` før manuell utførelse
+
+### Etter merge
+
+Når PR er merget til `dev`, er dokumentasjonsløftet ferdig. Richard utfører CNAME-migrering i avtalt vindu før produksjon; deretter oppdateres status til `active` → `merged` og D-014 til `resolved` med ny `generate-cc`-kjøring.

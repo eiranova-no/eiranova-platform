@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-26",
-  "updated_by": "K-DB-002 active 2026-04-26 — prod migration + production env",
+  "last_updated": "2026-04-27",
+  "updated_by": "K-DNS-001 ready 2026-04-27 — DNS migration tracked, execution deferred until pre-launch",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "status_taxonomy": [
@@ -402,6 +402,51 @@
         "Hardkodede dev-URL-er kan feile i Production",
         "Vipps/Stripe/Tripletex blokkert uten org.nr.",
         "Prod-Supabase RLS må verifiseres før lansering"
+      ]
+    },
+    {
+      "id": "K-DNS-001",
+      "title": "Vercel CNAME-migrering til nye DNS-records",
+      "type": "infra",
+      "status": "ready",
+      "spec_path": "docs/contracts/active/K-DNS-001.md",
+      "goal": "Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.no fra cname.vercel-dns.com til Vercels nye prosjekt-spesifikke vercel-dns-017.com-targets. Fjerner 'DNS Change Recommended'-varsel og fjerner teknisk gjeld før produksjon.",
+      "in_scope": [
+        "CNAME-oppdatering for app.eiranova.no i Domeneshop",
+        "CNAME-oppdatering for nurse.eiranova.no i Domeneshop",
+        "CNAME-oppdatering for admin.eiranova.no i Domeneshop",
+        "dig-verifisering av propagering",
+        "Refresh + smoke-test i Vercel for alle tre prosjekter",
+        "Markere D-014 som resolved"
+      ],
+      "out_of_scope": [
+        "Endringer i Vercel-konfigurasjon utover Refresh-knappen",
+        "SSL-fornyelse (Vercel automatisk)",
+        "Andre DNS-records enn de tre subdomenene (MX/TXT/SPF/DKIM urørt)",
+        "Apex-domenet eiranova.no",
+        "Kode- eller env-endringer"
+      ],
+      "deliverables": [
+        "Tre oppdaterte CNAME-records i Domeneshop",
+        "Vercel viser 'Valid Configuration' uten 'DNS Change Recommended' på alle tre prosjekter",
+        "DISCOVERIES.json: D-014 → resolved",
+        "CONTRACT_QUEUE.json: K-DNS-001 → merged",
+        "CONTROL_CENTER.md regenerert"
+      ],
+      "acceptance_criteria": [
+        "dig app.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "dig nurse.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "dig admin.eiranova.no CNAME +short returnerer *.vercel-dns-017.com.",
+        "Vercel: 'DNS Change Recommended'-varsel borte på alle tre prosjekter",
+        "Alle tre URL-er laster 200 OK i incognito",
+        "Ingen EnvBadge synlig på produksjonsdomenene"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-ENV-001"],
+      "risks": [
+        "DNS-propagering kan ta opptil 30 min — gjør i rolig tidsvindu",
+        "Feiltastet CNAME tar domenet ned — bruk copy-paste fra Vercel, ikke manuell skriving",
+        "Skal IKKE utføres etter at første eksterne kunde er onboardet"
       ]
     },
     {
