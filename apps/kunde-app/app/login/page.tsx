@@ -1,5 +1,6 @@
 import { Suspense } from "react";
-import { LoginGate } from "./LoginGate";
+
+import { Login } from "@/components/screens/Login/Login";
 
 export default function LoginPage() {
   return (
@@ -18,7 +19,9 @@ export default function LoginPage() {
         </div>
       }
     >
-      <LoginGate />
+      <div className="pw-app">
+        <Login />
+      </div>
     </Suspense>
   );
 }
