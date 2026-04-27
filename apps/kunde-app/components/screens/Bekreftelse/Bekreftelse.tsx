@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { colors } from "@eiranova/ui";
@@ -37,6 +37,7 @@ function BekreftelseToppStripe({ title }: { title: string }) {
 export function Bekreftelse() {
   const router = useRouter();
   const { ordre, resetOrdre } = useBestillFlow();
+  const [navigerer, setNavigerer] = useState(false);
 
   const tjeneste = ordre.tjeneste;
   const dato = ordre.dato;
@@ -44,12 +45,13 @@ export function Bekreftelse() {
   const manglerOrdre = !tjeneste || !dato || !tidspunkt;
 
   useEffect(() => {
+    if (navigerer) return;
     if (manglerOrdre) {
       void router.replace("/bestill");
     }
-  }, [manglerOrdre, router]);
+  }, [manglerOrdre, navigerer, router]);
 
-  if (manglerOrdre) {
+  if (manglerOrdre && !navigerer) {
     return (
       <div className="phone fu" style={{ padding: 24, textAlign: "center" }}>
         <p style={{ fontSize: 13, color: C.navy, marginBottom: 8 }}>Ingen aktiv bestilling</p>
@@ -60,6 +62,18 @@ export function Bekreftelse() {
     );
   }
 
+  if (manglerOrdre && navigerer) {
+    return (
+      <div className="phone fu" style={{ padding: 24, textAlign: "center" }}>
+        <p style={{ fontSize: 13, color: C.navy, margin: 0 }}>Går til mine bestillinger …</p>
+      </div>
+    );
+  }
+
+  if (!tjeneste || dato == null || tidspunkt == null) {
+    return null;
+  }
+
   const tjenesteLabel = tjeneste.name;
   const datoVis = dato;
   const tidVis = tidspunkt;
@@ -68,6 +82,7 @@ export function Bekreftelse() {
   const oppgjorVis = "D+1 virkedag";
 
   const gaaTilMine = () => {
+    setNavigerer(true);
     resetOrdre();
     void router.push("/mine");
   };

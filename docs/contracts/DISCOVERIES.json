@@ -278,6 +278,18 @@
       "status": "resolved",
       "resolved_in": "K-REFACTOR-001 Fase B2 (Fiks 2)",
       "action": "Vurder Supabase-persistert ordre når K-BESTILL-001 implementeres."
+    },
+    {
+      "id": "D-025",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Bekreftelse «Til mine bestillinger»)",
+      "severity": "low",
+      "title": "Bekreftelse: race mellom resetOrdre og guard useEffect",
+      "description": "Bekreftelse-skjerm hadde race mellom resetOrdre og guard useEffect. Løst med navigerer-flag som hopper over guard ved bevisst exit.",
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001 Fase B2",
+      "action": "Ingen; kodefiks i `Bekreftelse.tsx`."
     }
   ]
 }
