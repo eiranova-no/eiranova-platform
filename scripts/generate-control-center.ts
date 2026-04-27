@@ -24,6 +24,7 @@ interface Contract {
   user_stories?: string[]
   merged_at?: string
   blocked_reason?: string
+  paused_reason?: string
 }
 
 interface Queue {
@@ -38,6 +39,7 @@ function main() {
   const today = new Date().toISOString().split('T')[0]
 
   const active = contracts.filter(c => c.status === 'active')
+  const paused = contracts.filter(c => c.status === 'paused')
   const ready = contracts.filter(c => c.status === 'ready')
   const planned = contracts.filter(c => c.status === 'planned')
   const blocked = contracts.filter(c => c.status === 'blocked')
@@ -80,6 +82,24 @@ function main() {
     cc += `| ID | Title | Type | Goal |\n`
     cc += `|----|-------|------|------|\n`
     cc += `| **${c.id}** | ${c.title} | ${c.type} | ${c.goal.substring(0, 80)}... |\n`
+  }
+
+  cc += `
+---
+
+## ⏸️ PAUSED CONTRACTS
+
+`
+
+  if (paused.length === 0) {
+    cc += `Ingen pausede kontrakter.\n`
+  } else {
+    cc += `| ID | Title | Paused reason |\n`
+    cc += `|----|-------|---------------|\n`
+    paused.forEach(c => {
+      const reason = c.paused_reason || 'Midlertidig pause'
+      cc += `| ${c.id} | ${c.title} | ${reason} |\n`
+    })
   }
 
   cc += `
@@ -168,7 +188,7 @@ function main() {
 
   fs.writeFileSync(CC_PATH, cc, 'utf8')
   console.log(`✅ CONTROL_CENTER.md generert (${today})`)
-  console.log(`   Active: ${active.length} | Ready: ${ready.length} | Planned: ${planned.length} | Blocked: ${blocked.length} | Merged: ${merged.length}`)
+  console.log(`   Active: ${active.length} | Paused: ${paused.length} | Ready: ${ready.length} | Planned: ${planned.length} | Blocked: ${blocked.length} | Merged: ${merged.length}`)
   console.log(`   Progress: ${progress}%`)
 
   // Oppdater MERGED_HISTORY

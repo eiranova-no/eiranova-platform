@@ -1,16 +1,17 @@
 {
   "version": "1.0",
   "last_updated": "2026-04-27",
-  "updated_by": "K-DB-002 merged + K-REFACTOR-001 active + K-ROUTE-001 revidert (Next.js middleware) + K-AUTH-002 blocked",
+  "updated_by": "chore/queue-update-K-ENV-003: K-ENV-003 active, K-REFACTOR-001 paused",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
-  "schema_notes": "Optional per-contract field blocked_reason (string) when status is blocked — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
+  "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
   "status_taxonomy": [
     "merged",
     "active",
     "ready",
     "planned",
     "blocked",
+    "paused",
     "superseded"
   ],
   "contracts": [
@@ -264,10 +265,63 @@
       ]
     },
     {
+      "id": "K-ENV-003",
+      "title": "Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview",
+      "type": "infra",
+      "status": "active",
+      "spec_path": "docs/contracts/active/K-ENV-003.md",
+      "goal": "Etabler en klart adskilt tredelt deployment-modell for kunde-app, nurse-app og admin-app: production-domener på main + prod-Supabase, staging.* på dev + dev-Supabase, PR-previews på feature/* + dev-Supabase.",
+      "in_scope": [
+        "docs/contracts/active/K-ENV-003.md",
+        "CONTRACT_QUEUE.json: K-ENV-003 active, K-REFACTOR-001 paused under arbeidet",
+        "docs/ENVIRONMENTS.md: tredelt modell (etter Vercel/DNS)",
+        "docs/CHANGELOG.md [Unreleased]",
+        "Richard: Vercel Production Branch main (3 prosjekter), staging.* domener, Domeneshop CNAME"
+      ],
+      "out_of_scope": [
+        "Endringer i prod-Supabase data utover eksisterende schema",
+        "prod-Supabase auth-konfigurasjon (egen kontrakt ved behov)",
+        "oppstart og marketing Vercel-prosjekter",
+        "Migrering av eksisterende dev-data til prod-Supabase",
+        "Branch protection-regler på main"
+      ],
+      "deliverables": [
+        "docs/contracts/active/K-ENV-003.md",
+        "docs/contracts/CONTRACT_QUEUE.json oppdatert",
+        "docs/contracts/DISCOVERIES.json (ved behov)",
+        "docs/ENVIRONMENTS.md oppdatert",
+        "docs/CHANGELOG.md oppdatert",
+        "Vercel-konfigurasjon og Domeneshop DNS manuelt oppdatert"
+      ],
+      "acceptance_criteria": [
+        "main oppdatert med kode fra dev",
+        "Alle tre Vercel-prosjekter: Production Branch = main",
+        "app/nurse/admin.eiranova.no serverer fra main",
+        "staging.* serverer fra dev",
+        "Production bruker prod-Supabase env-vars; staging bruker dev-Supabase env-vars",
+        "SSL gyldig på alle 6 domener",
+        "ENVIRONMENTS.md reflekterer modellen",
+        "K-REFACTOR-001 paused under K-ENV-003, deretter active etter merge"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-INFRA-001",
+        "K-ENV-001",
+        "K-ENV-002",
+        "K-DB-002"
+      ],
+      "risks": [
+        "Vercel snudd før dev→main gir gammel kode i production — rekkefølge kritisk",
+        "prod-Supabase auth kan mangle — akseptert pre-launch",
+        "DNS/SSL-forsinkelse for staging.*"
+      ]
+    },
+    {
       "id": "K-REFACTOR-001",
       "title": "Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app",
       "type": "refactor",
-      "status": "active",
+      "status": "paused",
+      "paused_reason": "Pause under K-ENV-003 deployment-omlegging",
       "spec_path": "docs/contracts/active/K-REFACTOR-001.md",
       "goal": "Fjern apps/prototype/ som runtime-kilde. Hver app blir selvstendig Next.js App Router-applikasjon med egne typede komponenter og ekte ruter. Prototypen flyttes til docs/ux-reference/ som read-only UX-referanse. Ingen UX-endringer — pixel-parity er akseptkriterium.",
       "in_scope": [

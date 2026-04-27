@@ -12,7 +12,15 @@
 
 | ID | Title | Type | Goal |
 |----|-------|------|------|
-| **K-REFACTOR-001** | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | refactor | Fjern apps/prototype/ som runtime-kilde. Hver app blir selvstendig Next.js App R... |
+| **K-ENV-003** | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | infra | Etabler en klart adskilt tredelt deployment-modell for kunde-app, nurse-app og a... |
+
+---
+
+## ⏸️ PAUSED CONTRACTS
+
+| ID | Title | Paused reason |
+|----|-------|---------------|
+| K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | Pause under K-ENV-003 deployment-omlegging |
 
 ---
 

@@ -33,6 +33,7 @@ interface Contract {
   dependencies: string[]
   merged_at?: string
   blocked_reason?: string
+  paused_reason?: string
 }
 
 function statusColor(status: string): string {
@@ -41,6 +42,7 @@ function statusColor(status: string): string {
     case 'ready':   return C.cyan
     case 'planned': return C.blue
     case 'blocked': return C.red
+    case 'paused':  return C.yellow + C.bold
     case 'merged':  return C.gray
     default:        return C.white
   }
@@ -52,6 +54,7 @@ function statusIcon(status: string): string {
     case 'ready':   return '✅'
     case 'planned': return '📋'
     case 'blocked': return '🚫'
+    case 'paused':  return '⏸️'
     case 'merged':  return '✔️'
     default:        return '⚪'
   }
@@ -67,9 +70,10 @@ function main() {
   console.log(`${C.gray}${'─'.repeat(70)}${C.reset}`)
   console.log()
 
-  const groups = ['active', 'ready', 'planned', 'blocked', 'merged']
+  const groups = ['active', 'paused', 'ready', 'planned', 'blocked', 'merged']
   const groupLabels: Record<string, string> = {
     active:  '🟢 ACTIVE',
+    paused:  '⏸️ PAUSED',
     ready:   '✅ READY',
     planned: '📋 PLANNED',
     blocked: '🚫 BLOCKED',
@@ -87,6 +91,10 @@ function main() {
       const col = statusColor(status)
       const spec = c.spec_path ? `  ${C.gray}[${c.spec_path}]${C.reset}` : ''
       const blocked = c.blocked_reason ? `\n  ${C.red}⛔ ${c.blocked_reason}${C.reset}` : ''
+      const pausedNote =
+        status === 'paused' && c.paused_reason
+          ? `\n  ${C.yellow}⏸ ${c.paused_reason}${C.reset}`
+          : ''
       const deps = c.dependencies.length > 0
         ? `\n  ${C.gray}deps: ${c.dependencies.join(', ')}${C.reset}`
         : ''
@@ -95,14 +103,14 @@ function main() {
       console.log(`  ${col}${c.id}${C.reset}${merged}${spec}`)
       if (status !== 'merged') {
         console.log(`  ${C.white}${c.title}${C.reset}`)
-        if (status === 'active' || status === 'ready') {
+        if (status === 'active' || status === 'ready' || status === 'paused') {
           const goal = c.goal.length > 90 ? c.goal.substring(0, 90) + '...' : c.goal
           console.log(`  ${C.gray}${goal}${C.reset}`)
         }
       } else {
         console.log(`  ${C.gray}${c.title}${C.reset}`)
       }
-      console.log(`${deps}${blocked}`)
+      console.log(`${deps}${blocked}${pausedNote}`)
     }
     console.log()
   }
