@@ -3,7 +3,7 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-04-27
+**Last generated:** 2026-04-28
 **Progress:** 18% → MVP Launch
 
 ---

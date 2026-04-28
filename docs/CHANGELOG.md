@@ -7,6 +7,13 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase C2 — nurse-app skjerm-migrering (Innsjekk + Rapport)
+
+- Migrert NurseInnsjekk → `/innsjekk?id=<oppdragId>` med pixel-parity (`apps/nurse-app/components/screens/Innsjekk/`)
+- Migrert NurseRapport → `/rapport` (deep-link, ingen BottomNav, pixel-parity) (`apps/nurse-app/components/screens/Rapport/`)
+- D-029 registrert (mock-auth bypass — funn fra C1 staging-verifisering)
+- Lærdom fra C1 anvendt: stage og commit per steg, pixel-parity over kodestil
+
 ### Changed
 - **K-REFACTOR-001 (nurse-app, Fase C1 — kjerne):** Migrert seks nurse-skjermer + delt navigasjon fra prototype-import til App Router under `apps/nurse-app/` (`.tsx`). Ruter: `/login`, `/rolle`, `/onboarding`, `/`, `/oppdrag`, `/profil`; `NurseBottomNav` inne i `.phone fu`; mock `useAuth`-stub (`lib/auth/useAuth.ts`); `@eiranova/ui` + `@eiranova/mock-data` via `transpilePackages`; `layout.tsx` med global CSS. Ingen import fra `apps/prototype/` i nurse-app. Innsjekk/Rapport → Fase C2. Oppdagelser: D-026 (env/Supabase), D-027 (glemt-passord flyt); D-028 (cross-app URL vs `router`). Toast `fadeInUp` lagt til i `packages/ui` for pixel-paritet.
 - K-ENV-003 markert som merged i kø. K-REFACTOR-001 satt tilbake til active.
