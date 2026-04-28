@@ -1,16 +1,13 @@
-import { colors } from "@eiranova/ui";
+import { Suspense } from "react";
 
-const C = colors;
+import { Ansatte } from "@/components/screens/Ansatte/Ansatte";
 
 export default function AnsattePage() {
   return (
-    <div style={{ padding: 24, fontFamily: "DM Sans, system-ui, sans-serif" }}>
-      <h1 className="fr" style={{ fontSize: 20, fontWeight: 600, color: C.navy, marginBottom: 8 }}>
-        Ansatte & Roller
-      </h1>
-      <p style={{ fontSize: 13, color: C.soft }}>
-        Denne siden migreres i Fase D3 av K-REFACTOR-001.
-      </p>
-    </div>
+    <Suspense
+      fallback={<div style={{ padding: 24, fontFamily: "DM Sans, system-ui, sans-serif" }}>Laster …</div>}
+    >
+      <Ansatte />
+    </Suspense>
   );
 }
