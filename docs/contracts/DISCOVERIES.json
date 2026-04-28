@@ -380,6 +380,28 @@
       "description": "AOppdrag i prototypen (ca. linje 3744) kaller toast() ved «Avlys»-handling, men komponenten har ingen ToastContainer i treet — toasten vises derfor ikke. Replikert bit-for-bit i admin-app D2 for pixel-parity (bevisst, ikke fikset). Påvirker UX: ingen visuell bekreftelse på «Avlys» i Oppdrag-tabellen.",
       "status": "open",
       "action": "Vurder ToastContainer på /oppdrag (eller felles toast-shell) i en oppfølgingskontrakt (f.eks. K-ADMIN-001 eller helhetlig toast-refaktorering sammen med K-NURSE-001). Ikke innenfor K-REFACTOR-001 sitt skop."
+    },
+    {
+      "id": "D-034",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase D3 admin-app)",
+      "severity": "medium",
+      "title": "Cross-app profilendrings-flyt mellom NurseProfil og AAnsatte er brutt etter prototype-refactor",
+      "description": "I prototypen kunne en sykepleier sende profilendring fra NurseProfil og admin godkjenne i AAnsatte via felles state i Admin-wrapperen. Etter K-REFACTOR-001 C1+D3 er nurse-app og admin-app separate Next.js-apper uten delt state, så broen er brutt — AAnsatte starter med tom ventendeProfilendringer-array. Funksjonaliteten krever Supabase-binding (K-NURSE-001) for å gjenetableres på tvers av apper.",
+      "status": "open",
+      "action": "Adresseres i K-NURSE-001 (Supabase-binding for nurse) og K-ADMIN-001 (eller tilsvarende for admin-app sin data-binding)."
+    },
+    {
+      "id": "D-035",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase D3 admin-app)",
+      "severity": "low",
+      "title": "VikarPanel migrert sammen med AAnsatte i D3; prototype sendInvite brukte invitasjonsPending som ikke finnes i INIT_B2B_TILGANGER",
+      "description": "Prototypen embedder VikarPanel i AAnsatte (vikarer-fanen). For pixel-parity ble VikarPanel migrert til apps/admin-app/components/screens/Ansatte/VikarPanel.tsx i samme fase som AAnsatte (opprinnelig plan utsatte VikarPanel til D4 AB2B). I tillegg refererte prototype sendInvite til x.invitasjonsPending som ikke finnes på INIT_B2B_TILGANGER i @eiranova/mock-data; D3 bruker valgfri invitasjonsPending på state med tom array som default.",
+      "status": "open",
+      "action": "Vurder uttrekk av VikarPanel til delt modul ved D4; vurder å legge invitasjonsPending i fixtures eller erstatte med pending-array når Supabase-binding kommer."
     }
   ]
 }
