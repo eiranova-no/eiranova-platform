@@ -7,6 +7,14 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D2 — admin-app: Dashboard + Oppdrag
+
+- ADashboard → /dashboard (KPI-grid, oppdrag-i-dag-kort, sykepleiere-nå-kort, inntekt-graf)
+- AOppdrag → /oppdrag (filter-tabs, tabell, OppdragModal, KrediterPrivatModal)
+- AdminDrawerContext for drawer-state på tvers av sider
+- Bdg + useAdminToast som lokale kopier (D-031 registrert for senere uttrekk til @eiranova/ui)
+- D-032 resolved (cyrillisk «а» i OppdrагModal i prototypen — migrert til korrekt latinsk navn)
+
 ### K-REFACTOR-001 Fase D1 — admin-app infrastruktur
 
 - App Router root layout (`apps/admin-app/app/layout.tsx`) + (admin) shell-layout med ASidebar/AHeader/ADrawer
