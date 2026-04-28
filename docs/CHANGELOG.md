@@ -7,6 +7,11 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Governance — aktiv kontrakt
+
+- **K-DNS-001** satt til `active` i `CONTRACT_QUEUE.json` (anbefalt neste arbeid — infra før K-ROUTE-001)
+- `README.md` Status-linje oppdatert
+
 ### K-REFACTOR-001 Fase E — slett prototype, fullfør refactor
 
 - Flyttet `apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx`

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-04-28",
-  "updated_by": "K-REFACTOR-001 merged → K-ROUTE-001 unblocked, K-AUTH-002 blocked_reason oppdatert",
+  "updated_by": "K-DNS-001 satt til active (neste arbeid — anbefalt rekkefølge før K-ROUTE-001)",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -533,7 +533,7 @@
       "id": "K-DNS-001",
       "title": "Vercel CNAME-migrering til nye DNS-records",
       "type": "infra",
-      "status": "ready",
+      "status": "active",
       "spec_path": "docs/contracts/active/K-DNS-001.md",
       "goal": "Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.no fra cname.vercel-dns.com til Vercels nye prosjekt-spesifikke vercel-dns-017.com-targets. Fjerner 'DNS Change Recommended'-varsel og fjerner teknisk gjeld før produksjon.",
       "in_scope": [
