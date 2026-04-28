@@ -358,6 +358,17 @@
       "description": "Bdg-komponenten og toast-hooken er kopiert lokalt til både nurse-app (C1: useNurseToast) og admin-app (D2: useAdminToast) fordi @eiranova/ui ikke eksporterer dem. Kunde-app har tilsvarende mønstre på enkelte skjermer. Bør uttrekkes til packages/ui (components + hooks) i en Fase A-oppfølging slik at alle apper deler samme implementasjon.",
       "status": "open",
       "action": "Uttrekk til @eiranova/ui som del av Fase A-utvidelse. Lav prioritet inntil flere migrerte skjermer krever endringer, men før Fase E samkjør én kilde."
+    },
+    {
+      "id": "D-032",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase D2 admin-app)",
+      "severity": "low",
+      "title": "Cyrillisk «а» (U+0430) i OppdrагModal-funksjonsnavn i prototypen",
+      "description": "Funksjonen «OppdrагModal» i prototype-fila (linje 3518) og bruksted (linje 3715) bruker cyrillisk «а» (U+0430) i stedet for latinsk «a». Sannsynligvis utilsiktet. Fungerer fordi tegnene er konsistente. Migrert til admin-app som latinsk «OppdragModal».",
+      "status": "resolved",
+      "action": "Ingen videre — prototype erstattes i Fase E. admin-app bruker korrekt navn fra D2."
     }
   ]
 }
