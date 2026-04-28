@@ -7,6 +7,16 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D3 — admin-app: Betalinger + Ansatte
+
+- ABetalinger → /betalinger (5 tabs: oversikt/vipps/stripe/krediteringer/aktivitet)
+- AAnsatte → /ansatte (4 tabs: interne/vikarer/b2b/roller, prefillEmail via query-param)
+- KreditnotaB2BModal migrert som delt komponent
+- VikarPanel migrert som `components/screens/Ansatte/VikarPanel.tsx` (innebygd i vikarer-fanen; D-035)
+- D-034 registrert: Cross-app profilendrings-flyt brutt — adresseres i K-NURSE-001 / tilsvarende admin-binding
+- D-035 registrert: VikarPanel i D3 + sendInvite/invitasjonsPending vs mock-data
+- AB2B (D4) skal navigere til `/ansatte?prefillEmail=<email>` (encodeURIComponent) for koordinator-opprettelse
+
 ### K-REFACTOR-001 Fase D2 — admin-app: Dashboard + Oppdrag
 
 - ADashboard → /dashboard (KPI-grid, oppdrag-i-dag-kort, sykepleiere-nå-kort, inntekt-graf)
