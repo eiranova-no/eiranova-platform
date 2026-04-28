@@ -7,6 +7,19 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D6 — kunde-app: B2B-koordinator-skjermer
+
+- B2BDashboard → /b2b/dashboard (koordinator-oversikt, brukerliste)
+- B2BBestill → /b2b/bestill (legg til ny B2B-bruker)
+- B2BBruker → /b2b/bruker?id= (detaljvisning av B2B-bruker, ukeplan)
+- B2BOnboarding → /b2b/onboarding (intro-flyt for nye koordinatorer)
+- B2BBrukerAktivering → /b2b/bruker-aktivering (aktivering av enkeltbruker)
+- IngenInvitasjonInfo → /b2b/ingen-invitasjon (info for ikke-inviterte)
+- B2BLogin (linje 6136–6142 i prototypen) ikke migrert — allerede deaktivert i prototypen (redirect til /login)
+- LoginGate (linje 9240–9265) ikke migrert — auth-gate dekkes av K-AUTH-002 middleware
+
+Med D6 er alle skjermer fra prototypen migrert. Kun Fase E (slett apps/prototype/) gjenstår av K-REFACTOR-001.
+
 ### K-REFACTOR-001 Fase D5 — admin-app: Økonomi + Innstillinger
 
 - OkonomiPage → /okonomi (3 hovedfaner: regnskap/lønn/kalkulator; MVA under regnskap)
