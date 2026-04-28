@@ -14,19 +14,28 @@ export type LandingToastFn = (msg: string, type?: "ok" | "err" | "warn", dur?: n
 export interface LoginBedriftProps {
   email: string;
   setEmail: Dispatch<SetStateAction<string>>;
+  password: string;
+  setPassword: Dispatch<SetStateAction<string>>;
   bedriftMode: BedriftSubMode;
   setBedriftMode: Dispatch<SetStateAction<BedriftSubMode>>;
   onBackType: () => void;
   toast: LandingToastFn;
+  /** Privat kunde e-post+passord-innlogging (B2B-bruker etter aktivering bruker samme Auth-konto). */
+  onBrukerSignIn: () => void | Promise<void>;
+  kundeLoginFeil: string;
 }
 
 export function LoginBedrift({
   email,
   setEmail,
+  password,
+  setPassword,
   bedriftMode,
   setBedriftMode,
   onBackType,
   toast,
+  onBrukerSignIn,
+  kundeLoginFeil,
 }: LoginBedriftProps) {
   const router = useRouter();
   const isKommune = email.includes(".kommune.no");
@@ -91,7 +100,9 @@ export function LoginBedrift({
                     </div>
                     <button
                       type="button"
-                      onClick={() => {}}
+                      onClick={() => {
+                        router.push("/#b2b-kontakt");
+                      }}
                       style={{
                         fontSize: 10,
                         color: "#4ABC9E",
@@ -399,18 +410,52 @@ export function LoginBedrift({
             <div style={{ fontSize: 10, color: C.soft, marginBottom: 10, textAlign: "center" }}>Har du allerede aktivert? Logg inn under.</div>
             <div style={{ marginBottom: 8 }}>
               <label style={{ fontSize: 10, fontWeight: 600, color: C.navy, display: "block", marginBottom: 3 }}>Din e-post</label>
-              <input className="inp" type="email" placeholder="ola.nordmann@gmail.com" autoComplete="email" />
+              <input
+                className="inp"
+                type="email"
+                placeholder="ola.nordmann@gmail.com"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div style={{ marginBottom: 12 }}>
               <label style={{ fontSize: 10, fontWeight: 600, color: C.navy, display: "block", marginBottom: 3 }}>Passord</label>
-              <input className="inp" type="password" placeholder="••••••••" autoComplete="current-password" />
+              <input
+                className="inp"
+                type="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
-            <button type="button" onClick={() => {}} className="btn bp bf" style={{ borderRadius: 11, marginBottom: 12 }}>
+            {kundeLoginFeil ? (
+              <div style={{ fontSize: 11, color: C.danger, marginBottom: 8 }}>{kundeLoginFeil}</div>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => {
+                void onBrukerSignIn();
+              }}
+              className="btn bp bf"
+              style={{ borderRadius: 11, marginBottom: 12 }}
+            >
               Logg inn
             </button>
             <div style={{ textAlign: "center", fontSize: 10, color: C.soft, lineHeight: 1.6 }}>
               Ikke mottatt invitasjon?{" "}
-              <span onClick={() => {}} style={{ color: C.green, cursor: "pointer", fontWeight: 600 }}>
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={() => {
+                  void router.push("/b2b/ingen-invitasjon");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") void router.push("/b2b/ingen-invitasjon");
+                }}
+                style={{ color: C.green, cursor: "pointer", fontWeight: 600 }}
+              >
                 Les hva du gjør →
               </span>
             </div>

@@ -1,5 +1,6 @@
 /**
- * Generates packages/mock-data/src/generated/prototype-fixtures.ts from the HANDOFF prototype.
+ * Generates packages/mock-data/src/generated/prototype-fixtures.ts from the UX reference prototype.
+ * Source: docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx
  * Run from repo root: pnpm --filter @eiranova/mock-data generate
  * (or: node scripts/extract-prototype-mock-data.mjs)
  * After changing output shape, commit the file; CI runs pnpm verify:mock-data-generated.
@@ -12,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const protoPath = path.join(
   root,
-  "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx",
+  "docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx",
 );
 const src = fs.readFileSync(protoPath, "utf8");
 
@@ -216,7 +217,7 @@ let out = `/**
  * AUTO-GENERATED — do not edit manually.
  * Regenerate: pnpm --filter @eiranova/mock-data generate
  * (equivalent: node scripts/extract-prototype-mock-data.mjs from repo root)
- * Source: apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
+ * Source: docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx
  * Drift check: pnpm verify:mock-data-generated (also runs in CI)
  */
 

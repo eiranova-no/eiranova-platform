@@ -10,8 +10,9 @@
       "severity": "medium",
       "title": "Prototype-fil er eneste kildefil — ingen TypeScript ennå",
       "description": "apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx er 9449 linjer JSX uten TypeScript. Alle tre apper importerer denne filen og bruker forcedScreen-prop som pseudo-routing. Bevisst arkitekturvalg for prototype-fasen, men teknisk gjeld som adresseres i K-REFACTOR-001.",
-      "status": "triaged",
-      "action": "K-REFACTOR-001 (active 2026-04-27) flytter prototypen til docs/ux-reference/ som read-only referanse. Hver app får egne typede komponenter og ekte App Router. K-ROUTE-001 revidert til Next.js middleware (avhenger av K-REFACTOR-001). D-001 markeres resolved når K-REFACTOR-001 merges."
+      "status": "resolved",
+      "resolved_in": "K-REFACTOR-001",
+      "action": "K-REFACTOR-001 (Fase A–E, april 2026) splittet prototypen til tre selvstendige Next.js App Router-applikasjoner med TypeScript. Prototypen er bevart som read-only referanse i docs/ux-reference/. Pixel-parity var akseptkriterium og er verifisert."
     },
     {
       "id": "D-002",

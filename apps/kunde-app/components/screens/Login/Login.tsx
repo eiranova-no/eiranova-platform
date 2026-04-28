@@ -448,10 +448,16 @@ export function Login() {
       <LoginBedrift
         email={email}
         setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
         bedriftMode={bedriftMode}
         setBedriftMode={setBedriftMode}
         onBackType={() => setType(null)}
         toast={toast}
+        onBrukerSignIn={() => {
+          void handlePrivatSignIn();
+        }}
+        kundeLoginFeil={kundeLoginFeil}
       />
     </>
   );
