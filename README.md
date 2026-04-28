@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **Progress** | 18% → MVP Launch |
-| **Aktiv kontrakt** | **K-REFACTOR-001** (avvikle prototype-som-master — Fase C nurse-app m.m.). **K-ENV-003** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
+| **Aktiv kontrakt** | **K-REFACTOR-001** (avvikle prototype-som-master). **nurse-app Fase C1 (kjerne)** leverer App Router uten prototype-import på denne grenen; Fase C2 (innsjekk/rapport) neste PR. **K-ENV-003** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 
@@ -65,12 +65,13 @@ pnpm queue        # Vis kontrakt-køen
 
 Se [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full arkitekturbeskrivelse.
 
-**Én kildefil styrer tre apper:**
+Historisk importerte alle tre Nest-appene prototyp-filen. Under **K-REFACTOR-001** skal hver app få egne TSX-komponenter og App Router-ruter. **nurse-app** (Fase C1 — kjerne) importerer ikke lenger `apps/prototype/`. **kunde-app** og **admin-app** følger egne refactor-faser.
 
 ```
-apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
-         ↓              ↓              ↓
-    kunde-app       nurse-app       admin-app
+apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx (referanse · kunde/admin under migrering)
+         ↓                        ↓
+    kunde-app                admin-app
+(nurse-app: migrert — se apps/nurse-app/)
 ```
 
 ---
