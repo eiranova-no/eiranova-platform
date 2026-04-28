@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **Progress** | 18% → MVP Launch |
-| **Aktiv kontrakt** | **K-REFACTOR-001** (Fase E fullfører flytt av prototype til `docs/ux-reference/`). **K-ENV-003** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
+| **Aktiv kontrakt** | **K-DNS-001** (Vercel CNAME-migrering — Domeneshop / DNS). **K-REFACTOR-001** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 

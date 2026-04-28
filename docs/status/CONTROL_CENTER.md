@@ -10,7 +10,9 @@
 
 ## 🟢 ACTIVE CONTRACT
 
-Ingen aktiv kontrakt.
+| ID | Title | Type | Goal |
+|----|-------|------|------|
+| **K-DNS-001** | Vercel CNAME-migrering til nye DNS-records | infra | Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.n... |
 
 ---
 
@@ -24,7 +26,6 @@ Ingen pausede kontrakter.
 
 | ID | Title | Type | Dependencies | Goal |
 |----|-------|------|--------------|------|
-| **K-DNS-001** | Vercel CNAME-migrering til nye DNS-records | infra | K-ENV-001 ✅ | Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.n... |
 | **K-ROUTE-001** | App Router middleware — auth-guards og rolle-ruting | feature | K-AUTH-001 ✅, K-REFACTOR-001 ✅ | Etabler Next.js middleware-basert auth-guard på tvers av alle tre apper. Beskytt... |
 
 ---
