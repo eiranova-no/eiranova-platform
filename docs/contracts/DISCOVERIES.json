@@ -347,6 +347,17 @@
       "description": "Fase A-listen utsatte ModalPortal til packages/ui. Under K-REFACTOR-001 Fase D1 finnes ingen ModalPortal i @eiranova/ui (verifisert i packages/ui/src). ADrawer i admin-app krever createPortal-oppførsel identisk med prototype/kunde-app. Løsning i D1: apps/admin-app/components/admin/ModalPortal.tsx (samme implementasjon som kunde-app). Dette dupliserer midlertidig primitivet til Fase A eksporterer det fra @eiranova/ui og apper kan importere derfra.",
       "status": "open",
       "action": "Migrér ModalPortal til @eiranova/ui (Fase A-oppfølging eller dedikert chore); oppdater admin-app og kunde-app til felles import. Narrativ: D-016 / fase-a-discovery."
+    },
+    {
+      "id": "D-031",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase D2 admin-app)",
+      "severity": "low",
+      "title": "Bdg og useToast duplisert lokalt i nurse-app og admin-app",
+      "description": "Bdg-komponenten og toast-hooken er kopiert lokalt til både nurse-app (C1: useNurseToast) og admin-app (D2: useAdminToast) fordi @eiranova/ui ikke eksporterer dem. Kunde-app har tilsvarende mønstre på enkelte skjermer. Bør uttrekkes til packages/ui (components + hooks) i en Fase A-oppfølging slik at alle apper deler samme implementasjon.",
+      "status": "open",
+      "action": "Uttrekk til @eiranova/ui som del av Fase A-utvidelse. Lav prioritet inntil flere migrerte skjermer krever endringer, men før Fase E samkjør én kilde."
     }
   ]
 }
