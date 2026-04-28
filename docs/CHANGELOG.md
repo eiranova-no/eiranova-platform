@@ -7,6 +7,14 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D5 — admin-app: Økonomi + Innstillinger
+
+- OkonomiPage → /okonomi (3 hovedfaner: regnskap/lønn/kalkulator; MVA under regnskap)
+- LonnPanel migrert som Okonomi-lokal helper (interne faner som i prototypen)
+- PrisKalkulator migrert som Okonomi-lokal helper
+- InnstillingerPage → /innstillinger (varsel-mottakere, dekningsområder, B2B-toggle, journalmodul, integrasjoner, B2B-faktura, purring/inkasso, kanselleringsregler, API-nøkler)
+- Alle 8 admin-sider er nå migrert. D6 (B2B-skjermer) og Fase E (slett prototype) gjenstår.
+
 ### K-REFACTOR-001 Fase D4 — admin-app: B2B + Tjenester
 
 - AB2B → /b2b (3 tabs: kunder/fakturaer/avtalemodeller, MOCK_B2B_HENVENDELSER-kort, drawer-trigger via Context)
