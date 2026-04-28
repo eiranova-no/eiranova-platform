@@ -60,6 +60,12 @@ importers:
 
   apps/nurse-app:
     dependencies:
+      '@eiranova/mock-data':
+        specifier: workspace:*
+        version: link:../../packages/mock-data
+      '@eiranova/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: ^15.3.1
         version: 15.5.14(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -69,6 +75,16 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.2.4(react@19.2.4)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.14
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.14)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
 
   packages/mock-data:
     devDependencies:

@@ -8,7 +8,7 @@ const C = colors;
 interface ToastRow {
   id: number;
   msg: string;
-  type: "ok" | "err" | "warn" | string;
+  type: "ok" | "err" | "warn" | "info" | string;
 }
 
 export function useNurseToast() {
@@ -46,7 +46,16 @@ export function useNurseToast() {
             fontWeight: 600,
             color: "white",
             textAlign: "center",
-            background: t.type === "ok" ? C.green : t.type === "err" ? C.danger : t.type === "warn" ? C.gold : "#1A2E24",
+            background:
+              t.type === "ok"
+                ? C.green
+                : t.type === "err"
+                  ? C.danger
+                  : t.type === "warn"
+                    ? C.gold
+                    : t.type === "info"
+                      ? "#1A2E24"
+                      : "#1A2E24",
             boxShadow: "0 4px 20px rgba(0,0,0,.25)",
             animation: "fadeInUp .2s ease",
           }}
