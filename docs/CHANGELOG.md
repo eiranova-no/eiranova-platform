@@ -7,6 +7,14 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D4 — admin-app: B2B + Tjenester
+
+- AB2B → /b2b (3 tabs: kunder/fakturaer/avtalemodeller, MOCK_B2B_HENVENDELSER-kort, drawer-trigger via Context)
+- «Opprett koordinator»-knapp navigerer til `/ansatte?prefillEmail=<email>` (oppfølging av D3-kontrakten)
+- TjenesteAdmin → /tjenester (kategori-grid, tjeneste-modal, kalkulator, instruks-editor)
+- InstruktionEditor + TjenesteKalkulator migrert som lokale helpers under `screens/Tjenester/`
+- `tjenesterCatalog` er lokal state — Supabase-persistens kommer i K-TJENESTE-001
+
 ### K-REFACTOR-001 Fase D3 — admin-app: Betalinger + Ansatte
 
 - ABetalinger → /betalinger (5 tabs: oversikt/vipps/stripe/krediteringer/aktivitet)
