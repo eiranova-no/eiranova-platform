@@ -1,6 +1,7 @@
 "use client";
 
 import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/navigation";
 
 import { colors } from "@eiranova/ui";
 
@@ -27,6 +28,7 @@ export function LoginBedrift({
   onBackType,
   toast,
 }: LoginBedriftProps) {
+  const router = useRouter();
   const isKommune = email.includes(".kommune.no");
 
   return (
@@ -225,7 +227,7 @@ export function LoginBedrift({
             </div>
             <button
               type="button"
-              onClick={() => {}}
+              onClick={() => router.push("/b2b/dashboard")}
               style={{
                 width: "100%",
                 padding: "12px 0",
@@ -286,7 +288,12 @@ export function LoginBedrift({
               <label style={{ fontSize: 10, fontWeight: 600, color: C.navy, display: "block", marginBottom: 3 }}>Passord</label>
               <input className="inp" type="password" placeholder="••••••••" autoComplete="current-password" />
             </div>
-            <button type="button" onClick={() => {}} className="btn bf" style={{ borderRadius: 11, background: "#1A2E24", color: "white" }}>
+            <button
+              type="button"
+              onClick={() => router.push("/b2b/dashboard")}
+              className="btn bf"
+              style={{ borderRadius: 11, background: "#1A2E24", color: "white" }}
+            >
               Logg inn som koordinator
             </button>
           </>
@@ -381,7 +388,12 @@ export function LoginBedrift({
               <div style={{ fontSize: 11, fontWeight: 700, color: "#6D28D9", marginBottom: 3 }}>Bruker / Pasient</div>
               <div style={{ fontSize: 10, color: "#5B21B6", lineHeight: 1.55 }}>Din koordinator har lagt deg til i EiraNova og sendt en invitasjons-e-post med aktiveringslenke.</div>
             </div>
-            <button type="button" onClick={() => {}} className="btn bp bf" style={{ borderRadius: 11, marginBottom: 12 }}>
+            <button
+              type="button"
+              onClick={() => router.push("/b2b/bruker-aktivering")}
+              className="btn bp bf"
+              style={{ borderRadius: 11, marginBottom: 12 }}
+            >
               Aktiver konto med invitasjon →
             </button>
             <div style={{ fontSize: 10, color: C.soft, marginBottom: 10, textAlign: "center" }}>Har du allerede aktivert? Logg inn under.</div>

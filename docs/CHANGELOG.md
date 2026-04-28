@@ -7,6 +7,14 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fix-up etter K-REFACTOR-001 Fase D6 — B2B-navigasjon fra Login
+
+- "Logg inn med Google Workspace" → /b2b/dashboard (var tom onClick; faktisk Google-auth i K-AUTH-002)
+- "Logg inn som koordinator" → /b2b/dashboard (var tom onClick)
+- "Aktiver konto med invitasjon →" → /b2b/bruker-aktivering (var tom onClick)
+- "Ikke mottatt invitasjon?" → /b2b/ingen-invitasjon (onNavKunde manglet håndtering)
+- Bug introdusert i Fase B (Login-migrering) men avdekket først ved D6 staging-verifisering, da B2B-rutene faktisk fantes som mål
+
 ### K-REFACTOR-001 Fase D6 — kunde-app: B2B-koordinator-skjermer
 
 - B2BDashboard → /b2b/dashboard (koordinator-oversikt, brukerliste)

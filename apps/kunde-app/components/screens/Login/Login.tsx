@@ -111,10 +111,11 @@ export function Login() {
     void router.push("/onboarding/push");
   }, [email, fulltNavn, password, router, signUp]);
 
-  /** Matcher tidligere LoginGate: kun glemt-passord navigerer; landing/B2B er no-op. */
   const onNavKunde = useCallback((s: string) => {
     if (s === "glemt-passord") {
       void router.push("/glemt-passord");
+    } else if (s === "ingen-invitasjon") {
+      void router.push("/b2b/ingen-invitasjon");
     }
   }, [router]);
 
