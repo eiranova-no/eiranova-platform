@@ -7,6 +7,14 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase D1 — admin-app infrastruktur
+
+- App Router root layout (`apps/admin-app/app/layout.tsx`) + (admin) shell-layout med ASidebar/AHeader/ADrawer
+- ANAV migrert til `apps/admin-app/lib/admin/adminNav.ts` (ADMIN_NAV_ITEMS + path-helpers)
+- Mock useAuth-stub (parallelt med nurse-app C1)
+- 8 placeholder-sider for admin-nav-items (sider migreres i D2–D5)
+- admin-app importerer ikke lenger fra `apps/prototype/`
+
 ### K-REFACTOR-001 Fase C2 — nurse-app skjerm-migrering (Innsjekk + Rapport)
 
 - Migrert NurseInnsjekk → `/innsjekk?id=<oppdragId>` med pixel-parity (`apps/nurse-app/components/screens/Innsjekk/`)

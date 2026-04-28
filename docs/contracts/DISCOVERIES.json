@@ -336,6 +336,17 @@
       "description": "I K-REFACTOR-001 Fase C1 ble NurseLogin migrert med stub-useAuth. Lokal erIntern-validering sjekker @eiranova.no-suffiks korrekt, men signInMock() setter alltid hardkodet mock-bruker uavhengig av e-post/passord-input. Dette er forventet i C1 (skopet er kun arkitektur-refactor). Ekte autentisering kommer i K-AUTH-002 (Google Workspace SSO + e-post/passord-fallback). Funn: K-REFACTOR-001 Fase C1 (staging-verifisering). Påvirker: nurse-app login-flyt (alle nurse-brukere).",
       "status": "open",
       "action": "Erstatt stub med ekte Supabase auth i K-AUTH-002. Inntil da: brukere på staging klikker «Logg inn med EiraNova-konto»-knappen for å logge inn som mock-bruker."
+    },
+    {
+      "id": "D-030",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase D1 admin-app)",
+      "severity": "low",
+      "title": "ModalPortal ikke eksportert fra @eiranova/ui — ADrawer bruker lokal kopi",
+      "description": "Fase A-listen utsatte ModalPortal til packages/ui. Under K-REFACTOR-001 Fase D1 finnes ingen ModalPortal i @eiranova/ui (verifisert i packages/ui/src). ADrawer i admin-app krever createPortal-oppførsel identisk med prototype/kunde-app. Løsning i D1: apps/admin-app/components/admin/ModalPortal.tsx (samme implementasjon som kunde-app). Dette dupliserer midlertidig primitivet til Fase A eksporterer det fra @eiranova/ui og apper kan importere derfra.",
+      "status": "open",
+      "action": "Migrér ModalPortal til @eiranova/ui (Fase A-oppfølging eller dedikert chore); oppdater admin-app og kunde-app til felles import. Narrativ: D-016 / fase-a-discovery."
     }
   ]
 }
