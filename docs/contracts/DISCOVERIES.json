@@ -292,6 +292,17 @@
       "status": "resolved",
       "resolved_in": "K-REFACTOR-001 Fase B2",
       "action": "Ingen; kodefiks i `Bekreftelse.tsx`."
+    },
+    {
+      "id": "D-026",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase C1 Steg 1)",
+      "severity": "medium",
+      "title": "EnvBadge/env-validering antar Supabase-variabler — blokkerer apps uten Supabase-tilkobling",
+      "description": "Under K-REFACTOR-001 Fase C1 Steg 1 feilet pnpm --filter nurse-app build fordi lib/env.ts brukte requireValue på SUPABASE_URL og SUPABASE_ANON_KEY. Nurse-app har ikke Supabase-binding ennå (kommer i K-NURSE-001). Midlertidig løst ved å sette tomme strenger som default i nurse-app/lib/env.ts med kommentar. Admin-app vil treffe samme problem i Fase D. Mønsteret bør være konsistent på tvers av alle tre apper — enten (a) felles env-modul i packages/ui med per-app-konfigurerbar valideringsstrenghet, eller (b) per-app env.ts som validerer kun det den faktisk bruker. Påvirker: nurse-app (nå), admin-app (Fase D).",
+      "status": "open",
+      "action": "Beslut mønster før eller under K-NURSE-001 — ikke patche individuelt per app."
     }
   ]
 }
