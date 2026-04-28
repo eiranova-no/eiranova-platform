@@ -292,6 +292,39 @@
       "status": "resolved",
       "resolved_in": "K-REFACTOR-001 Fase B2",
       "action": "Ingen; kodefiks i `Bekreftelse.tsx`."
+    },
+    {
+      "id": "D-026",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase C1 Steg 1)",
+      "severity": "medium",
+      "title": "EnvBadge/env-validering antar Supabase-variabler — blokkerer apps uten Supabase-tilkobling",
+      "description": "Under K-REFACTOR-001 Fase C1 Steg 1 feilet pnpm --filter nurse-app build fordi lib/env.ts brukte requireValue på SUPABASE_URL og SUPABASE_ANON_KEY. Nurse-app har ikke Supabase-binding ennå (kommer i K-NURSE-001). Midlertidig løst ved å sette tomme strenger som default i nurse-app/lib/env.ts med kommentar. Admin-app vil treffe samme problem i Fase D. Mønsteret bør være konsistent på tvers av alle tre apper — enten (a) felles env-modul i packages/ui med per-app-konfigurerbar valideringsstrenghet, eller (b) per-app env.ts som validerer kun det den faktisk bruker. Påvirker: nurse-app (nå), admin-app (Fase D).",
+      "status": "open",
+      "action": "Beslut mønster før eller under K-NURSE-001 — ikke patche individuelt per app."
+    },
+    {
+      "id": "D-027",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase C1 Steg 2)",
+      "severity": "low",
+      "title": "Glemt-passord-flyt for nurse-app — felles eller separat?",
+      "description": "I prototypen kaller NurseLogin onNav('glemt-passord', {nurseMode: true}), som peker til samme glemt-passord-skjerm som kunde-app bruker, med en nurseMode-flag. I Fase C1 er lenken migrert til router.push('/glemt-passord'), men ruta finnes ikke i nurse-app ennå (404 til den implementeres). Avgjør i K-AUTH-002 om: (a) glemt-passord skal være per app (egen /glemt-passord i nurse-app med Google Workspace-spesifikk fallback), eller (b) felles flyt løftet til packages/ui eller delt rute. Påvirker også admin-app i Fase D.",
+      "status": "open",
+      "action": "Avklar i K-AUTH-002. Inntil da: aktiv lenke med 404 (samme prinsipp som Innsjekk-fanen i Fase C1)."
+    },
+    {
+      "id": "D-028",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Cursor (Fase C1 Steg 3-fix)",
+      "severity": "medium",
+      "title": "Cross-app navigasjon i monorepo — fra nurse-app til admin-app og motsatt",
+      "description": "I prototypen var alle apper én monolitt med fane-bytting via onNav('admin-panel'). I monorepo-konteksten er hver app et eget Next.js-prosjekt på eget domene (kunde-app: app.eiranova.no, nurse-app: nurse.eiranova.no, admin-app: admin.eiranova.no). Cross-app navigasjon krever full URL-redirect (window.location.href), ikke router.push. Identifisert under K-REFACTOR-001 Fase C1 Steg 3 (NurseRolle: koordinator/admin → adminpanelet). Same problem vil oppstå i Fase D (admin-app) hvis admin har 'gå til kunde'-flyt. Avgjør konsistent mønster: (a) felles crossAppNav(target)-helper i packages/ui som leser env-vars (NEXT_PUBLIC_ADMIN_URL, NEXT_PUBLIC_KUNDE_URL, NEXT_PUBLIC_NURSE_URL), eller (b) per-app hardkodede konstanter.",
+      "status": "open",
+      "action": "Avklar mønster før Fase D. For C1: hardkod URL i Rolle.tsx med kommentar som peker hit."
     }
   ]
 }
