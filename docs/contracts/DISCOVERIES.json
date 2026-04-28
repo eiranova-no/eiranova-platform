@@ -369,6 +369,17 @@
       "description": "Funksjonen «OppdrагModal» i prototype-fila (linje 3518) og bruksted (linje 3715) bruker cyrillisk «а» (U+0430) i stedet for latinsk «a». Sannsynligvis utilsiktet. Fungerer fordi tegnene er konsistente. Migrert til admin-app som latinsk «OppdragModal».",
       "status": "resolved",
       "action": "Ingen videre — prototype erstattes i Fase E. admin-app bruker korrekt navn fra D2."
+    },
+    {
+      "id": "D-033",
+      "contract": "K-REFACTOR-001",
+      "date": "2026-04-28",
+      "reported_by": "Richard Møller (beslutning) / Cursor (registrering)",
+      "severity": "low",
+      "title": "AOppdrag kaller toast() men rendrer ikke ToastContainer",
+      "description": "AOppdrag i prototypen (ca. linje 3744) kaller toast() ved «Avlys»-handling, men komponenten har ingen ToastContainer i treet — toasten vises derfor ikke. Replikert bit-for-bit i admin-app D2 for pixel-parity (bevisst, ikke fikset). Påvirker UX: ingen visuell bekreftelse på «Avlys» i Oppdrag-tabellen.",
+      "status": "open",
+      "action": "Vurder ToastContainer på /oppdrag (eller felles toast-shell) i en oppfølgingskontrakt (f.eks. K-ADMIN-001 eller helhetlig toast-refaktorering sammen med K-NURSE-001). Ikke innenfor K-REFACTOR-001 sitt skop."
     }
   ]
 }
