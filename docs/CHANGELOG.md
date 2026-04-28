@@ -7,6 +7,22 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-REFACTOR-001 Fase E — slett prototype, fullfør refactor
+
+- Flyttet `apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx`
+  til `docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx` som read-only artefakt
+- Slettet `apps/prototype/`-mappa
+- Oppdatert `scripts/extract-prototype-mock-data.mjs` til ny path
+- Oppdatert `.cursorrules` og `.cursor/rules/richard-prototype-workflow.mdc`
+- Oppdatert `docs/ARCHITECTURE.md` med ny monorepo-struktur og App Router-arkitektur
+- Oppdatert `README.md` (status, arkitektur-stripe, tech stack)
+- Markert D-001 som resolved (referanse: K-REFACTOR-001)
+- D-036: LoginBedrift — «Gå til kontaktskjema», B2B-bruker «Logg inn» og «Les hva du gjør» koblet til navigasjon / Auth
+
+K-REFACTOR-001 er ferdig implementert. Queue-oppdatering (kontrakten → merged,
+K-ROUTE-001 → ready, K-AUTH-002 blocked_reason oppdatert) kommer i separat
+`chore/queue-update-*` PR.
+
 ### Fix-up etter K-REFACTOR-001 Fase D6 — B2B-navigasjon fra Login
 
 - "Logg inn med Google Workspace" → /b2b/dashboard (var tom onClick; faktisk Google-auth i K-AUTH-002)
