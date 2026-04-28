@@ -3,6 +3,13 @@
 .env.local
 .env.*.local
 .env.production
+# Lokale kopier (.env.admin-preview osv.) — aldri commit hemmeligheter
+.env.*
+!.env.example
+!**/.env.example
+
+# TypeScript incremental (per-app build info)
+*.tsbuildinfo
 
 # Dependencies
 node_modules/
