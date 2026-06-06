@@ -88,6 +88,7 @@ Etter **K-REFACTOR-001** er **kunde-app**, **nurse-app** og **admin-app** selvst
 | 🔴 | Journalansvarlig utpekes FØR første stell | Lise |
 | 🔴 | Statsforvalteren registrering | Lise |
 | 🔴 | MVA-avklaring: Besøksvenn + Trilleturer (mva_risiko 'høy') | Revisor |
+| 🔴 | Roter alle API-nøkler før produksjonssetting ([#37](https://github.com/eiranova-no/eiranova-platform/issues/37)) | Richard |
 | 🟡 | Domener koblet i Vercel (K-ENV-001) | Richard |
 | 🟡 | NHN-sertifisering (FØR K-JOURNAL-001) | Richard |
 | 🟡 | Skattetrekkskonto DNB | Lise |
