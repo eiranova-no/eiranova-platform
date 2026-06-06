@@ -486,6 +486,17 @@
       "status": "resolved",
       "resolved_in": "K-LAUNCH-001 auth-config PR #35",
       "action": "config.toml pinner nå mfa.totp=true og email max_frequency=1m0s, otp_length=8. Realign staging (hlenyzppjodmkoaugzid) med oppdatert config før prod-push bekreftes."
+    },
+    {
+      "id": "D-044",
+      "contract": "K-AUTH-004",
+      "date": "2026-06-06",
+      "reported_by": "Claude / K-AUTH-003 review",
+      "severity": "high",
+      "title": "Passord-reset bruker sannsynligvis samme PKCE-kryss-enhet-bug som signup",
+      "description": "Recovery-e-post bruker standard ConfirmationURL / PKCE-flyt. Kunde som ber om passord-reset på én enhet og åpner lenken på annen (typisk mobil) vil trolig feile på samme måte som signup (D-043). Kunder bruker e-post+passord — reset er en faktisk produksjonsflyt. Samme token_hash-mønster som K-AUTH-003 løser det: /auth/confirm med type=recovery + norsk recovery-mal i config.toml.",
+      "status": "open",
+      "action": "Planlegg K-AUTH-004 (eller utvidelse av K-AUTH-003) etter merge av PR #40. Email-change-mal har samme mønster, lavere prioritet."
     }
   ]
 }

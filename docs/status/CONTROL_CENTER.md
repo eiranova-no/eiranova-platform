@@ -3,7 +3,7 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-04-28
+**Last generated:** 2026-06-06
 **Progress:** 21% → MVP Launch
 
 ---
@@ -12,13 +12,15 @@
 
 | ID | Title | Type | Goal |
 |----|-------|------|------|
-| **K-DNS-001** | Vercel CNAME-migrering til nye DNS-records | infra | Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.n... |
+| **K-AUTH-003** | E-postbekreftelse token_hash (enhetsuavhengig) + norsk mal | feature | Bytt signup-bekreftelse fra PKCE /auth/callback til token_hash + verifyOtp på /a... |
 
 ---
 
 ## ⏸️ PAUSED CONTRACTS
 
-Ingen pausede kontrakter.
+| ID | Title | Paused reason |
+|----|-------|---------------|
+| K-DNS-001 | Vercel CNAME-migrering til nye DNS-records | K-AUTH-003 prioriteres (auth kryss-enhet, PR #40). Gjenopptas etter merge. |
 
 ---
 
