@@ -7,6 +7,13 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-AUTH-003 — E-postbekreftelse token_hash + norsk mal
+
+- Ny route `apps/kunde-app/app/auth/confirm/route.ts` — `verifyOtp({ token_hash, type })`, enhetsuavhengig
+- Norsk signup-mal `supabase/templates/confirmation.html` via `[auth.email.template.confirmation]` i `config.toml`
+- DISCOVERIES: D-041 resolved, D-043 (PKCE krevde samme nettleser)
+- Krever `config push` mot dev + prod etter merge (Richard)
+
 ### Governance — aktiv kontrakt
 
 - **K-DNS-001** satt til `active` i `CONTRACT_QUEUE.json` (anbefalt neste arbeid — infra før K-ROUTE-001)

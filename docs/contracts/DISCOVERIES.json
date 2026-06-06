@@ -472,8 +472,9 @@
       "severity": "low",
       "title": "prod bruker fortsatt engelske standard e-postmaler — norske fra K-AUTH-001 ikke lagt inn",
       "description": "K-AUTH-001 T-001 spesifiserte norske auth-maller i Supabase dashboard. dev hadde delvis manuelt arbeid; prod har fortsatt Supabase standardmaler på engelsk. Rent kosmetisk — funksjonell auth og SMTP fungerer etter config push.",
-      "status": "open",
-      "action": "Legg inn norske maler på prod (og dev om ønskelig) som del av K-LAUNCH-001 cut-over-opprydding. Ikke blokkerende for auth-fix."
+      "status": "resolved",
+      "resolved_in": "K-AUTH-003",
+      "action": "Norsk signup-bekreftelsesmal i supabase/templates/confirmation.html, deklarativ via config.toml [auth.email.template.confirmation]. Pushes til begge prosjekter ved config push."
     },
     {
       "id": "D-042",
@@ -486,6 +487,18 @@
       "status": "resolved",
       "resolved_in": "K-LAUNCH-001 auth-config PR #35",
       "action": "config.toml pinner nå mfa.totp=true og email max_frequency=1m0s, otp_length=8. Realign staging (hlenyzppjodmkoaugzid) med oppdatert config før prod-push bekreftes."
+    },
+    {
+      "id": "D-043",
+      "contract": "K-AUTH-003",
+      "date": "2026-06-06",
+      "reported_by": "Richard / prod signup-feilsøking",
+      "severity": "high",
+      "title": "PKCE e-postbekreftelse krevde samme nettleser — kryss-enhet feilet stille",
+      "description": "Standard ConfirmationURL + /auth/callback exchangeCodeForSession binder code_verifier til signup-nettleseren. Brukere som registrerer på PC og åpner bekreftelseslenke på mobil (eller annen enhet) får exchange-feil og redirect til /login. Observert med Reidun (rhmorte@gmail.com) 06.06.2026. TC-AUTH-STG-001 fanget ikke dette fordi test skjedde i samme nettleser.",
+      "status": "resolved",
+      "resolved_in": "K-AUTH-003",
+      "action": "Byttet til token_hash + verifyOtp på /auth/confirm. Norsk mal med {{ .TokenHash }} i config.toml. Kryss-enhet-test (TC-AUTH-CROSS-001) påkrevd ved verifisering."
     }
   ]
 }

@@ -68,7 +68,7 @@ Auto-genererte Vercel-URL-er per prosjekt og PR, f.eks. `https://eiranova-web-�
 | Staging | `dev` | `https://staging.app.eiranova.no` |
 | Lokal (kunde-app) | — | `http://127.0.0.1:3001` |
 
-`additional_redirect_urls` inkluderer prod, staging og lokal kunde-auth (`127.0.0.1:3001` **og** `localhost:3001` — origin må matche adressefeltet nøyaktig). Appen sender `emailRedirectTo = ${window.location.origin}/auth/callback` ved signup.
+`additional_redirect_urls` inkluderer prod, staging og lokal kunde-auth (`127.0.0.1:3001` **og** `localhost:3001` — origin må matche adressefeltet nøyaktig). Signup-bekreftelse (K-AUTH-003): norsk mal lenker til `/auth/confirm?token_hash=…` (enhetsuavhengig `verifyOtp`), ikke PKCE `/auth/callback`.
 
 **SMTP i config.toml:** `[auth.email.smtp]` → Resend (`smtp.resend.com:465`, bruker `resend`, `pass = env(RESEND_API_KEY)`, avsender `noreply@eiranova.no` / EiraNova).
 
