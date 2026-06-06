@@ -474,6 +474,18 @@
       "description": "K-AUTH-001 T-001 spesifiserte norske auth-maller i Supabase dashboard. dev hadde delvis manuelt arbeid; prod har fortsatt Supabase standardmaler på engelsk. Rent kosmetisk — funksjonell auth og SMTP fungerer etter config push.",
       "status": "open",
       "action": "Legg inn norske maler på prod (og dev om ønskelig) som del av K-LAUNCH-001 cut-over-opprydding. Ikke blokkerende for auth-fix."
+    },
+    {
+      "id": "D-042",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / prod-diff-review",
+      "severity": "high",
+      "title": "Declarative config push ville utilsiktet svekke MFA TOTP og e-post-OTP på prod",
+      "description": "Prod-diff før bekreftelse viste at config push ville sette [auth.mfa.totp] enroll/verify fra true til false, max_frequency fra 1m0s til 1s, og otp_length fra 8 til 6 — bivirkninger fordi config.toml manglet feltene og falt tilbake til CLI-defaults. TC-AUTH-STG-001 fanget ikke dette (klikk-bekreftelse bruker ikke TOTP/OTP-lengde). Staging fikk antakelig de svekkede verdiene i første push.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "config.toml pinner nå mfa.totp=true og email max_frequency=1m0s, otp_length=8. Realign staging (hlenyzppjodmkoaugzid) med oppdatert config før prod-push bekreftes."
     }
   ]
 }
