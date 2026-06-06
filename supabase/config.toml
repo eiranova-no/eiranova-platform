@@ -236,7 +236,7 @@ sender_name = "EiraNova"
 # Norsk signup-bekreftelse — token_hash (enhetsuavhengig, ikke PKCE)
 [auth.email.template.confirmation]
 subject = "Bekreft e-postadressen din — EiraNova"
-content_path = "./templates/confirmation.html"
+content_path = "./supabase/templates/confirmation.html"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
