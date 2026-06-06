@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bekreft e-postadressen din — EiraNova</title>
+</head>
+<body style="margin:0;padding:24px;font-family:'DM Sans',Arial,sans-serif;line-height:1.6;color:#1A2E24;background:#FAF8F5;">
+  <div style="max-width:480px;margin:0 auto;">
+    <h2 style="margin:0 0 16px;font-family:Fraunces,Georgia,serif;color:#4A7C6F;font-weight:600;">
+      Velkommen til EiraNova
+    </h2>
+    <p style="margin:0 0 16px;">
+      Takk for at du registrerte deg. Bekreft e-postadressen din for å komme i gang med onboarding.
+    </p>
+    <p style="margin:0 0 24px;">
+      <a
+        href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&amp;next=/onboarding/push"
+        style="display:inline-block;padding:12px 24px;background:#4A7C6F;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:600;"
+      >
+        Bekreft e-postadressen
+      </a>
+    </p>
+    <p style="margin:0 0 8px;font-size:14px;color:#2C3E35;">
+      Fungerer ikke knappen? Kopier lenken under og lim den inn i nettleseren:
+    </p>
+    <p style="margin:0 0 24px;font-size:12px;word-break:break-all;color:#4A7C6F;">
+      {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&amp;next=/onboarding/push
+    </p>
+    <p style="margin:0;font-size:14px;color:#666666;">
+      Lenken utløper om én time. Hvis du ikke opprettet en konto hos EiraNova, kan du se bort fra denne e-posten.
+    </p>
+  </div>
+</body>
+</html>

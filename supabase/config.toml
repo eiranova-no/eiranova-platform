@@ -233,6 +233,11 @@ pass = "env(RESEND_API_KEY)"
 admin_email = "noreply@eiranova.no"
 sender_name = "EiraNova"
 
+# Norsk signup-bekreftelse — token_hash (enhetsuavhengig, ikke PKCE)
+[auth.email.template.confirmation]
+subject = "Bekreft e-postadressen din — EiraNova"
+content_path = "./supabase/templates/confirmation.html"
+
 # Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"

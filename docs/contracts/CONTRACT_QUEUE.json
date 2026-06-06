@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-04-28",
-  "updated_by": "K-DNS-001 satt til active (neste arbeid — anbefalt rekkefølge før K-ROUTE-001)",
+  "last_updated": "2026-06-06",
+  "updated_by": "K-AUTH-003 active (PR #40); K-DNS-001 paused",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -480,6 +480,45 @@
       "blocked_reason": "Avventer K-ROUTE-001 (Next.js middleware + routing-fundament). K-REFACTOR-001 ferdigstilt 2026-04-28."
     },
     {
+      "id": "K-AUTH-003",
+      "title": "E-postbekreftelse token_hash (enhetsuavhengig) + norsk mal",
+      "type": "feature",
+      "status": "active",
+      "spec_path": "docs/contracts/active/K-AUTH-003.md",
+      "goal": "Bytt signup-bekreftelse fra PKCE /auth/callback til token_hash + verifyOtp på /auth/confirm. Norsk bekreftelsesmal deklarativ i config.toml. Lukker D-041 og D-043.",
+      "in_scope": [
+        "apps/kunde-app/app/auth/confirm/route.ts",
+        "supabase/templates/confirmation.html",
+        "supabase/config.toml [auth.email.template.confirmation]",
+        "config push mot dev + prod (Richard)",
+        "TC-AUTH-CROSS-001: signup PC, åpne lenke mobil"
+      ],
+      "out_of_scope": [
+        "Passord-reset token_hash (K-AUTH-004 — samme PKCE-bug)",
+        "E-postendring-mal",
+        "Google OAuth callback (/auth/callback beholdes)"
+      ],
+      "deliverables": [
+        "apps/kunde-app/app/auth/confirm/route.ts",
+        "supabase/templates/confirmation.html",
+        "Oppdatert supabase/config.toml",
+        "docs/contracts/active/K-AUTH-003.md",
+        "DISCOVERIES D-041 resolved, D-043 resolved"
+      ],
+      "acceptance_criteria": [
+        "Registrer på PC, åpne bekreftelseslenke på mobil → /onboarding/push (staging + prod)",
+        "E-post på norsk, avsender noreply@eiranova.no",
+        "config push på begge Supabase-prosjekter",
+        "Feil token → /login?confirm=feilet"
+      ],
+      "user_stories": [],
+      "dependencies": ["K-AUTH-001", "K-LAUNCH-001 auth-config"],
+      "risks": [
+        "type=signup vs type=email mismatch mellom mal og verifyOtp — test fanger",
+        "config push må kun vise mal-endring i diff (MFA/OTP urørt)"
+      ]
+    },
+    {
       "id": "K-LAUNCH-001",
       "title": "Production Cut-over: Plattform til main",
       "type": "governance",
@@ -533,7 +572,8 @@
       "id": "K-DNS-001",
       "title": "Vercel CNAME-migrering til nye DNS-records",
       "type": "infra",
-      "status": "active",
+      "status": "paused",
+      "paused_reason": "K-AUTH-003 prioriteres (auth kryss-enhet, PR #40). Gjenopptas etter merge.",
       "spec_path": "docs/contracts/active/K-DNS-001.md",
       "goal": "Migrere CNAME-targets for app.eiranova.no, nurse.eiranova.no og admin.eiranova.no fra cname.vercel-dns.com til Vercels nye prosjekt-spesifikke vercel-dns-017.com-targets. Fjerner 'DNS Change Recommended'-varsel og fjerner teknisk gjeld før produksjon.",
       "in_scope": [

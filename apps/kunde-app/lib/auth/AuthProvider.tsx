@@ -73,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         options: {
           data: { full_name: fullName },
+          // Signup-bekreftelse bruker token_hash-mal (/auth/confirm), ikke denne URL-en.
           emailRedirectTo: origin
             ? `${origin}/auth/callback?next=${encodeURIComponent("/onboarding/push")}`
             : undefined,
