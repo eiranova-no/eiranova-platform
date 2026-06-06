@@ -53,10 +53,48 @@ Auto-genererte Vercel-URL-er per prosjekt og PR, f.eks. `https://eiranova-web-�
 
 | Prosjekt | Ref | Region | Brukes av |
 |----------|-----|--------|-----------|
-| eiranova-prod | (se `.env` / Vercel Production) | eu-central-1 Frankfurt 🇩🇪 | Production-domener |
-| eiranova-dev | (se `.env` / Vercel Preview) | eu-central-1 Frankfurt 🇩🇪 | Staging, PR-preview, localhost |
+| eiranova-prod | `wxyfwgxvfhpicmcpknxt` | eu-central-1 Frankfurt 🇩🇪 | Production-domener |
+| eiranova-dev | `hlenyzppjodmkoaugzid` | eu-central-1 Frankfurt 🇩🇪 | Staging, PR-preview, localhost |
 
 **Frankfurt er non-negotiable** — GDPR-krav for helsedata.
+
+### Auth (config-as-code)
+
+Én `supabase/config.toml` dekker prod, staging og lokal. `config push` er **deklarativ** — hele `[auth]`-seksjonen overskrives (SMTP, bekreftelser, rate limits), ikke bare `site_url`. Filen må derfor speile fungerende prod-tilstand (Resend SMTP, `enable_confirmations = true`, `email_sent = 100`) før noen push.
+
+| Miljø | Git-branch | `SUPABASE_AUTH_SITE_URL` |
+|-------|------------|--------------------------|
+| Production | `main` | `https://app.eiranova.no` |
+| Staging | `dev` | `https://staging.app.eiranova.no` |
+| Lokal (kunde-app) | — | `http://127.0.0.1:3001` |
+
+`additional_redirect_urls` inkluderer prod, staging og lokal kunde-auth (`127.0.0.1:3001` **og** `localhost:3001` — origin må matche adressefeltet nøyaktig). Appen sender `emailRedirectTo = ${window.location.origin}/auth/callback` ved signup.
+
+**SMTP i config.toml:** `[auth.email.smtp]` → Resend (`smtp.resend.com:465`, bruker `resend`, `pass = env(RESEND_API_KEY)`, avsender `noreply@eiranova.no` / EiraNova).
+
+**Lokal CLI:** Kopier `supabase/.env.example` → `supabase/.env` (gitignored). Sett `SUPABASE_AUTH_SITE_URL` og `RESEND_API_KEY`.
+
+**Supabase Branching (sannsynlig sync-mekanisme):** At Site URL reverterte i prod-dashbordet tyder på server-side config-as-code (Branching i Supabase-dashboard, ikke GitHub Action i repoet). Verifiser Branching-status før merge. Hvis aktiv: sett `SUPABASE_AUTH_SITE_URL` og `RESEND_API_KEY` som **branch-secrets** per prosjekt — ellers løses `env()` til tomt og knekker auth ved neste git-push.
+
+**Manuell config push** (Richard, etter at denne PR er merget og secrets er satt):
+
+```bash
+# Staging først (dev-Supabase)
+supabase link --project-ref hlenyzppjodmkoaugzid
+SUPABASE_AUTH_SITE_URL=https://staging.app.eiranova.no \
+RESEND_API_KEY=<resend-api-key> \
+supabase config push
+
+# Production — kun etter staging er verifisert
+supabase link --project-ref wxyfwgxvfhpicmcpknxt
+SUPABASE_AUTH_SITE_URL=https://app.eiranova.no \
+RESEND_API_KEY=<resend-api-key> \
+supabase config push
+```
+
+**Ikke** endre auth-URL-er eller SMTP manuelt i dashbordet på prosjekter med config-as-code — sync reverterer det.
+
+**Snarvei staging (uten config push):** Hvis dev-prosjektet *ikke* reverterer dashbord-endringer, legg `https://staging.app.eiranova.no/**` i Redirect URLs, `site_url = staging.app.eiranova.no`, og speil SMTP + bekreftelse som prod — da er staging oppe uten å røre `config push`.
 
 ---
 
