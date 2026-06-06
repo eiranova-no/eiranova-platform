@@ -403,6 +403,89 @@
       "description": "Prototypen embedder VikarPanel i AAnsatte (vikarer-fanen). For pixel-parity ble VikarPanel migrert til apps/admin-app/components/screens/Ansatte/VikarPanel.tsx i samme fase som AAnsatte (opprinnelig plan utsatte VikarPanel til D4 AB2B). I tillegg refererte prototype sendInvite til x.invitasjonsPending som ikke finnes på INIT_B2B_TILGANGER i @eiranova/mock-data; D3 bruker valgfri invitasjonsPending på state med tom array som default.",
       "status": "open",
       "action": "Vurder uttrekk av VikarPanel til delt modul ved D4; vurder å legge invitasjonsPending i fixtures eller erstatte med pending-array når Supabase-binding kommer."
+    },
+    {
+      "id": "D-036",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / staging auth-verifisering",
+      "severity": "low",
+      "title": "Verifisert Resend-domene er eiranova.no — ikke send.eiranova.no fra K-AUTH-001",
+      "description": "K-AUTH-001 T-001 planla send.eiranova.no som avsenderdomene. Faktisk verifisert domene i Resend er eiranova.no; nøkkelen er scopet til det. Testmail og TC-AUTH-STG-001 bekreftet avsender EiraNova <noreply@eiranova.no>. send.eiranova.no ble aldri realisert.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "Behold noreply@eiranova.no i config.toml og dokumentasjon. Oppdater K-AUTH-001 T-001-referanser ved neste doc-pass (ikke blokkerende)."
+    },
+    {
+      "id": "D-037",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / prod auth-feilsøking",
+      "severity": "high",
+      "title": "prod-Supabase manglet custom SMTP — «email rate limit exceeded» uten Resend",
+      "description": "Uten aktivert custom SMTP i Supabase Auth faller e-post tilbake på Supabase sin innebygde sender med svært lav rate limit (email_sent=2). Symptom: signup ga «email rate limit exceeded». dev-prosjektet hadde SMTP fra K-AUTH-001 manuelt; prod manglet tilsvarende oppsett. config.toml hadde [auth.email.smtp] kommentert ut.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "config.toml må ha full [auth.email.smtp] Resend-blokk før deklarativ config push. Staging og prod pushet med verifisert config (juni 2026)."
+    },
+    {
+      "id": "D-038",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / Supabase dashboard",
+      "severity": "medium",
+      "title": "Dashbord-endringer på Site URL reverterte — sannsynlig config-as-code uten env()-styring",
+      "description": "Manuelt satt Site URL i prod-dashbordet reverterte til localhost. Rotårsak: config.toml hadde site_url hardkodet til 127.0.0.1/localhost; noe (sannsynligvis manuell config push eller fremtidig Branching) overskrev dashbord. Supabase Branching er AV på begge prosjekter (ingen GitHub-repo koblet); sync skjer kun via manuell supabase config push.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "site_url = env(SUPABASE_AUTH_SITE_URL) med per-miljø verdi inline ved push. Verifiser etter prod-push at dashbord ikke reverterer."
+    },
+    {
+      "id": "D-039",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Cursor / auth-config implementasjon",
+      "severity": "low",
+      "title": "Lokal kunde-auth: port 3001 og origin 127.0.0.1 — ikke 3000",
+      "description": "kunde-app kjører på localhost:3001 (nurse 3002, admin 3003). Appen binder til 127.0.0.1. emailRedirectTo bruker window.location.origin nøyaktig — allow-list må inkludere både http://127.0.0.1:3001/** og http://localhost:3001/**. Tidlig config.toml brukte feilaktig 3000/127.0.0.1:3000.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "SUPABASE_AUTH_SITE_URL=http://127.0.0.1:3001 lokalt; begge origin-varianter i additional_redirect_urls."
+    },
+    {
+      "id": "D-040",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Cursor / staging config push",
+      "severity": "high",
+      "title": "env(RESEND_API_KEY) og env(SUPABASE_AUTH_SITE_URL) må settes ved hver config push",
+      "description": "config push er deklarativ for hele [auth]. pass = env(RESEND_API_KEY) krever at variabelen er satt i shell ved push — ellers 401 Missing SMTP_PASS og tom SMTP. Første staging-forsøk feilet fordi supabase/.env hadde tom RESEND_API_KEY. Inline SUPABASE_AUTH_SITE_URL overstyrer lokal .env for riktig miljø-URL.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "Alltid: set -a; source supabase/.env; set +a og SUPABASE_AUTH_SITE_URL=<miljø-URL> supabase config push. Ved prod-launch: Resend-rotasjon og config re-push mot BÅDE dev og prod er ett sammenkoblet steg — roterer du nøkkel uten re-push knekker SMTP."
+    },
+    {
+      "id": "D-041",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / prod dashboard",
+      "severity": "low",
+      "title": "prod bruker fortsatt engelske standard e-postmaler — norske fra K-AUTH-001 ikke lagt inn",
+      "description": "K-AUTH-001 T-001 spesifiserte norske auth-maller i Supabase dashboard. dev hadde delvis manuelt arbeid; prod har fortsatt Supabase standardmaler på engelsk. Rent kosmetisk — funksjonell auth og SMTP fungerer etter config push.",
+      "status": "open",
+      "action": "Legg inn norske maler på prod (og dev om ønskelig) som del av K-LAUNCH-001 cut-over-opprydding. Ikke blokkerende for auth-fix."
+    },
+    {
+      "id": "D-042",
+      "contract": "K-LAUNCH-001",
+      "date": "2026-06-06",
+      "reported_by": "Richard / prod-diff-review",
+      "severity": "high",
+      "title": "Declarative config push ville utilsiktet svekke MFA TOTP og e-post-OTP på prod",
+      "description": "Prod-diff før bekreftelse viste at config push ville sette [auth.mfa.totp] enroll/verify fra true til false, max_frequency fra 1m0s til 1s, og otp_length fra 8 til 6 — bivirkninger fordi config.toml manglet feltene og falt tilbake til CLI-defaults. TC-AUTH-STG-001 fanget ikke dette (klikk-bekreftelse bruker ikke TOTP/OTP-lengde). Staging fikk antakelig de svekkede verdiene i første push.",
+      "status": "resolved",
+      "resolved_in": "K-LAUNCH-001 auth-config PR #35",
+      "action": "config.toml pinner nå mfa.totp=true og email max_frequency=1m0s, otp_length=8. Realign staging (hlenyzppjodmkoaugzid) med oppdatert config før prod-push bekreftes."
     }
   ]
 }
