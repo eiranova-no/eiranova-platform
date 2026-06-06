@@ -11,7 +11,7 @@
 | | |
 |---|---|
 | **Progress** | 18% → MVP Launch |
-| **Aktiv kontrakt** | **K-REFACTOR-001** (avvikle prototype-som-master — Fase C nurse-app m.m.). **K-ENV-003** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
+| **Aktiv kontrakt** | **K-DNS-001** (Vercel CNAME-migrering — Domeneshop / DNS). **K-REFACTOR-001** er **merged**. Se [CONTROL_CENTER](docs/status/CONTROL_CENTER.md). |
 | **Alle kontrakter** | [docs/status/CONTROL_CENTER.md](docs/status/CONTROL_CENTER.md) |
 | **Åpne funn** | [docs/contracts/DISCOVERIES.json](docs/contracts/DISCOVERIES.json) |
 
@@ -32,7 +32,7 @@
 
 ## Tech Stack
 
-- **Frontend:** Next.js 15, React, JSX (→ TSX ved K-ROUTE-001)
+- **Frontend:** Next.js 15 App Router, React 18, TypeScript (TSX)
 - **Database:** Supabase PostgreSQL — eu-central-1 Frankfurt 🇩🇪 (GDPR)
 - **Auth:** Supabase Auth (e-post + passord / Google Workspace)
 - **Hosting:** Vercel Pro (tre Next.js-apper + statisk marketing + midlertidig oppstart)
@@ -65,13 +65,7 @@ pnpm queue        # Vis kontrakt-køen
 
 Se [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for full arkitekturbeskrivelse.
 
-**Én kildefil styrer tre apper:**
-
-```
-apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
-         ↓              ↓              ↓
-    kunde-app       nurse-app       admin-app
-```
+Etter **K-REFACTOR-001** er **kunde-app**, **nurse-app** og **admin-app** selvstendige Next.js App Router-apper med TypeScript. Den historiske monolitt-prototypen ligger som read-only UX-referanse under `docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx` — ikke importert fra app-kode.
 
 ---
 

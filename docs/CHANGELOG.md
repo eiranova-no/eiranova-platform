@@ -7,8 +7,100 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Governance — aktiv kontrakt
+
+- **K-DNS-001** satt til `active` i `CONTRACT_QUEUE.json` (anbefalt neste arbeid — infra før K-ROUTE-001)
+- `README.md` Status-linje oppdatert
+
+### K-REFACTOR-001 Fase E — slett prototype, fullfør refactor
+
+- Flyttet `apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx`
+  til `docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx` som read-only artefakt
+- Slettet `apps/prototype/`-mappa
+- Oppdatert `scripts/extract-prototype-mock-data.mjs` til ny path
+- Oppdatert `.cursorrules` og `.cursor/rules/richard-prototype-workflow.mdc`
+- Oppdatert `docs/ARCHITECTURE.md` med ny monorepo-struktur og App Router-arkitektur
+- Oppdatert `README.md` (status, arkitektur-stripe, tech stack)
+- Markert D-001 som resolved (referanse: K-REFACTOR-001)
+- D-036: LoginBedrift — «Gå til kontaktskjema», B2B-bruker «Logg inn» og «Les hva du gjør» koblet til navigasjon / Auth
+
+K-REFACTOR-001 er ferdig implementert. Queue-oppdatering (kontrakten → merged,
+K-ROUTE-001 → ready, K-AUTH-002 blocked_reason oppdatert) kommer i separat
+`chore/queue-update-*` PR.
+
+### Fix-up etter K-REFACTOR-001 Fase D6 — B2B-navigasjon fra Login
+
+- "Logg inn med Google Workspace" → /b2b/dashboard (var tom onClick; faktisk Google-auth i K-AUTH-002)
+- "Logg inn som koordinator" → /b2b/dashboard (var tom onClick)
+- "Aktiver konto med invitasjon →" → /b2b/bruker-aktivering (var tom onClick)
+- "Ikke mottatt invitasjon?" → /b2b/ingen-invitasjon (onNavKunde manglet håndtering)
+- Bug introdusert i Fase B (Login-migrering) men avdekket først ved D6 staging-verifisering, da B2B-rutene faktisk fantes som mål
+
+### K-REFACTOR-001 Fase D6 — kunde-app: B2B-koordinator-skjermer
+
+- B2BDashboard → /b2b/dashboard (koordinator-oversikt, brukerliste)
+- B2BBestill → /b2b/bestill (legg til ny B2B-bruker)
+- B2BBruker → /b2b/bruker?id= (detaljvisning av B2B-bruker, ukeplan)
+- B2BOnboarding → /b2b/onboarding (intro-flyt for nye koordinatorer)
+- B2BBrukerAktivering → /b2b/bruker-aktivering (aktivering av enkeltbruker)
+- IngenInvitasjonInfo → /b2b/ingen-invitasjon (info for ikke-inviterte)
+- B2BLogin (linje 6136–6142 i prototypen) ikke migrert — allerede deaktivert i prototypen (redirect til /login)
+- LoginGate (linje 9240–9265) ikke migrert — auth-gate dekkes av K-AUTH-002 middleware
+
+Med D6 er alle skjermer fra prototypen migrert. Kun Fase E (slett apps/prototype/) gjenstår av K-REFACTOR-001.
+
+### K-REFACTOR-001 Fase D5 — admin-app: Økonomi + Innstillinger
+
+- OkonomiPage → /okonomi (3 hovedfaner: regnskap/lønn/kalkulator; MVA under regnskap)
+- LonnPanel migrert som Okonomi-lokal helper (interne faner som i prototypen)
+- PrisKalkulator migrert som Okonomi-lokal helper
+- InnstillingerPage → /innstillinger (varsel-mottakere, dekningsområder, B2B-toggle, journalmodul, integrasjoner, B2B-faktura, purring/inkasso, kanselleringsregler, API-nøkler)
+- Alle 8 admin-sider er nå migrert. D6 (B2B-skjermer) og Fase E (slett prototype) gjenstår.
+
+### K-REFACTOR-001 Fase D4 — admin-app: B2B + Tjenester
+
+- AB2B → /b2b (3 tabs: kunder/fakturaer/avtalemodeller, MOCK_B2B_HENVENDELSER-kort, drawer-trigger via Context)
+- «Opprett koordinator»-knapp navigerer til `/ansatte?prefillEmail=<email>` (oppfølging av D3-kontrakten)
+- TjenesteAdmin → /tjenester (kategori-grid, tjeneste-modal, kalkulator, instruks-editor)
+- InstruktionEditor + TjenesteKalkulator migrert som lokale helpers under `screens/Tjenester/`
+- `tjenesterCatalog` er lokal state — Supabase-persistens kommer i K-TJENESTE-001
+
+### K-REFACTOR-001 Fase D3 — admin-app: Betalinger + Ansatte
+
+- ABetalinger → /betalinger (5 tabs: oversikt/vipps/stripe/krediteringer/aktivitet)
+- AAnsatte → /ansatte (4 tabs: interne/vikarer/b2b/roller, prefillEmail via query-param)
+- KreditnotaB2BModal migrert som delt komponent
+- VikarPanel migrert som `components/screens/Ansatte/VikarPanel.tsx` (innebygd i vikarer-fanen; D-035)
+- D-034 registrert: Cross-app profilendrings-flyt brutt — adresseres i K-NURSE-001 / tilsvarende admin-binding
+- D-035 registrert: VikarPanel i D3 + sendInvite/invitasjonsPending vs mock-data
+- AB2B (D4) skal navigere til `/ansatte?prefillEmail=<email>` (encodeURIComponent) for koordinator-opprettelse
+
+### K-REFACTOR-001 Fase D2 — admin-app: Dashboard + Oppdrag
+
+- ADashboard → /dashboard (KPI-grid, oppdrag-i-dag-kort, sykepleiere-nå-kort, inntekt-graf)
+- AOppdrag → /oppdrag (filter-tabs, tabell, OppdragModal, KrediterPrivatModal)
+- AdminDrawerContext for drawer-state på tvers av sider
+- Bdg + useAdminToast som lokale kopier (D-031 registrert for senere uttrekk til @eiranova/ui)
+- D-032 resolved (cyrillisk «а» i OppdrагModal i prototypen — migrert til korrekt latinsk navn)
+
+### K-REFACTOR-001 Fase D1 — admin-app infrastruktur
+
+- App Router root layout (`apps/admin-app/app/layout.tsx`) + (admin) shell-layout med ASidebar/AHeader/ADrawer
+- ANAV migrert til `apps/admin-app/lib/admin/adminNav.ts` (ADMIN_NAV_ITEMS + path-helpers)
+- Mock useAuth-stub (parallelt med nurse-app C1)
+- 8 placeholder-sider for admin-nav-items (sider migreres i D2–D5)
+- admin-app importerer ikke lenger fra `apps/prototype/`
+
+### K-REFACTOR-001 Fase C2 — nurse-app skjerm-migrering (Innsjekk + Rapport)
+
+- Migrert NurseInnsjekk → `/innsjekk?id=<oppdragId>` med pixel-parity (`apps/nurse-app/components/screens/Innsjekk/`)
+- Migrert NurseRapport → `/rapport` (deep-link, ingen BottomNav, pixel-parity) (`apps/nurse-app/components/screens/Rapport/`)
+- D-029 registrert (mock-auth bypass — funn fra C1 staging-verifisering)
+- Lærdom fra C1 anvendt: stage og commit per steg, pixel-parity over kodestil
+
 ### Changed
-- K-ENV-003 markert som merged i kø. K-REFACTOR-001 satt tilbake til active. Klar for Fase C (nurse-app skjerm-migrering).
+- **K-REFACTOR-001 (nurse-app, Fase C1 — kjerne):** Migrert seks nurse-skjermer + delt navigasjon fra prototype-import til App Router under `apps/nurse-app/` (`.tsx`). Ruter: `/login`, `/rolle`, `/onboarding`, `/`, `/oppdrag`, `/profil`; `NurseBottomNav` inne i `.phone fu`; mock `useAuth`-stub (`lib/auth/useAuth.ts`); `@eiranova/ui` + `@eiranova/mock-data` via `transpilePackages`; `layout.tsx` med global CSS. Ingen import fra `apps/prototype/` i nurse-app. Innsjekk/Rapport → Fase C2. Oppdagelser: D-026 (env/Supabase), D-027 (glemt-passord flyt); D-028 (cross-app URL vs `router`). Toast `fadeInUp` lagt til i `packages/ui` for pixel-paritet.
+- K-ENV-003 markert som merged i kø. K-REFACTOR-001 satt tilbake til active.
 - K-ENV-003 fullført: tredelt deployment-modell etablert. main → production-domener (app.eiranova.no, nurse.eiranova.no, admin.eiranova.no), dev → staging-domener (staging.app.eiranova.no, staging.nurse.eiranova.no, staging.admin.eiranova.no), feature/* → preview. Vercel Production Branch endret fra dev til main for alle tre apper.
 - **Kø (`chore/queue-update-K-ENV-003`):** K-ENV-003 lagt til som **active** (tredelt deployment: `main` + prod-Supabase, `dev` + staging.* + dev-Supabase, `feature/*` previews). K-REFACTOR-001 satt **paused** med `paused_reason` under K-ENV-003. Status `paused` i `CONTRACT_QUEUE.json` `status_taxonomy`; `pnpm generate-cc` / `pnpm queue` støtter pausede kontrakter. Spec: `docs/contracts/active/K-ENV-003.md`.
 - **K-REFACTOR-001 (kunde-app, Fase B2, fullført):** Bestill-flyt i App Router (`app/bestill/*`, `BestillFlowContext` med `sessionStorage`-backup), Betaling, Bekreftelse, `?tjeneste=`-prefill (D-019). Fjernet `KundePrototypeShell` og `app/prototype-styles.tsx` (Steg 5). Oppdagelser D-019/D-021/D-023–D-025 avklart i `DISCOVERIES.json`. Flyt verifisert: Hjem → Bestill → Betaling → Bekreftelse → Mine.

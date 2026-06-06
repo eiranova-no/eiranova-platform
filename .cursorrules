@@ -18,7 +18,7 @@ Vercel:       eiranova-web, eiranova-nurse, eiranova-admin
 ## Kilde til sannhet
 
 Eneste gyldige kilde = ~/code/eiranova-platform/ (repo-root)
-Prototype     = apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
+Prototype-ref = docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx (read-only — ikke importer i app-kode)
 Kontrakter    = docs/contracts/CONTRACT_QUEUE.json
 Status        = docs/status/CONTROL_CENTER.md (auto-generert — aldri manuelt rediger)
 

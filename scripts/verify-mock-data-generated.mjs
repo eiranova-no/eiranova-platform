@@ -1,6 +1,6 @@
 /**
  * Fails if packages/mock-data/src/generated/prototype-fixtures.ts is out of sync
- * with apps/prototype/EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx + extract script.
+ * with docs/ux-reference/EiraNova-Prototype-v17-REFERENCE.jsx + extract script.
  * Run from repo root: pnpm verify:mock-data-generated
  */
 import { execSync } from "child_process";
@@ -20,7 +20,7 @@ try {
   });
 } catch {
   console.error(
-    "\n❌ prototype-fixtures.ts is out of sync with the HANDOFF prototype.\n" +
+    "\n❌ prototype-fixtures.ts is out of sync with the UX reference prototype.\n" +
       "   Regenerate: pnpm --filter @eiranova/mock-data generate\n" +
       "   Do not edit packages/mock-data/src/generated/prototype-fixtures.ts by hand.\n",
   );

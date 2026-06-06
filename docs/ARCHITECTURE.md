@@ -15,16 +15,17 @@ EiraNova er en norsk hjemmehelsetjeneste-plattform for Mosseregionen/Østfold/Ak
 ```
 eiranova-platform/
 ├── apps/
-│   ├── prototype/
-│   │   └── EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx  ← ENESTE KILDEFIL (nå)
-│   ├── kunde-app/          → app.eiranova.no
-│   │   └── app/page.jsx    ← importerer prototype med forcedTab="kunde"
-│   ├── nurse-app/          → nurse.eiranova.no
-│   │   └── app/page.jsx    ← importerer prototype med forcedTab="nurse"
-│   ├── admin-app/          → admin.eiranova.no
-│   │   └── app/page.jsx    ← importerer prototype med forcedTab="admin"
-│   └── marketing/          → eiranova.no (statisk HTML)
+│   ├── kunde-app/          → app.eiranova.no (Next.js 15 App Router, TypeScript)
+│   ├── nurse-app/          → nurse.eiranova.no (Next.js 15 App Router, TypeScript)
+│   ├── admin-app/          → admin.eiranova.no (Next.js 15 App Router, TypeScript)
+│   ├── marketing/          → eiranova.no (statisk HTML)
+│   └── oppstart/           → intern oppstart-side
+├── packages/
+│   ├── ui/                 ← @eiranova/ui (tokens, helpers, felles komponenter, hooks)
+│   └── mock-data/          ← @eiranova/mock-data (genererte fixtures, types)
 ├── docs/
+│   ├── ux-reference/
+│   │   └── EiraNova-Prototype-v17-REFERENCE.jsx  ← read-only historisk artefakt
 │   ├── contracts/
 │   │   ├── CONTRACT_QUEUE.json   ← Governance OS
 │   │   ├── DISCOVERIES.json      ← Append-only discovery log
@@ -50,33 +51,33 @@ eiranova-platform/
 
 ---
 
-## Prototype-arkitektur
+## App Router-arkitektur
 
-**Én kildefil styrer tre apper:**
-
-```
-EiraNova-Prototype-HANDOFF-v17-COMPLETE.jsx
-         ↓              ↓              ↓
-    kunde-app       nurse-app       admin-app
-   (forcedTab=      (forcedTab=     (forcedTab=
-    "kunde")         "nurse")        "admin")
-```
-
-Prototypen er allerede pushet til både dev og main (april 2026).
-Alle UX-endringer skjer i prototypen inntil K-ROUTE-001 splitter den
-til ekte Next.js App Router-struktur med TypeScript.
-
----
-
-## Delt state i prototype
+Etter K-REFACTOR-001 (april 2026) er hver app en selvstendig Next.js
+App Router-applikasjon med egne typede komponenter:
 
 ```
-App()
-├── tjenesterCatalog    ← admin ↔ kunde (live sync)
-├── nursesCatalog       ← admin ↔ kunde ↔ bestilling
-├── mockOrders          ← kunde ↔ admin
-└── ventendeProfilendringer ← nurse → admin godkjenningskø
+kunde-app/                    nurse-app/                  admin-app/
+├── app/                      ├── app/                    ├── app/
+│   ├── login/                │   ├── login/              │   ├── dashboard/
+│   ├── hjem/                 │   ├── hjem/               │   ├── oppdrag/
+│   ├── bestill/              │   ├── oppdrag/            │   ├── betalinger/
+│   ├── b2b/                  │   ├── innsjekk/           │   ├── ansatte/
+│   └── ...                   │   └── ...                 │   └── ...
+└── components/               └── components/             └── components/
+    └── screens/                  └── screens/                └── screens/
 ```
+
+Felles UI-tokens, helpers og komponenter ligger i `packages/ui` (`@eiranova/ui`).
+Mock-data og typer ligger i `packages/mock-data` (`@eiranova/mock-data`).
+Originalprototypen er bevart som read-only artefakt under `docs/ux-reference/`.
+
+## Cross-app navigasjon
+
+B2B-skjermer (koordinator-flyt) ligger i `kunde-app` under `/b2b/*`-ruter.
+Nurse-skjermer i `nurse-app`. Admin-skjermer i `admin-app`. Apper kommuniserer
+via separate domener — ikke via delt state. Cross-app-flows (f.eks. nurse
+profilendring → admin godkjenningskø) går via Supabase som koordineringspunkt.
 
 ---
 
@@ -84,7 +85,7 @@ App()
 
 | Lag | Teknologi |
 |-----|-----------|
-| Frontend | Next.js 15, React, JSX (→ TSX ved K-ROUTE-001) |
+| Frontend | Next.js 15 App Router, React 18, TypeScript (TSX) |
 | Monorepo | pnpm workspaces |
 | Backend | Supabase (Auth + Postgres + Realtime + Edge Functions) |
 | Hosting | Vercel Pro (tre separate prosjekter) |

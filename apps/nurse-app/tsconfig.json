@@ -18,6 +18,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "eiranova-ui-css.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
