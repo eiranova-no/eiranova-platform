@@ -499,6 +499,17 @@
       "status": "resolved",
       "resolved_in": "K-AUTH-003",
       "action": "Byttet til token_hash + verifyOtp på /auth/confirm. Norsk mal med {{ .TokenHash }} i config.toml. Kryss-enhet-test (TC-AUTH-CROSS-001) påkrevd ved verifisering."
+    },
+    {
+      "id": "D-044",
+      "contract": "K-AUTH-004",
+      "date": "2026-06-06",
+      "reported_by": "Claude / K-AUTH-003 review",
+      "severity": "high",
+      "title": "Passord-reset bruker sannsynligvis samme PKCE-kryss-enhet-bug som signup",
+      "description": "Recovery-e-post bruker standard ConfirmationURL / PKCE-flyt. Kunde som ber om passord-reset på én enhet og åpner lenken på annen (typisk mobil) vil trolig feile på samme måte som signup (D-043). Kunder bruker e-post+passord — reset er en faktisk produksjonsflyt. Samme token_hash-mønster som K-AUTH-003 løser det: /auth/confirm med type=recovery + norsk recovery-mal i config.toml.",
+      "status": "open",
+      "action": "Planlegg K-AUTH-004 (eller utvidelse av K-AUTH-003) etter merge av PR #40. Email-change-mal har samme mønster, lavere prioritet."
     }
   ]
 }
