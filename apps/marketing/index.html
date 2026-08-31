@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EiraNova – Fremtidens hjemmetjeneste</title>
+<title>EiraNova – Litt støtte kan gjøre en stor forskjell</title>
+<meta name="description" content="EiraNova er sykepleiere i Østfold som gir helsefremmende og forebyggende støtte i hverdagen – til småbarnsfamilier, eldre og andre som trenger en ekstra hånd.">
+<meta property="og:title" content="EiraNova – Litt støtte kan gjøre en stor forskjell">
+<meta property="og:description" content="Sykepleiere i Østfold. Helsefremmende og forebyggende støtte i hverdagen – for småbarnsfamilier, eldre og deg som trenger en ekstra hånd.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://eiranova.no">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -430,6 +435,15 @@
     .hero h1 { font-size: 1.9rem; }
     .impact-grid { grid-template-columns: 1fr; }
   }
+
+  /* Team: to kort, sentrert (K-MARKETING-002) */
+  .team-grid { grid-template-columns: repeat(2, minmax(260px, 340px)); justify-content: center; }
+  @media (max-width: 900px) {
+    .team-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .team-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -438,6 +452,7 @@
 <nav>
   <div class="nav-logo">Eira<span>Nova</span></div>
   <ul class="nav-links">
+    <li><a href="#hverdagen">Hvem vi hjelper</a></li>
     <li><a href="#tjenester">Tjenester</a></li>
     <li><a href="#team">Team</a></li>
     <li><a href="#effekt">Samfunnseffekt</a></li>
@@ -451,22 +466,22 @@
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
+  <a href="#hverdagen" onclick="closeMenu()">Hvem vi hjelper</a>
   <a href="#tjenester" onclick="closeMenu()">Tjenester</a>
   <a href="#team" onclick="closeMenu()">Team</a>
   <a href="#effekt" onclick="closeMenu()">Samfunnseffekt</a>
-  <a href="#stotte" onclick="closeMenu()">Vi søker støtte</a>
   <a href="#kontakt" class="mob-cta" onclick="closeMenu()">Ta kontakt →</a>
 </div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-text">
-    <div class="hero-badge">🌿 Autoriserte sykepleiere · Hjemmebasert omsorg</div>
+    <div class="hero-badge">🌿 Autoriserte sykepleiere · Helsefremmende og forebyggende</div>
     <h1>Omsorg der<br>livet <em>leves</em></h1>
-    <p class="hero-sub">EiraNova leverer praktisk støtte i hjemmet – og frigjør kapasitet for kommunene til det som virkelig teller: medisinsk nødvendig oppfølging.</p>
+    <p class="hero-sub">Litt støtte kan gjøre en stor forskjell. Vi er sykepleiere som hjelper småbarnsfamilier, eldre og andre som trenger en ekstra hånd i hverdagen – slik at flere får overskudd, mestring og gode dager hjemme.</p>
     <div class="hero-actions">
-      <a href="#kontakt" class="btn-primary">Book møte med oss</a>
-      <a href="#tjenester" class="btn-outline">Les mer</a>
+      <a href="#kontakt" class="btn-primary">Ta kontakt</a>
+      <a href="#hverdagen" class="btn-outline">Hvem vi hjelper</a>
     </div>
   </div>
   <div class="hero-visual">
@@ -475,19 +490,19 @@
         <div class="card-icon">🏡</div>
         <div>
           <div class="card-title">Våre tjenester</div>
-          <div class="card-sub">Ikke-medisinsk hjemmestøtte</div>
+          <div class="card-sub">Støtte i hverdagen – ikke-medisinsk</div>
         </div>
       </div>
       <div class="service-list">
-        <div class="service-item"><div class="service-dot"></div>Praktisk hjelp i hverdagen</div>
-        <div class="service-item"><div class="service-dot"></div>Sosial støtte og aktivitet</div>
-        <div class="service-item"><div class="service-dot"></div>Avlastning for pårørende</div>
-        <div class="service-item"><div class="service-dot"></div>Koordinering og oppfølging</div>
-        <div class="service-item"><div class="service-dot"></div>Trygg overgangsstøtte</div>
+        <div class="service-item"><div class="service-dot"></div>Avlastning for småbarnsfamilier</div>
+        <div class="service-item"><div class="service-dot"></div>Sosialt samvær og følge</div>
+        <div class="service-item"><div class="service-dot"></div>Praktisk hjelp hjemme</div>
+        <div class="service-item"><div class="service-dot"></div>Trygghet og mestring for eldre</div>
+        <div class="service-item"><div class="service-dot"></div>Forebyggende og helsefremmende</div>
       </div>
       <div class="card-footer">
-        <div class="stat"><span class="stat-num">3</span><span class="stat-label">Sykepleiere</span></div>
-        <div class="stat"><span class="stat-num">3</span><span class="stat-label">Kommuner</span></div>
+        <div class="stat"><span class="stat-num">2</span><span class="stat-label">Sykepleiere</span></div>
+        <div class="stat"><span class="stat-num">Østfold</span><span class="stat-label">Lokalt</span></div>
         <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Omsorg</span></div>
       </div>
     </div>
@@ -508,19 +523,60 @@
   </div>
 </div>
 
+<!-- HVERDAGEN -->
+<section class="services" id="hverdagen">
+  <div style="max-width:760px; margin:0 auto 3rem;">
+    <span class="section-tag">Hvem vi hjelper</span>
+    <h2 class="section-title">Litt støtte kan gjøre<br>en stor forskjell</h2>
+    <p class="section-body">I EiraNova ønsker vi å tenke litt annerledes rundt hjelp og omsorg.</p>
+    <p class="section-body">Vi tror ikke man trenger å være syk eller ha store hjelpebehov for å kunne ha nytte av litt støtte i hverdagen. Noen ganger kan det handle om en småbarnsfamilie som trenger avlastning i en travel periode. Andre ganger om en eldre person som ønsker mer sosialt samvær, følge til aktiviteter eller litt hjelp for å kunne fortsette å mestre hverdagen hjemme.</p>
+    <p class="section-body">Vi er sykepleiere med erfaring fra blant annet eldreomsorg og hjemmetjeneste, og vi ønsker å bruke denne erfaringen til å jobbe mer <strong>helsefremmende og forebyggende</strong>.</p>
+  </div>
+
+  <div class="services-list" style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+    <div class="service-card fade-in">
+      <div class="service-icon-wrap">👶</div>
+      <div>
+        <div class="service-card-title">For småbarnsfamilier</div>
+        <div class="service-card-desc">Vi ønsker å være en ekstra hånd når hverdagen blir mye. Det kan være avlastning, praktisk hjelp, trilletur, følge, sosial støtte eller andre små og store ting som kan gi familien litt mer overskudd.</div>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon-wrap">🌿</div>
+      <div>
+        <div class="service-card-title">For eldre</div>
+        <div class="service-card-desc">Vi kan bidra med trygghet, sosialt samvær, praktisk hjelp, følge til avtaler og aktiviteter eller bare være en ekstra person i hverdagen. Målet er å støtte den enkeltes ressurser og bidra til at flere kan oppleve mestring, selvstendighet og gode dager hjemme.</div>
+      </div>
+    </div>
+    <div class="service-card fade-in">
+      <div class="service-icon-wrap">💡</div>
+      <div>
+        <div class="service-card-title">Og kanskje noe helt annet?</div>
+        <div class="service-card-desc">Vi ønsker også å lytte. EiraNova er under utvikling, og vi er nysgjerrige på hvilke behov som faktisk finnes hos mennesker, familier og i lokalsamfunnet. Har du et behov eller en idé som ikke passer inn i en bestemt kategori? <a href="#kontakt">Ta kontakt med oss.</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:760px; margin:3rem auto 0; text-align:center;">
+    <p class="section-body">Vi ønsker å utforske hvordan EiraNova kan bidra til bedre folkehelse – ved å styrke mennesker, familier og fellesskapet rundt oss.</p>
+    <p class="section-body"><strong>God helse skapes også i hverdagen.</strong></p>
+    <a href="#kontakt" class="btn-primary">Ta kontakt</a>
+  </div>
+</section>
+
 <!-- TJENESTER -->
 <section class="services" id="tjenester">
   <div class="services-grid">
     <div>
       <span class="section-tag">Hva vi gjør</span>
       <h2 class="section-title">Praktisk støtte.<br>Verdifull frihet.</h2>
-      <p class="section-body">Vi tar oss av hverdagslige, ikke-medisinske oppgaver slik at kommunale helsetjenester kan fokusere på det de er best på – og slik at brukerne kan leve mer selvstendige liv.</p>
+      <p class="section-body">Vi tar oss av hverdagslige, ikke-medisinske oppgaver – slik at familier får mer overskudd, og eldre kan mestre hverdagen hjemme lenger. Kommunale helsetjenester kan dermed fokusere på det de er best på.</p>
       <div class="services-list">
         <div class="service-card">
           <div class="service-icon-wrap">🧹</div>
           <div>
             <div class="service-card-title">Praktisk hjelp</div>
-            <div class="service-card-desc">Rengjøring, handling, matlaging og andre hverdagslige gjøremål som gir brukeren mer energi.</div>
+            <div class="service-card-desc">Handling, matlaging, enkle gjøremål og en ekstra hånd der det trengs – slik at hverdagen går opp.</div>
           </div>
         </div>
         <div class="service-card">
@@ -533,8 +589,8 @@
         <div class="service-card">
           <div class="service-icon-wrap">👨‍👩‍👧</div>
           <div>
-            <div class="service-card-title">Pårørendeavlastning</div>
-            <div class="service-card-desc">Vi gir familier rom til å puste, med trygg og profesjonell omsorg for deres kjære.</div>
+            <div class="service-card-title">Avlastning</div>
+            <div class="service-card-desc">For småbarnsfamilier i en travel periode, og for familier som pleier sine nærmeste. Vi gir rom til å puste.</div>
           </div>
         </div>
         <div class="service-card">
@@ -564,29 +620,22 @@
   <div class="team-intro">
     <span class="section-tag">Menneskene bak</span>
     <h2 class="section-title">Grunnlagt av sykepleiere.<br>For menneskene vi møter.</h2>
-    <p class="section-body" style="margin:0 auto;">Vi er tre autoriserte sykepleiere med erfaring fra hjemmetjenesten. Vi kjenner systemet innenfra – og vi vet hva som mangler.</p>
+    <p class="section-body" style="margin:0 auto;">Vi er to autoriserte sykepleiere med erfaring fra blant annet eldreomsorg og hjemmetjeneste. Vi kjenner systemet innenfra – og vi vet hva som mangler.</p>
   </div>
   <div class="team-grid">
     <div class="team-card fade-in">
       <div class="team-avatar">👩‍⚕️</div>
-      <div class="team-name">Medgründer</div>
+      <div class="team-name">Medgründer og sykepleier</div>
       <div class="team-role">Autorisert sykepleier</div>
       <div class="team-desc">Erfaring fra kommunal hjemmetjeneste. Brenner for forebyggende omsorg og helhetlig brukeroppfølging.</div>
       <span class="team-tag">Hjemmetjenesten</span>
     </div>
     <div class="team-card fade-in">
       <div class="team-avatar">👩‍⚕️</div>
-      <div class="team-name">Medgründer</div>
+      <div class="team-name">Medgründer og sykepleier</div>
       <div class="team-role">Autorisert sykepleier</div>
       <div class="team-desc">Spesialisert på koordinering mellom bruker, pårørende og helsepersonell. Sterk på digitale løsninger i helse.</div>
       <span class="team-tag">Koordinering</span>
-    </div>
-    <div class="team-card fade-in">
-      <div class="team-avatar">👩‍⚕️</div>
-      <div class="team-name">Medgründer</div>
-      <div class="team-role">Autorisert sykepleier</div>
-      <div class="team-desc">Erfaring med sårbare grupper og pårørendearbeid. Som småbarnsmor forstår hun behovet for fleksibel støtte.</div>
-      <span class="team-tag">Pårørendestøtte</span>
     </div>
   </div>
   <p class="team-note">Som småbarnsmødre har vi også personlig innsikt i behovet for praktisk støtte – i alle livets faser.</p>
@@ -696,7 +745,7 @@
     <div>
       <span class="section-tag">Ta kontakt</span>
       <h2 class="section-title">La oss snakke<br>om mulighetene.</h2>
-      <p class="section-body">Er du en kommune, investor, samarbeidspartner eller privatperson? Vi ønsker å høre fra deg.</p>
+      <p class="section-body">Er du privatperson, pårørende, kommune eller samarbeidspartner? Vi ønsker å høre fra deg – uforpliktende.</p>
       <div class="contact-form">
         <div class="form-row">
           <div class="form-group">
@@ -704,8 +753,8 @@
             <input class="form-input" type="text" placeholder="Ditt navn" id="fname">
           </div>
           <div class="form-group">
-            <label class="form-label">Organisasjon</label>
-            <input class="form-input" type="text" placeholder="Kommune / bedrift" id="org">
+            <label class="form-label">Kommune / bedrift (valgfritt)</label>
+            <input class="form-input" type="text" placeholder="Kun hvis du representerer en virksomhet" id="org">
           </div>
         </div>
         <div class="form-group">
@@ -713,30 +762,43 @@
           <input class="form-input" type="email" placeholder="din@epost.no" id="email">
         </div>
         <div class="form-group">
+          <label class="form-label">Telefon (valgfritt)</label>
+          <input class="form-input" type="tel" placeholder="Så kan vi ringe deg" id="phone">
+        </div>
+        <div class="form-group">
           <label class="form-label">Jeg er...</label>
           <select class="form-select" id="role">
-            <option value="">Velg kategori</option>
+            <option value="">Velg det som passer best</option>
+            <option>Privatperson – småbarnsfamilie</option>
+            <option>Privatperson – eldre eller pårørende</option>
             <option>Kommunal tjenesteansvarlig</option>
-            <option>Privatperson / pårørende</option>
-            <option>Investor / partner</option>
+            <option>Samarbeidspartner / investor</option>
             <option>Annet</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">Melding</label>
-          <textarea class="form-textarea" placeholder="Fortell oss litt om hva du er opptatt av..." id="msg"></textarea>
+          <textarea class="form-textarea" placeholder="Fortell oss litt om hva du trenger, eller hva du lurer på..." id="msg"></textarea>
+        </div>
+        <input type="text" id="website" name="website" autocomplete="off" tabindex="-1" style="position:absolute; left:-9999px;" aria-hidden="true">
+        <div class="form-group">
+          <p style="font-size:0.85rem; opacity:0.7; margin:0 0 1rem;">Ikke skriv helseopplysninger i skjemaet – det tar vi heller på telefon eller i et møte.</p>
+          <label style="display:flex; gap:0.6rem; align-items:flex-start; font-size:0.9rem; cursor:pointer;">
+            <input type="checkbox" id="consent" style="margin-top:0.25rem;">
+            <span>Jeg samtykker til at EiraNova lagrer opplysningene og kontakter meg om henvendelsen. Opplysningene brukes ikke til noe annet.</span>
+          </label>
         </div>
         <button class="form-submit" onclick="handleSubmit()">Send melding →</button>
       </div>
     </div>
     <div class="contact-info">
       <h3>Vi gleder oss<br>til å møte deg.</h3>
-      <p>EiraNova er etablert i Østfold og betjener primært Moss, Fredrikstad og Sarpsborg. Vi er åpne for dialog om samarbeid og pilotprosjekter.</p>
+      <p>EiraNova holder til i Østfold og hjelper primært i Moss, Fredrikstad og Sarpsborg. Ta kontakt for en uforpliktende samtale – vi svarer innen 1–2 virkedager.</p>
       <div class="contact-details">
         <div class="contact-detail"><div class="contact-detail-icon">📍</div>Østfold, Norge</div>
         <div class="contact-detail"><div class="contact-detail-icon">📧</div>post@eiranova.no</div>
         <div class="contact-detail"><div class="contact-detail-icon">🕐</div>Svarer innen 1–2 virkedager</div>
-        <div class="contact-detail"><div class="contact-detail-icon">🤝</div>Åpne for kommunale partnerskap</div>
+        <div class="contact-detail"><div class="contact-detail-icon">🤝</div>Privatpersoner, kommuner og partnere</div>
       </div>
       <div class="pilot-box">
         <p><strong style="color:var(--sage);">Vil du teste tjenesten?</strong><br>Vi er i oppstartsfasen og ønsker pilotbrukere velkommen. Ta kontakt for en uforpliktende samtale.</p>
@@ -748,11 +810,11 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">Eira<span>Nova</span></div>
-  <div>© 2025 EiraNova AS · Autoriserte sykepleiere · Østfold</div>
+  <div>© 2026 EiraNova AS · Autoriserte sykepleiere · Østfold</div>
   <div>post@eiranova.no</div>
 </footer>
 
-<div class="toast" id="toast">✅ Takk! Vi tar kontakt snart.</div>
+<div class="toast" id="toast"></div>
 
 <script>
   // Scroll fade-in
@@ -784,18 +846,46 @@
     }
   });
 
-  // Form submit
-  function handleSubmit() {
-    const name = document.getElementById('fname').value.trim();
-    const email = document.getElementById('email').value.trim();
-    if (!name || !email) { alert('Vennligst fyll inn navn og e-post.'); return; }
+  async function handleSubmit() {
+    const get = id => (document.getElementById(id)?.value || '').trim();
+    const name = get('fname'), email = get('email'), msg = get('msg');
+    const consent = document.getElementById('consent')?.checked;
+
+    if (!name || !email || !msg) { alert('Vennligst fyll inn navn, e-post og melding.'); return; }
+    if (!consent) { alert('Du må samtykke for at vi skal kunne kontakte deg.'); return; }
+
+    const btn = document.querySelector('.form-submit');
+    btn.disabled = true; btn.textContent = 'Sender…';
+
+    try {
+      const r = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, phone: get('phone'), org: get('org'), role: get('role'), msg, website: get('website') })
+      });
+      const data = await r.json().catch(() => ({}));
+
+      if (r.ok && data.ok) {
+        showToast('✅ Takk! Vi tar kontakt innen 1–2 virkedager.');
+        ['fname','org','email','phone','role','msg'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        document.getElementById('consent').checked = false;
+      } else if (r.status === 503) {
+        showToast('Skjemaet er ikke aktivt ennå – send oss gjerne en e-post til post@eiranova.no');
+      } else {
+        showToast('Noe gikk galt. Prøv igjen, eller send e-post til post@eiranova.no');
+      }
+    } catch (e) {
+      showToast('Ingen kontakt med serveren. Send oss gjerne en e-post til post@eiranova.no');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send melding →';
+    }
+  }
+
+  function showToast(text) {
     const toast = document.getElementById('toast');
+    toast.textContent = text;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3500);
-    ['fname','org','email','role','msg'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
+    setTimeout(() => toast.classList.remove('show'), 5000);
   }
 </script>
 </body>

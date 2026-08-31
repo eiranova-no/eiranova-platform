@@ -510,6 +510,18 @@
       "description": "Recovery-e-post bruker standard ConfirmationURL / PKCE-flyt. Kunde som ber om passord-reset på én enhet og åpner lenken på annen (typisk mobil) vil trolig feile på samme måte som signup (D-043). Kunder bruker e-post+passord — reset er en faktisk produksjonsflyt. Samme token_hash-mønster som K-AUTH-003 løser det: /auth/confirm med type=recovery + norsk recovery-mal i config.toml.",
       "status": "open",
       "action": "Planlegg K-AUTH-004 (eller utvidelse av K-AUTH-003) etter merge av PR #40. Email-change-mal har samme mønster, lavere prioritet."
+    },
+    {
+      "id": "D-045",
+      "contract": "K-MARKETING-002",
+      "date": "2026-08-31",
+      "reported_by": "Cursor (implementasjon)",
+      "severity": "high",
+      "title": "Markedsføringssidens kontaktskjema var ikke-funksjonelt (ingen backend)",
+      "description": "apps/marketing/index.html handleSubmit() viste kun en toast og tømte feltene — ingen POST, ingen e-post. Brukere fikk falsk bekreftelse på at henvendelsen var sendt. Oppdaget under K-MARKETING-002.",
+      "status": "resolved",
+      "resolved_in": "K-MARKETING-002",
+      "action": "Lagt til Vercel serverless api/contact.js (Resend), honeypot, samtykke, og rewrite som unntar /api/. Krever RESEND_API_KEY i Vercel for faktisk levering."
     }
   ]
 }
