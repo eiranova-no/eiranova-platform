@@ -43,7 +43,7 @@ Ingen hemmeligheter i kode. Sett i Vercel Production:
 |---|---|---|
 | `RESEND_API_KEY` | API-nøkkel fra Resend | Ja |
 | `CONTACT_TO` | `post@eiranova.no` | Nei (default) |
-| `CONTACT_FROM` | `EiraNova nettside <post@eiranova.no>` | Nei (default) |
+| `CONTACT_FROM` | `EiraNova.no kontaktskjema <post@eiranova.no>` | Nei (default) |
 
 **Forutsetning:** Domenet `eiranova.no` må være verifisert i Resend for at `from` skal godtas. Er `RESEND_API_KEY` ikke satt, svarer API-et `503` og skjemaet viser e-postfallback — siden er trygg å deploye før Resend er klart.
 
