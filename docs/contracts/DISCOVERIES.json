@@ -522,6 +522,30 @@
       "status": "resolved",
       "resolved_in": "K-MARKETING-002",
       "action": "Lagt til Vercel serverless api/contact.js (Resend), honeypot, samtykke, og rewrite som unntar /api/. Krever RESEND_API_KEY i Vercel for faktisk levering."
+    },
+    {
+      "id": "D-046",
+      "contract": "K-MARKETING-003",
+      "date": "2026-08-31",
+      "reported_by": "Cursor (K-MARKETING-002B)",
+      "severity": "high",
+      "title": "Marketing manglet kobling til eiranova.no (kun *.vercel.app)",
+      "description": "Etter K-MARKETING-002B var kontaktskjemaet live på eiranova-marketing.vercel.app, men apex/www var ikke tilordnet Vercel-prosjektet eiranova-marketing. Trykksaker og SoMe peker på eiranova.no — uten kobling nådde ikke brukere den nye siden.",
+      "status": "resolved",
+      "resolved_in": "K-MARKETING-003",
+      "action": "Koblet eiranova.no (primær) og www.eiranova.no (308→apex) til eiranova-marketing. DNS A/CNAME oppdatert til prosjekt-spesifikk vercel-dns-016-target. MX/TXT og app/nurse/admin urørt."
+    },
+    {
+      "id": "D-047",
+      "contract": "K-MARKETING-003",
+      "date": "2026-08-31",
+      "reported_by": "Cursor (K-MARKETING-002B)",
+      "severity": "high",
+      "title": "Utilsiktet CLI-deploy til eiranova-nurse under marketing-oppsett",
+      "description": "Under K-MARKETING-002B ble `vercel deploy --prod` kjørt fra monorepo-root uten verifisert prosjekt-link. CLI valgte eiranova-nurse og publiserte en production-deploy. Rullet tilbake til forrige nurse-produksjon samme økt.",
+      "status": "resolved",
+      "resolved_in": "K-MARKETING-003",
+      "action": "Tiltak: alltid verifiser `.vercel/project.json` (forventet prosjektnavn) før Vercel-kommandoer; produksjon deployes av main-push, ikke CLI. Permanent .cursorrules-regel utsettes til planlagt governance-commit."
     }
   ]
 }
