@@ -29,10 +29,10 @@ export default async function handler(req, res) {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: process.env.CONTACT_FROM || 'EiraNova nettside <post@eiranova.no>',
+      from: process.env.CONTACT_FROM || 'EiraNova.no kontaktskjema <post@eiranova.no>',
       to: [process.env.CONTACT_TO || 'post@eiranova.no'],
       reply_to: email,
-      subject: `Henvendelse fra ${name}${role ? ' – ' + role : ''}`,
+      subject: `[eiranova.no] Henvendelse fra ${name}${role ? ' – ' + role : ''}`,
       html
     })
   });
