@@ -345,6 +345,8 @@
   .contact-info p { color: var(--stone); line-height: 1.75; font-size: 0.9rem; margin-bottom: 2rem; }
   .contact-details { display: flex; flex-direction: column; gap: 1rem; }
   .contact-detail { display: flex; align-items: center; gap: 0.8rem; font-size: 0.88rem; color: var(--ink-soft); }
+  .contact-detail a { color: var(--sage); text-decoration: none; }
+  .contact-detail a:hover { text-decoration: underline; }
   .contact-detail-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--sage-pale); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
   .pilot-box { margin-top: 2.5rem; padding: 1.5rem; background: var(--sage-pale); border-radius: 16px; }
   .pilot-box p { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.7; margin: 0; }
@@ -445,6 +447,19 @@
   @media (max-width: 600px) {
     .team-grid { grid-template-columns: 1fr; }
   }
+
+  /* Profilkort med bilder (K-MARKETING-005) */
+  .team-card--profile { text-align: left; padding: 2rem 1.8rem; }
+  .team-card-header { text-align: center; margin-bottom: 1.4rem; }
+  .team-photo {
+    width: 100%; max-width: 280px; border-radius: 50%;
+    display: block; margin: 0 auto 1.2rem;
+    box-shadow: 0 4px 16px rgba(107,143,113,0.2);
+  }
+  .team-bio { font-size: 0.85rem; color: var(--stone); line-height: 1.65; }
+  .team-bio p { margin-bottom: 0.85rem; }
+  .team-bio p:last-child { margin-bottom: 0; }
+  .team-bio strong { font-weight: 500; color: var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -455,7 +470,7 @@
   <ul class="nav-links">
     <li><a href="#hverdagen">Hvem vi hjelper</a></li>
     <li><a href="#tjenester">Tjenester</a></li>
-    <li><a href="#team">Team</a></li>
+    <li><a href="#team">Om oss</a></li>
     <li><a href="#effekt">Samfunnseffekt</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
   </ul>
@@ -469,7 +484,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#hverdagen" onclick="closeMenu()">Hvem vi hjelper</a>
   <a href="#tjenester" onclick="closeMenu()">Tjenester</a>
-  <a href="#team" onclick="closeMenu()">Team</a>
+  <a href="#team" onclick="closeMenu()">Om oss</a>
   <a href="#effekt" onclick="closeMenu()">Samfunnseffekt</a>
   <a href="#kontakt" class="mob-cta" onclick="closeMenu()">Ta kontakt →</a>
 </div>
@@ -619,24 +634,36 @@
 <!-- TEAM -->
 <section class="team" id="team">
   <div class="team-intro">
-    <span class="section-tag">Menneskene bak</span>
-    <h2 class="section-title">Grunnlagt av sykepleiere.<br>For menneskene vi møter.</h2>
-    <p class="section-body" style="margin:0 auto;">Vi er to autoriserte sykepleiere med erfaring fra blant annet eldreomsorg og hjemmetjeneste. Vi kjenner systemet innenfra – og vi vet hva som mangler.</p>
+    <span class="section-tag">Om oss</span>
+    <h2 class="section-title">Hvem er vi?</h2>
+    <p class="section-body" style="margin:0 auto;">Bak EiraNova står vi, Jeanett og Lise – to sykepleiere og småbarnsmødre med et ønske om å gjøre det litt enklere å ta imot støtte i hverdagen. For oss handler god omsorg om faglig trygghet, tid, nærvær og å se hele mennesket.</p>
   </div>
   <div class="team-grid">
-    <div class="team-card fade-in">
-      <div class="team-avatar">👩‍⚕️</div>
-      <div class="team-name">Medgründer og sykepleier</div>
-      <div class="team-role">Autorisert sykepleier</div>
-      <div class="team-desc">Erfaring fra kommunal hjemmetjeneste. Brenner for forebyggende omsorg og helhetlig brukeroppfølging.</div>
-      <span class="team-tag">Hjemmetjenesten</span>
+    <div class="team-card team-card--profile fade-in">
+      <div class="team-card-header">
+        <img class="team-photo" src="img/team-jeanett.jpg" alt="Portrett av Jeanett Marie Arntsen" width="280" height="280" loading="lazy">
+        <div class="team-name">Jeanett Marie Arntsen</div>
+        <div class="team-role">Sykepleier og medgründer</div>
+      </div>
+      <div class="team-bio">
+        <p>Jeg er sykepleier med over ti års erfaring fra helsevesenet – fra sykehjem, omsorgsbolig, sykehus og hjemmetjeneste. Som mamma til to vet jeg hvor viktig trygghet, omsorg og støtte er i ulike faser av livet.</p>
+        <p>Jeg brenner for å skape trygghet og nærvær – enten det er for eldre som trenger omsorg og tid, eller nybakte foreldre i en sårbar og krevende periode. Mange kjenner på presset om å klare alt selv, men med litt støtte i hverdagen kan det bli mer overskudd, mindre stress og en enklere hverdag – og noen ganger også mindre ensomhet.</p>
+        <p>Hos meg får du ikke bare hjelp – du får også en som ser deg.</p>
+        <p><strong>Hjertet banker ekstra for:</strong> demensomsorgen, pårørende, likeverd, kvinnehelse og barseltid.</p>
+      </div>
     </div>
-    <div class="team-card fade-in">
-      <div class="team-avatar">👩‍⚕️</div>
-      <div class="team-name">Medgründer og sykepleier</div>
-      <div class="team-role">Autorisert sykepleier</div>
-      <div class="team-desc">Spesialisert på koordinering mellom bruker, pårørende og helsepersonell. Sterk på digitale løsninger i helse.</div>
-      <span class="team-tag">Koordinering</span>
+    <div class="team-card team-card--profile fade-in">
+      <div class="team-card-header">
+        <img class="team-photo" src="img/team-lise.jpg" alt="Portrett av Lise Amanda Sofie Møller" width="280" height="280" loading="lazy">
+        <div class="team-name">Lise Amanda Sofie Møller</div>
+        <div class="team-role">Sykepleier og medgründer</div>
+      </div>
+      <div class="team-bio">
+        <p>Jeg er sykepleier med mange års erfaring fra eldreomsorgen, særlig hjemmetjenesten. Det jeg alltid har satt mest pris på i jobben min, er møtene med mennesker – å kunne gi trygghet, skape gode relasjoner og gjøre hverdagen litt bedre for den enkelte.</p>
+        <p>Jeg brenner for forebyggende helse og ønsker å bidra til at det får en større plass i samfunnet vårt. Jeg tror på å bygge gode tilbud som kan forebygge, skape trygghet og bidra til bedre helse og livskvalitet – før behovene blir store. Ved siden av arbeidet med EiraNova studerer jeg derfor folkehelsevitenskap ved NMBU.</p>
+        <p>Gjennom EiraNova ønsker jeg å skape tjenester som ser hele mennesket – og som bidrar til trygghet, mestring, fellesskap og bedre livskvalitet i hverdagen.</p>
+        <p>Privat er jeg mamma og bonusmamma, og jeg setter stor pris på familieliv, nærhet og de små tingene i hverdagen.</p>
+      </div>
     </div>
   </div>
   <p class="team-note">Som småbarnsmødre har vi også personlig innsikt i behovet for praktisk støtte – i alle livets faser.</p>
@@ -797,6 +824,7 @@
       <p>EiraNova holder til i Østfold og hjelper primært i Moss, Fredrikstad og Sarpsborg. Ta kontakt for en uforpliktende samtale – vi svarer innen 1–2 virkedager.</p>
       <div class="contact-details">
         <div class="contact-detail"><div class="contact-detail-icon">📍</div>Østfold, Norge</div>
+        <div class="contact-detail"><div class="contact-detail-icon">📞</div>Telefon: <a href="tel:+4741144400">411 44 400</a></div>
         <div class="contact-detail"><div class="contact-detail-icon">📧</div>post@eiranova.no</div>
         <div class="contact-detail"><div class="contact-detail-icon">🕐</div>Svarer innen 1–2 virkedager</div>
         <div class="contact-detail"><div class="contact-detail-icon">🤝</div>Privatpersoner, kommuner og partnere</div>
@@ -812,7 +840,7 @@
 <footer>
   <div class="footer-logo">Eira<span>Nova</span></div>
   <div>© 2026 EiraNova AS · Autoriserte sykepleiere · Østfold</div>
-  <div>post@eiranova.no</div>
+  <div>post@eiranova.no · <a href="tel:+4741144400" style="color:inherit;text-decoration:none;">411 44 400</a></div>
 </footer>
 
 <div class="toast" id="toast"></div>
