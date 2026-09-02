@@ -15,7 +15,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="img/favicon-256.png">
 <link rel="apple-touch-icon" href="img/favicon-256.png">
 <link rel="canonical" href="https://eiranova.no">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --sage: #6B8F71;
@@ -260,6 +260,12 @@
   .service-card:hover .service-icon-wrap { background: var(--sage); }
   .service-card-title { font-weight: 500; margin-bottom: 0.3rem; font-size: 0.95rem; }
   .service-card-desc { font-size: 0.85rem; color: var(--stone); line-height: 1.6; }
+  .bestill-text-link {
+    color: var(--sage); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600;
+    margin-top: 0.75rem; display: inline-block;
+  }
+  .bestill-text-link:hover { text-decoration: underline; }
 
   /* ── PRICES ── */
   .prices-intro { max-width: 540px; margin: 0 auto 2.5rem; text-align: center; }
@@ -571,7 +577,7 @@
     <h1>Omsorg der<br>livet <em>leves</em></h1>
     <p class="hero-sub">Litt støtte kan gjøre en stor forskjell. Vi er sykepleiere som hjelper småbarnsfamilier, eldre og andre som trenger en ekstra hånd i hverdagen – slik at flere får overskudd, mestring og gode dager hjemme.</p>
     <div class="hero-actions">
-      <a href="#kontakt" class="btn-primary">Ta kontakt</a>
+      <a href="#kontakt" class="btn-primary js-bestill" data-kategori="">Bestill et besøk</a>
       <a href="#hverdagen" class="btn-outline">Hvem vi hjelper</a>
     </div>
   </div>
@@ -630,6 +636,7 @@
       <div>
         <div class="service-card-title">For småbarnsfamilier</div>
         <div class="service-card-desc">Vi ønsker å være en ekstra hånd når hverdagen blir mye. Det kan være avlastning, praktisk hjelp, trilletur, følge, sosial støtte eller andre små og store ting som kan gi familien litt mer overskudd.</div>
+        <a href="#kontakt" class="bestill-text-link js-bestill" data-kategori="Privatperson – småbarnsfamilie">Bestill avlastning →</a>
       </div>
     </div>
     <div class="service-card fade-in">
@@ -637,6 +644,7 @@
       <div>
         <div class="service-card-title">For eldre</div>
         <div class="service-card-desc">Vi kan bidra med trygghet, sosialt samvær, praktisk hjelp, følge til avtaler og aktiviteter eller bare være en ekstra person i hverdagen. Målet er å støtte den enkeltes ressurser og bidra til at flere kan oppleve mestring, selvstendighet og gode dager hjemme.</div>
+        <a href="#kontakt" class="bestill-text-link js-bestill" data-kategori="Privatperson – eldre eller pårørende">Bestill et besøk →</a>
       </div>
     </div>
     <div class="service-card fade-in">
@@ -651,7 +659,7 @@
   <div style="max-width:760px; margin:3rem auto 0; text-align:center;">
     <p class="section-body">Vi ønsker å utforske hvordan EiraNova kan bidra til bedre folkehelse – ved å styrke mennesker, familier og fellesskapet rundt oss.</p>
     <p class="section-body"><strong>God helse skapes også i hverdagen.</strong></p>
-    <a href="#kontakt" class="btn-primary">Ta kontakt</a>
+    <a href="#kontakt" class="btn-primary js-bestill" data-kategori="">Bestill et besøk</a>
   </div>
 </section>
 
@@ -750,7 +758,7 @@
     </div>
   </div>
   <div class="prices-cta">
-    <a href="#kontakt" class="btn-primary">Be om pristilbud</a>
+    <a href="#kontakt" class="btn-primary js-bestill" data-kategori="">Be om pristilbud</a>
   </div>
 </section>
 
@@ -866,6 +874,7 @@
     <span class="section-tag">Vi søker samarbeid</span>
     <h2 class="section-title">Vi er klare.<br>Men vi trenger partnere.</h2>
     <p class="section-body">For å realisere potensialet i EiraNova søker vi støtte og samarbeidspartnere innen fire nøkkelområder.</p>
+    <p class="section-body">Vi utvikler en egen digital plattform for bestilling, gjennomføring og dokumentasjon av oppdrag – slik at sykepleieren kan være til stede hos kunden, mens systemet tar administrasjonen. Plattformen lanseres for pilotkunder høsten 2026.</p>
   </div>
   <div class="support-grid">
     <div class="support-card fade-in">
@@ -1066,6 +1075,19 @@
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 5000);
   }
+
+  // Bestill-CTA: forhåndsvelg kategori og fokusér navnefelt (href=#kontakt fungerer uten JS)
+  document.querySelectorAll('.js-bestill').forEach(el => {
+    el.addEventListener('click', () => {
+      const kategori = el.dataset.kategori || '';
+      const role = document.getElementById('role');
+      if (kategori && role) {
+        const match = [...role.options].find(o => o.text.trim() === kategori);
+        if (match) role.value = match.value || match.text;
+      }
+      setTimeout(() => document.getElementById('fname')?.focus({ preventScroll: true }), 400);
+    });
+  });
 </script>
 </body>
 </html>
