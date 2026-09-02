@@ -28,6 +28,7 @@ MX/TXT (Google Workspace) og subdomenene `app` / `nurse` / `admin` (samt staging
 - Statisk `personvern.html` — personvernerklæring for kontaktskjemaet. Header og footer er duplisert markup fra `index.html` (ingen build-step; endringer må gjøres i begge filer).
 - Én serverless-funksjon: `api/contact.js` (kontaktskjema → Resend → `post@eiranova.no`)
 - Prisseksjon `#priser` i `index.html` er plassholder med tabellstruktur klar for K-MARKETING-008 (faktiske priser)
+- Bestill-CTA-er (`.js-bestill`) peker på kontaktskjemaet inntil K-MARKETING-004 bytter `href` til kunde-appen.
 
 ## Routing
 
