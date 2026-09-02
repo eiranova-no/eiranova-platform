@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personvernerklæring – EiraNova</title>
+<meta name="description" content="Personvernerklæring for eiranova.no – hvordan EiraNova behandler opplysninger fra kontaktskjemaet.">
+<link rel="icon" type="image/png" sizes="256x256" href="img/favicon-256.png">
+<link rel="apple-touch-icon" href="img/favicon-256.png">
+<link rel="canonical" href="https://eiranova.no/personvern">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #6B8F71;
+    --sage-light: #A8C5AD;
+    --sage-pale: #E8F0E9;
+    --warm: #C4956A;
+    --warm-light: #EDD9C4;
+    --cream: #FAF8F4;
+    --ink: #1C2B1E;
+    --ink-soft: #4A5C4C;
+    --stone: #8B9E8D;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 3rem;
+    background: rgba(250,248,244,0.95);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(107,143,113,0.12);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 600;
+    color: var(--sage); letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .nav-logo img { height: 32px; width: auto; flex-shrink: 0; }
+  .nav-logo .wordmark { display: inline; }
+  .nav-logo .wordmark > span { color: var(--warm); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sage); }
+  .nav-cta {
+    background: var(--sage); color: white;
+    border: none; padding: 0.6rem 1.4rem;
+    border-radius: 2rem; font-size: 0.82rem;
+    font-weight: 500; cursor: pointer; transition: all 0.25s;
+    font-family: 'DM Sans', sans-serif; text-transform: uppercase;
+    text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--ink); }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    cursor: pointer; padding: 4px; background: none; border: none;
+  }
+  .hamburger span {
+    display: block; width: 24px; height: 2px;
+    background: var(--ink); border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none; position: fixed; top: 60px; left: 0; right: 0;
+    background: rgba(250,248,244,0.98); backdrop-filter: blur(14px);
+    z-index: 199; padding: 1.5rem 2rem 2rem;
+    border-bottom: 1px solid rgba(107,143,113,0.15);
+    flex-direction: column; gap: 1rem;
+    transform: translateY(-10px); opacity: 0;
+    transition: all 0.25s ease;
+  }
+  .mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+  .mobile-menu a {
+    font-size: 1rem; font-weight: 500; color: var(--ink-soft);
+    text-decoration: none; padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(107,143,113,0.1);
+    letter-spacing: 0.04em;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu .mob-cta {
+    margin-top: 0.5rem;
+    background: var(--sage); color: white;
+    text-align: center; padding: 0.9rem;
+    border-radius: 2rem; font-weight: 500;
+    border-bottom: none;
+  }
+
+  main {
+    padding: 8rem 1.5rem 4rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .privacy-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    color: var(--ink);
+  }
+  .privacy-updated {
+    font-size: 0.9rem;
+    color: var(--stone);
+    margin-bottom: 2.5rem;
+  }
+  .privacy-content h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 2rem 0 0.75rem;
+  }
+  .privacy-content p {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .privacy-content p:last-child { margin-bottom: 0; }
+  .privacy-content a { color: var(--sage); text-decoration: none; }
+  .privacy-content a:hover { text-decoration: underline; }
+
+  footer { background: var(--ink); color: rgba(255,255,255,0.5); padding: 2.5rem 5rem; font-size: 0.8rem; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-logo-img { max-width: 220px; height: auto; display: block; }
+  .footer-meta { display: flex; flex-direction: column; gap: 0.35rem; text-align: right; }
+  .footer-meta a { color: inherit; text-decoration: none; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    footer { padding: 2rem 1.5rem; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .footer-meta { text-align: center; }
+    .nav-logo img { height: 28px; }
+    .nav-logo { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/"><img src="img/logo-mark.png" alt="" aria-hidden="true"><span class="wordmark">Eira<span>Nova</span></span></a>
+  <ul class="nav-links">
+    <li><a href="/#hverdagen">Hvem vi hjelper</a></li>
+    <li><a href="/#tjenester">Tjenester</a></li>
+    <li><a href="/#priser">Priser</a></li>
+    <li><a href="/#team">Om oss</a></li>
+    <li><a href="/#effekt">Samfunnseffekt</a></li>
+    <li><a href="/#kontakt">Kontakt</a></li>
+  </ul>
+  <a class="nav-cta" href="/#kontakt">Ta kontakt</a>
+  <button class="hamburger" id="hamburger" aria-label="Meny" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#hverdagen" onclick="closeMenu()">Hvem vi hjelper</a>
+  <a href="/#tjenester" onclick="closeMenu()">Tjenester</a>
+  <a href="/#priser" onclick="closeMenu()">Priser</a>
+  <a href="/#team" onclick="closeMenu()">Om oss</a>
+  <a href="/#effekt" onclick="closeMenu()">Samfunnseffekt</a>
+  <a href="/#kontakt" class="mob-cta" onclick="closeMenu()">Ta kontakt →</a>
+</div>
+
+<main>
+  <h1 class="privacy-title">Personvernerklæring</h1>
+  <p class="privacy-updated">Sist oppdatert: 2. september 2026</p>
+
+  <div class="privacy-content">
+    <h2>Hvem vi er</h2>
+    <p>EiraNova AS (under stiftelse) er behandlingsansvarlig for personopplysninger som samles inn gjennom eiranova.no. Kontakt: post@eiranova.no, telefon 411 44 400. Organisasjonsnummer oppdateres når selskapet er registrert.</p>
+
+    <h2>Hvilke opplysninger vi samler inn</h2>
+    <p>Når du bruker kontaktskjemaet, lagrer vi det du selv oppgir: navn, e-postadresse, eventuelt telefonnummer og kommune/bedrift, hvilken kategori henvendelsen gjelder, og meldingen din. Vi ber deg om å ikke skrive helseopplysninger i skjemaet. Slike opplysninger tar vi heller på telefon eller i et møte.</p>
+    <p>Nettsiden bruker ingen informasjonskapsler (cookies) for sporing eller analyse.</p>
+
+    <h2>Hvorfor og med hvilket grunnlag</h2>
+    <p>Vi bruker opplysningene utelukkende for å svare på henvendelsen din og følge opp en eventuell samtale om tjenestene våre. Behandlingsgrunnlaget er ditt samtykke (personvernforordningen artikkel 6 nr. 1 bokstav a), som du gir ved å krysse av i skjemaet. Du kan trekke samtykket når som helst ved å kontakte oss.</p>
+
+    <h2>Hvor lenge vi lagrer opplysningene</h2>
+    <p>Henvendelser lagres så lenge det er nødvendig for å følge dem opp, og slettes senest 12 måneder etter siste kontakt, med mindre du er blitt kunde – da gjelder avtalen og personvernerklæringen for kundeforholdet.</p>
+
+    <h2>Hvem som behandler opplysningene for oss</h2>
+    <p>Skjemaet sendes som e-post til vår postkasse hos Google Workspace, via e-posttjenesten Resend. Nettsiden driftes av Vercel. Opplysningene lagres innenfor EU/EØS; der leverandørene har fjerntilgang fra USA, er dette regulert gjennom EU–USA Data Privacy Framework og EUs standardavtaler. Vi deler ikke opplysningene med andre.</p>
+
+    <h2>Dine rettigheter</h2>
+    <p>Du har rett til innsyn i, retting og sletting av opplysningene om deg, og til å protestere mot behandlingen. Send en e-post til post@eiranova.no, så svarer vi innen 30 dager. Mener du at vi behandler opplysninger i strid med regelverket, kan du klage til Datatilsynet (<a href="https://datatilsynet.no">datatilsynet.no</a>).</p>
+
+    <h2>Endringer</h2>
+    <p>Vi oppdaterer denne erklæringen ved behov. Dato for siste endring står øverst.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/"><img class="footer-logo-img" src="img/logo-full.png" alt="EiraNova – Faglig trygghet. Menneskelig nærhet." width="220" height="147" loading="lazy"></a>
+    <div class="footer-meta">
+      <div>© 2026 EiraNova AS · Autoriserte sykepleiere · Østfold</div>
+      <div>post@eiranova.no · <a href="tel:+4741144400">411 44 400</a></div>
+      <div><a href="/personvern">Personvern</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove('open');
+      btn.classList.remove('open');
+    }
+  });
+</script>
+</body>
+</html>
