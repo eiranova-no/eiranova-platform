@@ -56,7 +56,8 @@
     text-decoration: none;
   }
   .nav-logo img { height: 32px; width: auto; flex-shrink: 0; }
-  .nav-logo span { color: var(--warm); }
+  .nav-logo .wordmark { display: inline; }
+  .nav-logo .wordmark > span { color: var(--warm); }
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a {
     font-size: 0.82rem; font-weight: 500; letter-spacing: 0.08em;
@@ -259,6 +260,31 @@
   .service-card:hover .service-icon-wrap { background: var(--sage); }
   .service-card-title { font-weight: 500; margin-bottom: 0.3rem; font-size: 0.95rem; }
   .service-card-desc { font-size: 0.85rem; color: var(--stone); line-height: 1.6; }
+
+  /* ── PRICES ── */
+  .prices-intro { max-width: 540px; margin: 0 auto 2.5rem; text-align: center; }
+  .prices-intro .section-body { max-width: none; margin: 0 auto; }
+  .price-card-wrap { max-width: 560px; margin: 0 auto 2rem; }
+  .price-card {
+    display: block; padding: 2rem;
+    border-radius: 16px; border: 1px solid rgba(107,143,113,0.12);
+    background: var(--cream);
+  }
+  .price-table { width: 100%; border-collapse: collapse; }
+  .price-table th {
+    font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--stone); font-weight: 500; text-align: left;
+    padding-bottom: 0.75rem; border-bottom: 1px solid rgba(107,143,113,0.12);
+  }
+  .price-table th:last-child { text-align: right; }
+  .price-table td {
+    padding: 0.6rem 0; border-bottom: 1px solid rgba(107,143,113,0.12);
+    font-size: 0.95rem;
+  }
+  .price-table td:last-child { text-align: right; font-weight: 500; }
+  .price-table .price-placeholder { color: var(--ink-soft); font-weight: 400; }
+  .price-note { font-size: 0.85rem; opacity: 0.7; margin-top: 1.25rem; line-height: 1.65; }
+  .prices-cta { text-align: center; }
   .visual-panel {
     background: linear-gradient(145deg, var(--sage) 0%, #4A6E50 100%);
     border-radius: 28px; padding: 3rem; color: white; position: relative; overflow: hidden;
@@ -348,6 +374,8 @@
     transition: all 0.25s; margin-top: 0.5rem;
   }
   .form-submit:hover { background: var(--ink); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,43,30,0.2); }
+  .form-group a { color: var(--sage); text-decoration: none; }
+  .form-group a:hover { text-decoration: underline; }
   .contact-info { padding-top: 2rem; }
   .contact-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; margin-bottom: 1rem; font-weight: 400; }
   .contact-info p { color: var(--stone); line-height: 1.75; font-size: 0.9rem; margin-bottom: 2rem; }
@@ -511,10 +539,11 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#top"><img src="img/logo-mark.png" alt="" aria-hidden="true">Eira<span>Nova</span></a>
+  <a class="nav-logo" href="#top"><img src="img/logo-mark.png" alt="" aria-hidden="true"><span class="wordmark">Eira<span>Nova</span></span></a>
   <ul class="nav-links">
     <li><a href="#hverdagen">Hvem vi hjelper</a></li>
     <li><a href="#tjenester">Tjenester</a></li>
+    <li><a href="#priser">Priser</a></li>
     <li><a href="#team">Om oss</a></li>
     <li><a href="#effekt">Samfunnseffekt</a></li>
     <li><a href="#kontakt">Kontakt</a></li>
@@ -529,6 +558,7 @@
 <div class="mobile-menu" id="mobileMenu">
   <a href="#hverdagen" onclick="closeMenu()">Hvem vi hjelper</a>
   <a href="#tjenester" onclick="closeMenu()">Tjenester</a>
+  <a href="#priser" onclick="closeMenu()">Priser</a>
   <a href="#team" onclick="closeMenu()">Om oss</a>
   <a href="#effekt" onclick="closeMenu()">Samfunnseffekt</a>
   <a href="#kontakt" class="mob-cta" onclick="closeMenu()">Ta kontakt →</a>
@@ -673,6 +703,54 @@
         <div class="impact-item"><div class="impact-emoji">📋</div><div class="impact-text">Trygg dokumentasjon og journalføring</div></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- PRISER -->
+<section class="services" id="priser">
+  <div class="prices-intro">
+    <span class="section-tag">Priser</span>
+    <h2 class="section-title">Enkelt og forutsigbart</h2>
+    <p class="section-body">Vi tar betalt per time, uten binding og uten abonnement. Du betaler kun for den tiden vi er hos deg – og du får faktura i etterkant av hvert oppdrag. Nye kunder får introduksjonspris på første besøk.</p>
+  </div>
+  <div class="price-card-wrap">
+    <div class="service-card price-card">
+      <!-- K-MARKETING-008: erstatt «Kommer» med priser fra prislisten; oppdater småteksten; behold radrekkefølgen -->
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th scope="col">Tjeneste</th>
+            <th scope="col">Pris</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Introduksjonspris – første besøk</td>
+            <td class="price-placeholder">Kommer</td>
+          </tr>
+          <tr>
+            <td>Praktisk hjelp i hjemmet</td>
+            <td class="price-placeholder">Kommer</td>
+          </tr>
+          <tr>
+            <td>Avlastning for småbarnsfamilier</td>
+            <td class="price-placeholder">Kommer</td>
+          </tr>
+          <tr>
+            <td>Følge til avtaler og aktiviteter</td>
+            <td class="price-placeholder">Kommer</td>
+          </tr>
+          <tr>
+            <td>Sosialt samvær og støtte</td>
+            <td class="price-placeholder">Kommer</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="price-note">Prisene er under utarbeidelse og publiseres her i løpet av høsten. Alle priser vil oppgis per time inkludert eventuell merverdiavgift. Ta kontakt for et uforpliktende pristilbud i mellomtiden.</p>
+    </div>
+  </div>
+  <div class="prices-cta">
+    <a href="#kontakt" class="btn-primary">Be om pristilbud</a>
   </div>
 </section>
 
@@ -880,7 +958,7 @@
           <p style="font-size:0.85rem; opacity:0.7; margin:0 0 1rem;">Ikke skriv helseopplysninger i skjemaet – det tar vi heller på telefon eller i et møte.</p>
           <label style="display:flex; gap:0.6rem; align-items:flex-start; font-size:0.9rem; cursor:pointer;">
             <input type="checkbox" id="consent" style="margin-top:0.25rem;">
-            <span>Jeg samtykker til at EiraNova lagrer opplysningene og kontakter meg om henvendelsen. Opplysningene brukes ikke til noe annet.</span>
+            <span>Jeg samtykker til at EiraNova lagrer opplysningene og kontakter meg om henvendelsen. Les vår <a href="/personvern">personvernerklæring</a>.</span>
           </label>
         </div>
         <button class="form-submit" onclick="handleSubmit()">Send melding →</button>
@@ -910,6 +988,7 @@
     <div class="footer-meta">
       <div>© 2026 EiraNova AS · Autoriserte sykepleiere · Østfold</div>
       <div>post@eiranova.no · <a href="tel:+4741144400">411 44 400</a></div>
+      <div><a href="/personvern">Personvern</a></div>
     </div>
   </div>
 </footer>

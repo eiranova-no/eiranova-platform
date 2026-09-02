@@ -25,15 +25,22 @@ MX/TXT (Google Workspace) og subdomenene `app` / `nurse` / `admin` (samt staging
 ## Innhold
 
 - Statisk `index.html` (ingen build-step)
+- Statisk `personvern.html` — personvernerklæring for kontaktskjemaet. Header og footer er duplisert markup fra `index.html` (ingen build-step; endringer må gjøres i begge filer).
 - Én serverless-funksjon: `api/contact.js` (kontaktskjema → Resend → `post@eiranova.no`)
+- Prisseksjon `#priser` i `index.html` er plassholder med tabellstruktur klar for K-MARKETING-008 (faktiske priser)
 
 ## Routing
 
-`vercel.json` rewriter alle stier til `index.html`, **unntatt** `/api/*`, slik at serverless-funksjoner ikke fanges av SPA-rewriten:
+`vercel.json` bruker `cleanUrls: true` og rewriter alle stier til `index.html`, **unntatt** `/api/*` og `/personvern`, slik at serverless-funksjoner og personvernsiden ikke fanges av SPA-rewriten:
 
 ```json
-{ "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }] }
+{
+  "cleanUrls": true,
+  "rewrites": [{ "source": "/((?!api/|personvern).*)", "destination": "/index.html" }]
+}
 ```
+
+Med `cleanUrls` serveres `https://eiranova.no/personvern` fra `personvern.html`. Både `/personvern` og `/personvern.html` skal gi 200 etter deploy.
 
 ## Miljøvariabler (Vercel → marketing-prosjektet)
 
@@ -58,6 +65,10 @@ vercel dev
 curl -s -X POST http://localhost:3000/api/contact \
   -H 'Content-Type: application/json' \
   -d '{"name":"Test","email":"test@example.com","msg":"Hei"}'
+# Personvern og forsiden
+curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/
+curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/personvern
+curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/personvern.html
 ```
 
 Produksjon deployes via push/merge til `main` (ikke `vercel deploy --prod`).
