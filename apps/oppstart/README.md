@@ -30,7 +30,7 @@ Migreringer:
 | `supabase-migration-002-feedback.sql` | Feedback-tabell |
 | `supabase-migration-003-status-2026-09.sql` | To eiere, ikke-medisinsk pilot, arkivering, status sept 2026 |
 
-Migrering 003 er idempotent og kjøres mot oppstart-prosjektet (ikke plattform-dev/prod).
+Migrering 003 er kjørt mot oppstart-prosjektet (sept 2026) og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
 
 ### Tilgang
 

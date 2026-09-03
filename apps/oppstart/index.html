@@ -1583,26 +1583,11 @@ async function loadTasks() {
     .from('tasks')
     .select('*')
     .eq('is_deleted', false)
-    .eq('archived', false)
     .order('section_id', { ascending: true })
     .order('is_default', { ascending: false })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: true });
-  if (error) {
-    // Fallback hvis archived-kolonnen ikke finnes ennå (før migrering 003)
-    console.warn('loadTasks med archived feilet, prøver uten:', error.message);
-    const retry = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('is_deleted', false)
-      .order('section_id', { ascending: true })
-      .order('is_default', { ascending: false })
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: true });
-    if (retry.error) { console.error(retry.error); return; }
-    tasks = (retry.data || []).filter(t => !t.archived);
-    return;
-  }
+  if (error) { console.error(error); return; }
   tasks = data || [];
 }
 
@@ -1818,7 +1803,7 @@ function render() {
 }
 
 function isNowCountable(task) {
-  return !task.archived && !LATER_SECTION_IDS.has(task.section_id);
+  return !LATER_SECTION_IDS.has(task.section_id);
 }
 
 function updateProgress() {
