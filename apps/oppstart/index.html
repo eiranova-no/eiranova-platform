@@ -782,7 +782,46 @@
     100% { transform: translateX(350%); }
   }
 
-  /* ── FEEDBACK FLOATING BUTTON (de tre ser dette) ── */
+  /* Safety warning under gate / header */
+  .safety-warn {
+    font-size: 0.78rem; line-height: 1.45;
+    color: var(--alert); background: var(--alert-pale);
+    border: 1px solid rgba(182,84,73,0.2);
+    border-radius: 10px; padding: 0.65rem 0.9rem;
+    margin: 0.8rem 0 0; text-align: left;
+  }
+  .safety-warn-header {
+    max-width: 1200px; margin: 0 auto 1.2rem;
+    padding: 0 3rem;
+  }
+  @media (max-width: 900px) {
+    .safety-warn-header { padding: 0 1.5rem; }
+  }
+  @media (max-width: 500px) {
+    .safety-warn-header { padding: 0 1.2rem; }
+  }
+
+  /* Helsetjeneste-sporet (dempet) */
+  .later-track-header {
+    margin: 3rem 0 1.2rem; padding: 1.3rem 1.5rem;
+    background: rgba(139,158,141,0.12);
+    border: 1px dashed rgba(139,158,141,0.45);
+    border-radius: 14px;
+  }
+  .later-track-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem; font-weight: 400;
+    color: var(--ink-soft); margin-bottom: 0.35rem;
+  }
+  .later-track-header p {
+    font-size: 0.85rem; color: var(--stone);
+    line-height: 1.55; font-weight: 300;
+  }
+  .section-later { opacity: 0.62; }
+  .section-later .section-header h3 { color: var(--ink-soft); }
+  .section-later .add-task { opacity: 0.85; }
+
+  /* ── FEEDBACK FLOATING BUTTON (eierne ser dette) ── */
   .feedback-fab {
     position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 400;
     background: var(--sage); color: white;
@@ -1063,10 +1102,11 @@
     <div class="gate-logo">Eira<span>Nova</span></div>
     <div class="gate-sub">Intern oppstart</div>
     <h2 class="gate-title">Velkommen</h2>
-    <p class="gate-desc">For medgrunnleggere i EiraNova AS.</p>
+    <p class="gate-desc">For eiere i EiraNova AS.</p>
     <input type="password" id="gate-pw" class="gate-input" placeholder="Passord" autocomplete="off">
     <button class="gate-btn" id="gate-btn">Fortsett</button>
     <div class="gate-error" id="gate-error"></div>
+    <p class="safety-warn">Skriv ikke helse-, person- eller eierforhold i kommentarene – appen er ikke sikret for det.</p>
   </div>
 </div>
 
@@ -1124,11 +1164,15 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <span class="hero-badge">Fra AS til første kunde</span>
+    <span class="hero-badge">Fra AS til pilot · ikke-medisinsk</span>
     <h1>Oppstartsplan<br>& <em>compliance</em></h1>
-    <p class="hero-sub">Praktisk arbeidsplan for Lise, Therese og Jeanett mens EiraNova-plattformen utvikles. Delt fremdrift i sanntid — hak av, legg til egne oppgaver, kommenter på hverandres arbeid.</p>
+    <p class="hero-sub">Praktisk arbeidsplan for Lise og Jeanett mens EiraNova-plattformen utvikles. Delt fremdrift i sanntid — hak av, legg til egne oppgaver, kommenter på hverandres arbeid.</p>
   </div>
 </header>
+
+<div class="safety-warn-header">
+  <p class="safety-warn">Skriv ikke helse-, person- eller eierforhold i kommentarene – appen er ikke sikret for det.</p>
+</div>
 
 <div class="progress-wrap">
   <div class="progress-bar-outer">
@@ -1160,53 +1204,53 @@
 <section class="panel active" data-panel="oversikt">
   <div class="panel-intro">
     <span class="panel-intro-tag">Hvorfor denne planen</span>
-    <h2>Appen er et verktøy. Driften starter nå.</h2>
-    <p>EiraNova-plattformen er et skaleringsverktøy — ikke en forutsetning for å levere tjenester. De tre medgrunnleggerne kan starte å ta imot oppdrag parallelt med at appen utvikles. Det gir inntekter fra dag én, og reell brukererfaring som styrer hvilke funksjoner appen faktisk trenger.</p>
+    <h2>Appen er et verktøy. Piloten starter nå.</h2>
+    <p>EiraNova-plattformen er et skaleringsverktøy — ikke en forutsetning for å levere tjenester. De to eierne kan starte ikke-medisinsk pilot (støtte i hverdagen) parallelt med at appen utvikles. Booking går via egen plattform (kunde-app); frem til lansering brukes kontaktskjema på eiranova.no.</p>
   </div>
 
   <div class="panel-intro" style="background: var(--sage-pale); border-color: rgba(107,143,113,0.25);">
-    <span class="panel-intro-tag" style="color: var(--sage-dark);">Tre likeverdige grunnleggere</span>
-    <h2 style="color: var(--sage-dark);">Delt ansvar, delt lærekurve</h2>
-    <p style="color: var(--ink);">Lise, Therese og Jeanett er likeverdige eiere og autoriserte sykepleiere. Fordeling av operative oppgaver (kundekontakt, journalføring, markedsføring, økonomi) gjøres internt og oppdateres her i planen etter hvert som rollene krystalliserer seg. Alle tre står på samme linje.</p>
+    <span class="panel-intro-tag" style="color: var(--sage-dark);">To eiere</span>
+    <h2 style="color: var(--sage-dark);">Lise (51 %) og Jeanett (49 %)</h2>
+    <p style="color: var(--ink);">Begge er autoriserte sykepleiere og står i styret. Varamedlem utpekes ved stiftelse. Fordeling av operative oppgaver (kundekontakt, markedsføring, økonomi) gjøres internt og oppdateres her etter hvert som rollene krystalliserer seg.</p>
   </div>
 
   <div class="section-header">
-    <h3>Fire faser over åtte uker</h3>
-    <div class="section-meta">Hver fase låser opp neste</div>
+    <h3>Roadmap til pilot</h3>
+    <div class="section-meta">M0 → M2 · sept–nov 2026</div>
   </div>
 
   <div class="tools-grid">
     <div class="tool-card">
-      <div class="tool-card-tag">Fase 1 · Uke 1–2</div>
-      <h4>Grunnmur</h4>
-      <p>Selskap, bank, forsikring, regnskap. Juridisk og finansielt fundament på plass. Ingen kundekontakt ennå.</p>
+      <div class="tool-card-tag">M0 · September</div>
+      <h4>Fundament</h4>
+      <p>Selskap, avtaler, bank, Workspace, NAV og MVA. Juridisk og finansielt fundament på plass.</p>
     </div>
     <div class="tool-card">
-      <div class="tool-card-tag">Fase 2 · Uke 3–4</div>
-      <h4>Verktøy & prosesser</h4>
-      <p>Booking, journalsystem, betaling, tjenestekatalog. Alt manuelt, men strukturert. Prising låst.</p>
+      <div class="tool-card-tag">M1 · Oktober</div>
+      <h4>Verktøy og dokumenter</h4>
+      <p>Tripletex, Vipps-søknad, priser, vilkår, pilotavtale og forenklet internkontroll for ikke-medisinsk drift.</p>
     </div>
     <div class="tool-card">
-      <div class="tool-card-tag">Fase 3 · Uke 5–6</div>
-      <h4>Klar for kunder</h4>
-      <p>Compliance godkjent, melding til Statsforvalteren sendt, forsikring aktiv. Soft launch av markedsføring.</p>
+      <div class="tool-card-tag">M2 · November</div>
+      <h4>Pilotstart</h4>
+      <p>3–5 pilotkunder, første oppdrag i plattformen, arbeidsnotat i nurse-app (ikke journal).</p>
     </div>
     <div class="tool-card">
-      <div class="tool-card-tag">Fase 4 · Uke 7–8+</div>
-      <h4>Drift & læring</h4>
-      <p>Pilotkunder, journalføring, ukentlig app-feedback til Richard. Evaluering og justering.</p>
+      <div class="tool-card-tag">M3 · Des–jan</div>
+      <h4>Betaling og rytme</h4>
+      <p>Vipps, Tripletex-faktura, ukentlig evaluering. Helsetjeneste-sporet aktiveres først ved beslutning.</p>
     </div>
   </div>
 
   <div class="section-header">
-    <h3>Hvorfor compliance før kunder?</h3>
-    <div class="section-meta"><strong>Lovkrav, ikke formalitet</strong></div>
+    <h3>Compliance for ikke-medisinsk pilot</h3>
+    <div class="section-meta"><strong>«Nå»-sporet først</strong></div>
   </div>
   <div class="critical">
     <div class="critical-icon">!</div>
     <div class="critical-content">
-      <h4>Compliance er ikke forhandlingsbart</h4>
-      <p>Helsetjenester — også ikke-medisinsk hjemmehjelp levert av autoriserte sykepleiere — reguleres av helse- og omsorgstjenesteloven, helsepersonelloven, GDPR artikkel 9 (særlige kategorier) og forskrift om ledelse og kvalitetsforbedring. Brudd kan utløse pålegg, tvangsmulkt, inndragning av autorisasjon, og GDPR-bot opp til 4% av omsetning. Compliance-fanen må være 100% før første betalende kunde.</p>
+      <h4>Pilot ≠ helsetjenester</h4>
+      <p>Piloten er støtte i hverdagen — ikke medisinsk behandling. Journal, Statsforvalter-melding, KPR og HPL § 39 hører til et senere helsetjeneste-spor og skal ikke blokkere piloten. GDPR for kundeopplysninger (ikke helsedata) gjelder fortsatt. Helsetjeneste-kravene ligger nederst i compliance-fanen, dempet, og telles ikke i «Nå»-fremdriften.</p>
     </div>
   </div>
 </section>
@@ -1214,8 +1258,8 @@
 <section class="panel" data-panel="plan">
   <div class="panel-intro">
     <span class="panel-intro-tag">Konkret oppstartsplan</span>
-    <h2>Uke for uke til første kunde</h2>
-    <p>Huk av oppgavene når de fullføres. Legg til egne oppgaver per uke med «+»-knappen. Kommenter på oppgaver med talebobleikonet. Endringer synkroniseres umiddelbart mellom Lise, Therese og Jeanett.</p>
+    <h2>Fra stiftelse til pilot</h2>
+    <p>Huk av oppgavene når de fullføres. Legg til egne oppgaver per fase med «+»-knappen. Kommenter på oppgaver med talebobleikonet. Endringer synkroniseres umiddelbart mellom Lise og Jeanett.</p>
   </div>
   <div id="plan-sections"></div>
 </section>
@@ -1223,14 +1267,14 @@
 <section class="panel" data-panel="compliance">
   <div class="panel-intro">
     <span class="panel-intro-tag">Compliance-sjekkliste</span>
-    <h2>Alt må være grønt før første kunde</h2>
-    <p>Dette er ikke en formalitet — det er et lovkrav etter norsk helselovgivning og GDPR. Ingen betalende kunder før alle punkter er avkrysset. Tilpass gjerne med egne oppgaver.</p>
+    <h2>«Nå» for ikke-medisinsk pilot</h2>
+    <p>Punktene under «Nå» må være på plass før pilotkunder. Helsetjeneste-sporet (Statsforvalter, journal) aktiveres først ved beslutning om medisinske tjenester — det vises nederst og telles ikke i fremdriften.</p>
   </div>
   <div class="critical">
     <div class="critical-icon">!</div>
     <div class="critical-content">
-      <h4>Kritisk</h4>
-      <p>Å levere helsetjenester uten oppfylte krav kan føre til pålegg, tvangsmulkt, inndragning av autorisasjon og erstatningsansvar. Personvernbrudd kan medføre bot opp til 20 mill. EUR eller 4% av omsetning. Konsulter jurist med helserett-kompetanse før oppstart.</p>
+      <h4>Personvern gjelder uansett</h4>
+      <p>Kundeopplysninger i piloten er personopplysninger under GDPR. Skriv ikke helse- eller sensitive opplysninger i denne appen. Ved overgang til helsetjenester aktiveres journalkrav og myndighetsmelding — se helsetjeneste-sporet nederst.</p>
     </div>
   </div>
   <div id="compliance-sections"></div>
@@ -1276,11 +1320,11 @@
 <footer>
   <div class="footer-logo">Eira<span>Nova</span></div>
   <div class="footer-tag">Intern · Oppstart</div>
-  <p class="footer-note">Delt fremdrift via Supabase — alle endringer synkroniseres i sanntid mellom Lise, Therese og Jeanett. Midlertidig intern app mens EiraNova-plattformen ferdigstilles.</p>
+  <p class="footer-note">Delt fremdrift via Supabase — alle endringer synkroniseres i sanntid mellom Lise og Jeanett. Midlertidig intern app frem til pilotstart (M2); deretter arkiveres den.</p>
   <div class="footer-copy">EiraNova AS · <span id="year"></span></div>
 </footer>
 
-<!-- Svevende knapp: Send forbedringsforslag (vises for de tre, ikke for Richard) -->
+<!-- Svevende knapp: Send forbedringsforslag (vises for eierne, ikke for Richard) -->
 <button class="feedback-fab" id="feedback-fab" style="display:none" title="Send forbedringsforslag til Richard">
   <svg viewBox="0 0 24 24"><path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path><path d="M9 12l2 2 4-4"></path></svg>
   <span>Forbedringsforslag</span>
@@ -1315,7 +1359,7 @@
     <div class="admin-header">
       <span class="admin-tag">Admin · kun Richard</span>
       <h1>Forbedrings<em>forslag</em></h1>
-      <p>Tilbakemeldinger fra Lise, Therese og Jeanett. De tre ser ikke denne siden og vet ikke hva de andre har sendt — dette er en privat kanal fra hver av dem til deg.</p>
+      <p>Tilbakemeldinger fra Lise og Jeanett. De ser ikke denne siden og vet ikke hva den andre har sendt — dette er en privat kanal fra hver av dem til deg.</p>
     </div>
     <div class="admin-stats">
       <div class="admin-stat unseen">
@@ -1345,44 +1389,48 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // ═════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://jvhfelvwzsqkmewecvfz.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp2aGZlbHZ3enNxa21ld2VjdmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzOTkyMDIsImV4cCI6MjA5MTk3NTIwMn0.K_GWGY00mHzIv-e42LG686x01pCPE7ebiqQ1bcMgovs';
+// NB: repoet er offentlig – passordene gir kun skjermgate, ikke sikkerhet. Ingen sensitive opplysninger i kommentarer.
 const GATE_PASSWORD = 'eiranova2026';
-const ADMIN_PASSWORD = 'richard2026';  // Endre dette til noe Richard vil bruke. Må være ulikt GATE_PASSWORD.
-const USERS = ['Lise', 'Therese', 'Jeanett'];
+const ADMIN_PASSWORD = 'richard2026';
+const USERS = ['Lise', 'Jeanett'];
 const ADMIN_USER = 'Richard';
 
 const STACK_ITEMS = [
-  { tag: 'Booking', name: 'Calendly', desc: 'Booking-link med tjenestekatalog. Kundene velger tid og tjeneste selv.', cost: '~150 kr/mnd', alt: 'SimplyBook.me' },
-  { tag: 'Kalender', name: 'Google Workspace', desc: 'Delt «EiraNova Drift»-kalender mellom de tre grunnleggerne.', cost: '~80 kr/bruker', alt: 'Allerede aktiv' },
-  { tag: 'Journal', name: 'Infodoc / Pridok', desc: 'Elektronisk pasientjournal. Oppfyller helsepersonelloven § 39.', cost: '~500–1 200 kr', alt: 'WebMed' },
-  { tag: 'Regnskap', name: 'Tripletex', desc: 'Master for alt regnskap iht. plattform-arkitektur. B2C og B2B.', cost: '~400 kr/mnd', alt: 'Fiken / PowerOffice' },
-  { tag: 'Betaling', name: 'Vipps Bedrift', desc: 'Enkel betaling for kunder. 1,75% + 2 kr per transaksjon.', cost: 'Transaksjonsbasert', alt: 'Stripe' },
-  { tag: 'Lagring', name: 'OneDrive Business', desc: 'Kryptert sky for avtaler, prosedyrer, dokumentasjon. Aldri pasientdata utenfor journal.', cost: 'Inkl. Workspace', alt: 'SharePoint' },
-  { tag: 'Forsikring', name: 'Yrkesansvar', desc: 'Lovpålagt for alle tre autoriserte sykepleiere.', cost: '~300–600 kr', alt: 'If / Gjensidige / Tryg' },
-  { tag: 'Marketing', name: 'eiranova-marketing.vercel.app', desc: 'Marketing-siden med «Book time»-knapp til Calendly.', cost: 'Gratis (Vercel)', alt: 'Allerede live' },
+  { tag: 'Bestilling', name: 'EiraNova-plattformen (kunde-app)', desc: 'Egen bestillings- og oppfølgingsløsning. Frem til lansering: kontaktskjema på eiranova.no.', cost: 'Ingen (egen plattform)', alt: 'Pilot: skjema + telefon' },
+  { tag: 'Kalender', name: 'Google Workspace', desc: 'Delt «EiraNova Drift»-kalender og e-post for begge eiere. lise@ og jeanett@ må opprettes.', cost: '~80 kr/bruker', alt: 'Business Starter' },
+  { tag: 'Regnskap', name: 'Tripletex', desc: 'Egenregi i det daglige. Årsoppgjør kjøpes som enkelttjeneste.', cost: '~400 kr/mnd', alt: 'Fiken' },
+  { tag: 'Betaling', name: 'Vipps (ePayment)', desc: 'Hovedbetaling for privatkunder når org.nr foreligger. Pilot: faktura i etterkant.', cost: 'Transaksjonsbasert', alt: 'Stripe senere' },
+  { tag: 'Lagring', name: 'Google Drive (Workspace)', desc: 'Avtaler, rutiner og kundedokumenter. Ingen helseopplysninger i pilot.', cost: 'Inkl. Workspace', alt: '—' },
+  { tag: 'Forsikring', name: 'Yrkesansvar', desc: 'Begge sykepleierne dekket. Innhent tilbud fra If, Gjensidige, Tryg.', cost: '~300–600 kr/mnd', alt: '—' },
+  { tag: 'Signering', name: 'Posten Signering (BankID)', desc: 'Alle avtaler signeres elektronisk. Pris per dokument, ingen binding.', cost: 'Per dokument', alt: '—' },
+  { tag: 'Marketing', name: 'eiranova.no', desc: 'Live: posisjonering, kontaktskjema, personvern, priser (plassholder), Bestill-CTA. Vedlikeholdes av Richard.', cost: 'Gratis (Vercel)', alt: 'Live' },
 ];
 
 const SECTION_META = {
-  'plan-w1': { phase: 'Fase 1', title: 'Uke 1 · Selskap og bank', meta: 'Grunnmur på plass' },
-  'plan-w2': { phase: 'Fase 1', title: 'Uke 2 · Juridisk fundament', meta: 'Avtaler og compliance-start' },
-  'plan-w3': { phase: 'Fase 2', title: 'Uke 3 · Operativ stack', meta: 'Verktøy i drift' },
-  'plan-w4': { phase: 'Fase 2', title: 'Uke 4 · Prising og dokumentasjon', meta: 'Klar for compliance-fasen' },
-  'plan-w5': { phase: 'Fase 3', title: 'Uke 5 · Compliance låst', meta: 'Siste stopp før kunder' },
-  'plan-w6': { phase: 'Fase 3', title: 'Uke 6 · Soft launch', meta: 'Markedsføring starter' },
-  'plan-w7': { phase: 'Fase 4', title: 'Uke 7 · Første oppdrag', meta: 'Pilotkunder' },
-  'plan-w8': { phase: 'Fase 4', title: 'Uke 8 · Evaluering og rytme', meta: 'Fast ukentlig drift' },
-  'c-01': { phase: '1', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk' },
-  'c-02': { phase: '2', title: 'Melding til myndigheter', meta: 'Før første kunde' },
-  'c-03': { phase: '3', title: 'Internkontroll og kvalitet', meta: 'Forskrift om ledelse' },
-  'c-04': { phase: '4', title: 'Personvern og GDPR', meta: 'Helsedata = særlig kategori' },
-  'c-05': { phase: '5', title: 'Dokumentasjon og journalføring', meta: 'Helsepersonelloven § 39' },
-  'c-06': { phase: '6', title: 'Forsikring og økonomi', meta: 'Dekning og regnskap' },
-  'c-07': { phase: '7', title: 'Avtaler med kunder', meta: 'Forbrukerrettigheter' },
-  'c-08': { phase: '8', title: 'Operasjonell beredskap', meta: 'Faglig og sikkerhet' },
-  'c-09': { phase: '9', title: 'Markedsføring', meta: 'Helsepersonelloven § 13' },
+  'plan-w1': { phase: 'M0 · September', title: 'Selskap, avtaler og bank', meta: 'Stiftelse og signering' },
+  'plan-w2': { phase: 'M0 · September', title: 'Kontoer og avklaringer', meta: 'Workspace, NAV, MVA' },
+  'plan-w3': { phase: 'M1 · Oktober', title: 'Verktøy og drift', meta: 'Tripletex, Vipps-søknad, forsikring' },
+  'plan-w4': { phase: 'M1 · Oktober', title: 'Priser og kundedokumenter', meta: 'Prisliste, vilkår, pilotavtale' },
+  'plan-w5': { phase: 'M1 · Oktober', title: 'Klar for pilot', meta: 'Rutiner og sikkerhet (ikke-medisinsk)' },
+  'plan-w6': { phase: 'M2 · November', title: 'Pilotrekruttering', meta: '3–5 kunder' },
+  'plan-w7': { phase: 'M2 · November', title: 'Pilot i drift', meta: 'Første oppdrag i plattformen' },
+  'plan-w8': { phase: 'M3 · Desember–januar', title: 'Evaluering og betaling', meta: 'Vipps, Tripletex, rytme' },
+  'c-01': { phase: 'Nå', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk' },
+  'c-02': { phase: 'Senere (helsetjenester)', title: 'Melding til myndigheter', meta: 'Kun ved overgang til helsetjenester', later: true },
+  'c-03': { phase: 'Nå (forenklet)', title: 'Internkontroll og kvalitet', meta: 'Rutiner for ikke-medisinsk drift' },
+  'c-04': { phase: 'Nå', title: 'Personvern og GDPR', meta: 'Kundeopplysninger; ikke helsedata i pilot' },
+  'c-05': { phase: 'Senere (helsetjenester)', title: 'Dokumentasjon og journalføring', meta: 'Krever journalsystem – ikke i pilot', later: true },
+  'c-06': { phase: 'Nå', title: 'Forsikring og økonomi', meta: 'Dekning og regnskap' },
+  'c-07': { phase: 'Nå', title: 'Avtaler med kunder', meta: 'Vilkår, priser, pilotavtale' },
+  'c-08': { phase: 'Nå (forenklet)', title: 'Operasjonell beredskap', meta: 'Sikkerhet ved arbeid i hjem' },
+  'c-09': { phase: 'Nå', title: 'Markedsføring', meta: 'Sannferdig og GDPR-riktig' },
 };
 
 const PLAN_SECTION_IDS = ['plan-w1','plan-w2','plan-w3','plan-w4','plan-w5','plan-w6','plan-w7','plan-w8'];
-const COMPLIANCE_SECTION_IDS = ['c-01','c-02','c-03','c-04','c-05','c-06','c-07','c-08','c-09'];
+const COMPLIANCE_NOW_IDS = ['c-01','c-03','c-04','c-06','c-07','c-08','c-09'];
+const COMPLIANCE_LATER_IDS = ['c-02','c-05'];
+const COMPLIANCE_SECTION_IDS = [...COMPLIANCE_NOW_IDS, ...COMPLIANCE_LATER_IDS];
+const LATER_SECTION_IDS = new Set(COMPLIANCE_LATER_IDS);
 
 // ═════════════════════════════════════════════════════════
 // STATE
@@ -1482,7 +1530,7 @@ if (sessionStorage.getItem('eiranova-oppstart-admin') === '1') {
 }
 
 // ═════════════════════════════════════════════════════════
-// BOOT — vanlig bruker (Lise/Therese/Jeanett)
+// BOOT — vanlig bruker (Lise/Jeanett)
 // ═════════════════════════════════════════════════════════
 async function boot() {
   await Promise.all([
@@ -1535,11 +1583,26 @@ async function loadTasks() {
     .from('tasks')
     .select('*')
     .eq('is_deleted', false)
+    .eq('archived', false)
     .order('section_id', { ascending: true })
     .order('is_default', { ascending: false })
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: true });
-  if (error) { console.error(error); return; }
+  if (error) {
+    // Fallback hvis archived-kolonnen ikke finnes ennå (før migrering 003)
+    console.warn('loadTasks med archived feilet, prøver uten:', error.message);
+    const retry = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('is_deleted', false)
+      .order('section_id', { ascending: true })
+      .order('is_default', { ascending: false })
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: true });
+    if (retry.error) { console.error(retry.error); return; }
+    tasks = (retry.data || []).filter(t => !t.archived);
+    return;
+  }
   tasks = data || [];
 }
 
@@ -1700,11 +1763,14 @@ function renderTask(task) {
   `;
 }
 
-function renderSection(sectionId) {
+function renderSection(sectionId, { later = false } = {}) {
   const meta = SECTION_META[sectionId] || { phase: '', title: sectionId, meta: '' };
   const sectionTasks = tasksFor(sectionId);
   const phaseTag = meta.phase ? `<span class="phase-tag">${escapeHtml(meta.phase)}</span>` : '';
+  const wrapStart = later ? `<div class="section-later">` : '';
+  const wrapEnd = later ? `</div>` : '';
   return `
+    ${wrapStart}
     <div class="section-header">
       <h3>${phaseTag}${escapeHtml(meta.title)}</h3>
       <div class="section-meta">${escapeHtml(meta.meta || '')}</div>
@@ -1716,12 +1782,26 @@ function renderSection(sectionId) {
       <span class="add-task-icon">+</span>
       <span>Legg til egen oppgave</span>
     </button>
+    ${wrapEnd}
+  `;
+}
+
+function renderCompliance() {
+  const nowHtml = COMPLIANCE_NOW_IDS.map(id => renderSection(id)).join('');
+  const laterHtml = COMPLIANCE_LATER_IDS.map(id => renderSection(id, { later: true })).join('');
+  return `
+    ${nowHtml}
+    <div class="later-track-header">
+      <h3>Helsetjeneste-sporet – aktiveres ved beslutning om medisinske tjenester</h3>
+      <p>Oppgavene beholdes for senere, men telles ikke i fremdriftsprosenten for «Nå».</p>
+    </div>
+    ${laterHtml}
   `;
 }
 
 function render() {
-  document.getElementById('plan-sections').innerHTML = PLAN_SECTION_IDS.map(renderSection).join('');
-  document.getElementById('compliance-sections').innerHTML = COMPLIANCE_SECTION_IDS.map(renderSection).join('');
+  document.getElementById('plan-sections').innerHTML = PLAN_SECTION_IDS.map(id => renderSection(id)).join('');
+  document.getElementById('compliance-sections').innerHTML = renderCompliance();
   document.getElementById('stack-grid').innerHTML = STACK_ITEMS.map(s => `
     <div class="tool-card">
       <div class="tool-card-tag">${escapeHtml(s.tag)}</div>
@@ -1737,9 +1817,13 @@ function render() {
   document.getElementById('year').textContent = new Date().getFullYear();
 }
 
+function isNowCountable(task) {
+  return !task.archived && !LATER_SECTION_IDS.has(task.section_id);
+}
+
 function updateProgress() {
-  const planTasks = tasks.filter(t => t.kind === 'plan');
-  const compTasks = tasks.filter(t => t.kind === 'compliance');
+  const planTasks = tasks.filter(t => t.kind === 'plan' && isNowCountable(t));
+  const compTasks = tasks.filter(t => t.kind === 'compliance' && isNowCountable(t));
   const planDone = planTasks.filter(t => completions.has(t.id)).length;
   const compDone = compTasks.filter(t => completions.has(t.id)).length;
   const total = planTasks.length + compTasks.length;
@@ -2017,7 +2101,7 @@ function showTaskForm(sectionId, kind, existingTask) {
 }
 
 // ═════════════════════════════════════════════════════════
-// FEEDBACK (de tre kan sende, ingen kan lese tilbake)
+// FEEDBACK (eierne kan sende, ingen kan lese tilbake)
 // ═════════════════════════════════════════════════════════
 function setupFeedbackUI() {
   const fab = document.getElementById('feedback-fab');
@@ -2146,7 +2230,7 @@ function renderAdmin() {
     list.innerHTML = `
       <div class="admin-empty">
         <div class="admin-empty-title">Ingen forslag ennå</div>
-        <div class="admin-empty-desc">Når Lise, Therese eller Jeanett sender inn et forbedringsforslag, vil det dukke opp her umiddelbart.</div>
+        <div class="admin-empty-desc">Når Lise eller Jeanett sender inn et forbedringsforslag, vil det dukke opp her umiddelbart.</div>
       </div>
     `;
     return;
