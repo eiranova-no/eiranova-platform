@@ -1,11 +1,11 @@
 # EiraNova Oppstart-app
 
-Intern app for oppstartsplan og compliance-sjekkliste — brukt av Lise, Therese og Jeanett under manuell drift mens EiraNova-plattformen utvikles.
+Intern app for oppstartsplan og compliance-sjekkliste — brukt av Lise og Jeanett under ikke-medisinsk pilot mens EiraNova-plattformen utvikles.
 
 ## Formål
 
-- Felles oppstartsplan fra AS-registrering til første betalende kunde
-- Compliance-sjekkliste for norsk helselovgivning og GDPR (helse- og omsorgstjenesteloven, helsepersonelloven, GDPR art. 9, forskrift om ledelse)
+- Felles oppstartsplan fra AS-registrering til pilotstart (M2, november 2026)
+- Compliance delt i «Nå» (ikke-medisinsk pilot) og «Helsetjeneste-sporet» (aktiveres ved beslutning om medisinske tjenester)
 - Delt fremdrift i sanntid via Supabase
 - Egne oppgaver (add/edit/delete) og kommentarer per oppgave
 
@@ -18,21 +18,31 @@ Ren statisk HTML med `@supabase/supabase-js` via ESM CDN (esm.sh). Ingen build-s
 - **Prosjekt:** `eiranova-oppstart` (separat fra eiranova-dev og eiranova-prod)
 - **Ref:** `jvhfelvwzsqkmewecvfz`
 - **Region:** eu-central-1 (Frankfurt) — GDPR
-- **Tabeller:** `tasks`, `completions`, `comments`
-- **Realtime:** aktivert på alle tre tabeller
-- **RLS:** på, med åpen policy for anon (sikkerheten ligger i at anon-nøkkelen + passord deles kun med de tre)
+- **Tabeller:** `tasks`, `completions`, `comments`, `feedback`
+- **Realtime:** aktivert på alle tabeller
+- **RLS:** på, med åpen policy for anon (sikkerheten ligger i at anon-nøkkelen + passord deles kun med eierne)
 
-Migrering ligger i `supabase-migration.sql` og kjøres manuelt i Supabase SQL Editor første gang (idempotent — trygg å re-kjøre).
+Migreringer:
+
+| Fil | Innhold |
+|-----|---------|
+| `supabase-migration.sql` | Skjema + seed (opprinnelig) |
+| `supabase-migration-002-feedback.sql` | Feedback-tabell |
+| `supabase-migration-003-status-2026-09.sql` | To eiere, ikke-medisinsk pilot, arkivering, status sept 2026 |
+
+Migrering 003 er kjørt mot oppstart-prosjektet (sept 2026) og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
 
 ### Tilgang
 
-To-stegs gate: først passord (`eiranova2026`, i klartekst i `index.html` under `GATE_PASSWORD`), så navnevalg (Lise / Therese / Jeanett). Brukervalget lagres i `localStorage` så man slipper å velge hver gang.
+To-stegs gate: først passord (`GATE_PASSWORD` / `ADMIN_PASSWORD` i `index.html`), så navnevalg (Lise / Jeanett). Admin-passordet åpner Richards feedback-visning.
 
-For å bytte bruker: klikk på navne-chippen øverst til høyre, eller «Bytt bruker» i mobilmenyen.
+**NB:** Repoet er offentlig — passordene gir kun skjermgate, ikke sikkerhet. Skriv ikke helse-, person- eller eierforhold i kommentarene.
+
+Brukervalget lagres i `localStorage`. Bytt bruker via navne-chippen øverst til høyre, eller «Bytt bruker» i mobilmenyen.
 
 ## Deploy
 
-Vercel-prosjekt: `eiranova-oppstart` → root directory `apps/oppstart` → framework `Other` → production branch `dev`.
+Vercel-prosjekt: `eiranova-oppstart` → root directory `apps/oppstart` → framework `Other` → production branch `main` (PR-kjede: feature → `dev` → `main`).
 
 Ingen env-vars i Vercel — Supabase URL og anon-nøkkel er hardkodet i `index.html`. Dette er bevisst: ren statisk HTML, ingen build-step, enkel debugging.
 
@@ -42,21 +52,20 @@ Ingen env-vars i Vercel — Supabase URL og anon-nøkkel er hardkodet i `index.h
 
 ### Legge til/endre standard-oppgaver
 
-Rediger `supabase-migration.sql` og re-kjør den i SQL Editor. `on conflict (default_id)` gjør den idempotent.
+Legg til i en ny migreringsfil (idempotent `update` / `insert … on conflict`) og kjør mot oppstart-prosjektet. Ikke rediger historiske migreringer i etterkant uten behov.
 
 ### Endre seksjonstitler
 
-Rediger `SECTION_META`-objektet i `index.html`.
+Rediger `SECTION_META` i `index.html`. Compliance-seksjoner merket `later: true` vises under helsetjeneste-sporet og telles ikke i «Nå»-fremdriften.
 
 ### Endre brukere
 
-Rediger `USERS`-arrayen i `index.html`. Merk: eksisterende completions og comments refererer til gamle navn — håndteres manuelt hvis det noen gang blir nødvendig.
+Rediger `USERS`-arrayen i `index.html`. Historiske completions/comments beholder gamle navn — det er bevisst.
 
 ## Pensjonering
 
-Når EiraNova-plattformen tar over oppstartsflyten:
+Appen brukes frem til pilotstart (M2, november 2026). Deretter:
 
-1. Slett Vercel-prosjektet `eiranova-oppstart`
-2. Slett Supabase-prosjektet `eiranova-oppstart` (ref: `jvhfelvwzsqkmewecvfz`)
-3. Fjern `apps/oppstart/`-mappen
-4. Oppdater root README og CHANGELOG
+1. Arkiver: slett Vercel-prosjektet `eiranova-oppstart` (mappen `apps/oppstart/` beholdes i repo som historikk)
+2. Slett Supabase-prosjektet `eiranova-oppstart` (ref: `jvhfelvwzsqkmewecvfz`) når data ikke lenger trengs
+3. Oppdater root README og CHANGELOG
