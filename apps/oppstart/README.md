@@ -31,8 +31,9 @@ Migreringer:
 | `supabase-migration-003-status-2026-09.sql` | To eiere, ikke-medisinsk pilot, arkivering, status sept 2026 |
 | `supabase-migration-004-pilotrekruttering.sql` | pilotrekruttering — ti oppgaver i plan-w6/plan-w7 |
 | `supabase-migration-005-1password-navn.sql` | 1Password-navn for Cursor-onboarding (Richard) |
+| `supabase-migration-006-claude.sql` | Claude-konto og EiraNova-prosjekt (Lise, K-DOC-002a) |
 
-Migrering 003–005 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
+Migrering 003–006 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
 
 Pilot: se [docs/pilot/](../../docs/pilot/).
 
