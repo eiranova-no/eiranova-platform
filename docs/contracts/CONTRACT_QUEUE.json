@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-17",
-  "updated_by": "K-OPPSTART-003 + K-GOV-002 merged",
+  "updated_by": "K-GOV-003 merged",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1691,6 +1691,43 @@
         "p-w6-10…p-w6-17 og p-w7-8, p-w7-9 finnes i oppstart-DB",
         "Migrasjon idempotent (dobbeltkjøring OK)",
         "docs/pilot/ lesbar på GitHub"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-GOV-002"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-GOV-003",
+      "title": "Sett opp tilganger: onboarding i Cursor uten teknisk språk",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-17",
+      "spec_path": null,
+      "goal": "Ny person skriver «Sett opp tilganger» i Cursor, limer inn seks nøkler fra 1Password én og én, og er klar — uten filer, chmod eller terminal.",
+      "in_scope": [
+        ".cursorrules Onboarding-seksjon",
+        "docs/ops/lokale-tilganger.md i klarspråk",
+        "docs/pilot/eierhandbok-og-opplaering.md Del 3 + økt 1",
+        "scripts/setup-local-env.sh (tekniker-fallback)",
+        "Oppstart-oppgave p-w2-10 for Richard (1Password-navn)"
+      ],
+      "out_of_scope": [
+        "Selve omdøpingen i 1Password (Richard)",
+        "Appkode utenom oppstart-migrering"
+      ],
+      "deliverables": [
+        ".cursorrules",
+        "docs/ops/lokale-tilganger.md",
+        "docs/pilot/eierhandbok-og-opplaering.md",
+        "scripts/setup-local-env.sh",
+        "apps/oppstart/supabase-migration-005-1password-navn.sql"
+      ],
+      "acceptance_criteria": [
+        "Simulert ny maskin: Cursor-flyt i klarspråk, verifikasjon OK, env gjenopprettet",
+        "git grep for nøkkelverdier = 0",
+        "Håndbok Del 3 og økt 1 oppdatert"
       ],
       "user_stories": [],
       "dependencies": [
