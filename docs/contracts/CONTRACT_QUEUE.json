@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-09-17",
-  "updated_by": "K-DOC-001 merged",
+  "last_updated": "2026-09-18",
+  "updated_by": "K-DOC-002 merged; K-DOC-003 planned; K-GOV-004 + K-OVERLEVERING-001 blocked",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1768,6 +1768,164 @@
         "K-GOV-003"
       ],
       "risks": []
+    },
+    {
+      "id": "K-DOC-002",
+      "title": "«Kom i gang fra null» og prosjektinstruks inn i repoet",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-18",
+      "spec_path": null,
+      "goal": "Guiden, øvelsesfilen og Claude-prosjektinstruksen ligger i docs/pilot/; eierhåndboken peker dit; PDF eksportert; bildeplassholdere som HTML-kommentarer for K-DOC-003.",
+      "in_scope": [
+        "docs/pilot/kom-i-gang-fra-null.md",
+        "docs/pilot/ovelse.md",
+        "docs/pilot/claude-prosjektinstruks.md",
+        "docs/pilot/eierhandbok-og-opplaering.md Del 3 og Del 10",
+        "docs/pilot/img/.gitkeep",
+        "docs/pilot/README.md",
+        "PDF-eksport av guide og håndbok"
+      ],
+      "out_of_scope": [
+        "Skjermbilder (K-DOC-003)",
+        "Appkode",
+        "Windows-onboarding (K-GOV-004)"
+      ],
+      "deliverables": [
+        "docs/pilot/kom-i-gang-fra-null.md",
+        "docs/pilot/kom-i-gang-fra-null.pdf",
+        "docs/pilot/ovelse.md",
+        "docs/pilot/claude-prosjektinstruks.md",
+        "docs/pilot/README.md",
+        "docs/pilot/img/.gitkeep",
+        "docs/pilot/eierhandbok-og-opplaering.md",
+        "docs/pilot/eierhandbok-og-opplaering.pdf"
+      ],
+      "acceptance_criteria": [
+        "Alle filer lesbare på GitHub; lenker i håndboken til guiden virker",
+        "PDF-er åpner; plassholder-kommentarer synes ikke i PDF (viser [Skjermbilde kommer])",
+        "git grep -i richard i guiden kun steg 4-notatet"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DOC-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-DOC-003",
+      "title": "Skjermbilder til Kom i gang-guiden",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Richard tar skjermbilder under gjennomgang på tom Mac-konto; Cursor legger dem i docs/pilot/img/ og aktiverer plassholderne (fjern HTML-kommentartegn). Blocked_by: gjennomgangen.",
+      "in_scope": [
+        "docs/pilot/img/*.png (åtte skjermbilder)",
+        "docs/pilot/kom-i-gang-fra-null.md — aktiver <!-- 📷 ... --> til markdown-bilder",
+        "Oppdatert PDF av guiden"
+      ],
+      "out_of_scope": [
+        "Nye steg i guiden (kun bilder + eventuelle Windows-avvik fra K-GOV-004)",
+        "Appkode"
+      ],
+      "deliverables": [
+        "docs/pilot/img/steg-1-1password.png",
+        "docs/pilot/img/steg-2-claude-prosjekt.png",
+        "docs/pilot/img/steg-3-cursor-mapper.png",
+        "docs/pilot/img/steg-4-ferdig.png",
+        "docs/pilot/img/steg-5a-github-zip.png",
+        "docs/pilot/img/steg-5c-cursor-rapport.png",
+        "docs/pilot/img/steg-5e-files-changed.png",
+        "docs/pilot/img/steg-6-vercel-preview.png",
+        "docs/pilot/kom-i-gang-fra-null.md med aktive bilder",
+        "docs/pilot/kom-i-gang-fra-null.pdf"
+      ],
+      "acceptance_criteria": [
+        "Alle åtte plassholdere erstattet med synlige bilder i md og PDF",
+        "Ingen <!-- 📷 --> igjen i guiden"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DOC-002"
+      ],
+      "risks": [
+        "Blocked av Richards gjennomgang på tom Mac-konto (skjermbilder mangler til da)"
+      ]
+    },
+    {
+      "id": "K-GOV-004",
+      "title": "«Sett opp tilganger» på Windows",
+      "type": "governance",
+      "status": "blocked",
+      "spec_path": null,
+      "goal": "Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett kan ha PC; guiden lover samme opplevelse.",
+      "in_scope": [
+        ".cursorrules onboarding-seksjon (plattformdeteksjon)",
+        "scripts/setup-local-env.ps1",
+        "docs/ops/lokale-tilganger.md (én linje om Windows)",
+        "Verifikasjon at Kom i gang-guiden steg 4 holder på begge plattformer"
+      ],
+      "out_of_scope": [
+        "Endre brukeropplevelsen i guiden for Mac",
+        "Appkode"
+      ],
+      "deliverables": [
+        ".cursorrules",
+        "scripts/setup-local-env.ps1",
+        "docs/ops/lokale-tilganger.md"
+      ],
+      "acceptance_criteria": [
+        "Ren Windows-bruker: Sett opp tilganger → Ferdig med seks nøkler",
+        "supabase/gh/vercel/psql OK fra Cursor-shell",
+        "Kom i gang steg 5 (øvelse) gjennomført på Windows til main"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-GOV-003",
+        "K-DOC-002"
+      ],
+      "risks": [],
+      "blocked_reason": "krever Windows-maskin for verifikasjon — avklar om Jeanett har PC"
+    },
+    {
+      "id": "K-OVERLEVERING-001",
+      "title": "Overlevering av plattformen fra Richard til Lise / EiraNova AS",
+      "type": "governance",
+      "status": "blocked",
+      "spec_path": null,
+      "goal": "Frys punktet med tag v1.0-overlevering, EIERSKAP.md, fjern Richard som ressurs, konto-overføringer, BankID-signering — første kontrakt etter M1, før noe annet.",
+      "in_scope": [
+        "git tag v1.0-overlevering på main (== dev)",
+        "docs/EIERSKAP.md + lenke i README",
+        ".cursorrules, docs/ROADMAP.md, docs/ops/*, docs/pilot/* — fjern Richard som ressurs",
+        "Manuell sjekkliste: GitHub, Vercel, Supabase, Resend, 1Password, domeneshop, Workspace, Claude",
+        "Gavebrevets overleveringsprotokoll + BankID",
+        "Bevis: Lise kjører første kontrakt etter overlevering via Kom i gang-guiden"
+      ],
+      "out_of_scope": [
+        "Appkode",
+        "Endringer før M1 er levert"
+      ],
+      "deliverables": [
+        "tag v1.0-overlevering",
+        "docs/EIERSKAP.md",
+        "Oppdaterte .cursorrules / README / ROADMAP / pilot-docs",
+        "Signert overleveringsprotokoll",
+        "Kø: K-OVERLEVERING-001 → merged"
+      ],
+      "acceptance_criteria": [
+        "git tag -l v1.0-overlevering finnes på origin; EIERSKAP.md lenket fra README",
+        "Richard ikke i GitHub/Vercel/Supabase/Resend team-lister",
+        "Preview-build på dev fungerer etter eierbytte",
+        "Sett opp tilganger på Lises maskin = Ferdig med nye tokens",
+        "git grep -i richard kun i gavebrev-/eierskapskontekst og ovelse.md"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "M1"
+      ],
+      "risks": [],
+      "blocked_reason": "blocked_by M1 (vertikal skive levert, jf. docs/ROADMAP.md). Utføres som første kontrakt etter M1."
     }
   ]
 }

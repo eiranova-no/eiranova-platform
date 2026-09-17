@@ -51,12 +51,7 @@ Fem regler som aldri brytes:
 
 ## Del 3 — Kom i gang (gjøres én gang, ca. 1 time)
 
-- Opprett egen GitHub-bruker med @eiranova.no-adressen din. Be om å bli lagt til i organisasjonen eiranova-no.
-- Claude: logg inn på claude.ai med selskapets konto (abonnement betales av selskapet). Bruk prosjektet «EiraNova» — der ligger metodikken, roadmapen og eierhåndboken som bakgrunnskunnskap, slik at Claude alltid vet hvordan dere jobber. Hver kontrakt er én ny samtale i prosjektet.
-- Slik lager dere zip av repoet: gå til github.com/eiranova-no/eiranova-platform i nettleseren → velg branch «dev» øverst til venstre → grønn «Code»-knapp → «Download ZIP». Last opp zip-filen i Claude-samtalen. Gjør dette hver gang, før hver kontrakt.
-- Installer Cursor (cursor.com) og 1Password-appen. Be Lise om tilgang til hvelvet «EiraNova». Åpne Cursor og skriv «hent eiranova-platform», deretter «Sett opp tilganger» – Cursor ber om seks nøkler fra 1Password, én om gangen. Det tar fem minutter og gjøres én gang.
-- Åpne mappen docs/ og les i denne rekkefølgen: README.md (oversikt), docs/PROCESS.md (metoden), docs/ROADMAP.md (planen), docs/contracts/CONTRACT_QUEUE.json (køen — hva som er gjort og planlagt).
-- Logg inn på Vercel og Supabase med selskapets konto og bare se deg rundt. Ikke endre noe.
+Følg `docs/pilot/kom-i-gang-fra-null.md` steg 0–4. Den tar deg fra tom maskin til klar Cursor.
 
 ## Del 4 — Din første kontrakt, steg for steg
 
@@ -197,7 +192,7 @@ Hvorfor dette er viktig for dere som eiere: køen er selskapets minne. Den viser
 
 ## Del 10 — Opplæringsøktene (med Richard)
 
-- **Økt 1 — Kart og kompass (2 t):** Del 1, 3 og 9. Begge logger inn overalt, inkludert Claude-prosjektet. Lager zip av repoet sammen, og åpner CONTROL_CENTER.md på GitHub for å lese køen. Sjekkliste: GitHub-bruker, Claude-prosjekt åpnet, Cursor installert, repo klonet, **Sett opp tilganger fullført – Cursor sa Ferdig**, zip lastet opp én gang, køen lest og forstått.
+- **Økt 1 — Kart og kompass (2 t):** Økt 1 = Kom i gang-guiden steg 0–5, gjennomført selv med Richard til stede.
 - **Økt 2 — Ønske til kode (2 t):** Del 2, 4 og 5. Hver av dere gjennomfører én ekte liten kontrakt: ønske til Claude → kontrakt → Cursor → rapport tilbake til Claude → forhåndsvisning → live. Sjekkliste: én PR laget, rapport verifisert av Claude, forhåndsvist, godkjent, live, kø oppdatert.
 - **Økt 3 — Drift og feil (2 t):** Del 7. Gjør en rollback med vilje og se at det virker. Gå gjennom overleveringsprotokollen: hvem eier hva, hvor ligger nøklene. Sjekkliste: rollback utført, hvelv gjennomgått.
 - **Økt 4 — Trappen, køen og bestilling (1 t):** Del 6, 9 og roadmapen. Parker sammen én fremtidig idé som kontrakt i køen, og skriv én QA-bestilling til konsulent. Sjekkliste: én kontrakt lagt i kø via Claude og Cursor, QA-bestilling skrevet, avtalt hvem som er QA-konsulent.

@@ -5,6 +5,7 @@
 
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
+| K-DOC-002 | «Kom i gang fra null» og prosjektinstruks inn i repoet | governance | 2026-09-18 |
 | K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | governance | 2026-09-17 |
 | K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | governance | 2026-09-17 |
 | K-GOV-003 | Sett opp tilganger: onboarding i Cursor uten teknisk språk | governance | 2026-09-17 |
