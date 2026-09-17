@@ -3,8 +3,8 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-06-06
-**Progress:** 21% → MVP Launch
+**Last generated:** 2026-09-17
+**Progress:** 24% → MVP Launch
 
 ---
 
@@ -78,11 +78,11 @@
 
 | ID | Title | Merged |
 |----|-------|--------|
+| K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | 2026-09-17 |
+| K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | 2026-09-17 |
 | K-ENV-003 | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | 2026-04-28 |
 | K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | 2026-04-28 |
 | K-ENV-002 | Env-guard & Middleware Hardening | 2026-04-26 |
-| K-DB-002 | Prod-Supabase Migration & Production Environment Activation | 2026-04-26 |
-| K-DB-001 | Supabase Databaseskjema — Komplett Fundament | 2026-04-25 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 
