@@ -7,6 +7,9 @@
 .env.*
 !.env.example
 !**/.env.example
+*.pem
+*.key
+**/env
 
 # TypeScript incremental (per-app build info)
 *.tsbuildinfo
