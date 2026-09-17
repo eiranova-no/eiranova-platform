@@ -284,6 +284,27 @@ Snakk enkelt. Ikke nevn filer, chmod, shell eller miljøvariabler. Gjør dette:
 6. Avslutt med: «Ferdig. Du trenger ikke gjøre dette igjen på denne maskinen.»
 Hvis brukeren limer inn noe som ser feil ut (f.eks. supabase.com-passord i stedet for databasestreng), si vennlig hva som forventes: databasestrengen starter med postgresql://.
 
+## Rapportering til eierne
+
+Sluttrapporten er det eneste eierne leser. Den skal være kort, i vanlig norsk, og uten teknisk støy.
+
+- Aldri lim inn rå terminalutskrift (git status, diff-stat, «use git restore», commit-lister, stack traces) i sluttrapporten. Slik utskrift hører hjemme i arbeidsloggen underveis, ikke i det du avslutter med.
+- Fast format, alltid:
+
+  **Ferdig: <kontrakt-ID> – <tittel>**
+
+  Hva som er gjort: 2–5 punkter i klarspråk (hva eierne ser/kan gjøre nå).
+
+  Hvor: lenke til PR-en (eller «på main»), og evt. adressen der endringen kan sees.
+
+  Sjekket: én linje per verifikasjonspunkt, «OK» eller hva som avviker.
+
+  Neste: én linje – hva eierne skal gjøre (f.eks. «Godkjenn PR #80», «Ingenting – det er live»), eller «Ingenting».
+
+- Maks 12 linjer. Ingen commit-shaer, ingen filstier med mindre eieren må åpne filen selv.
+- Blir du avbrutt eller feiler noe: samme format, med «Stoppet ved: …» og ett konkret forslag i klarspråk.
+- Rapporten skrives etter at hele kjeden er fullført (dev → main der kontrakten sier det), ikke etter hvert delsteg.
+
 ## Governance
 
 - Contract-before-code alltid
@@ -306,7 +327,7 @@ Hvis brukeren limer inn noe som ser feil ut (f.eks. supabase.com-passord i stede
 
 ---
 
-**Last updated:** 2026-04-10
-**Cursor:** Følg dette for konsistent utvikling + doc-automatisering
+**Last updated:** 2026-09-18
+**Cursor:** Følg dette for konsistent utvikling + doc-automatisering + sluttrapport til eierne
 **Claude:** Gir kontrakter, strategiske docs, governance
 **System:** Single-Contract Mode — maks 1 kontrakt active, Richard setter ready
