@@ -7,6 +7,13 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-DOC-002a — Claude-konto og prosjekt inn i guiden
+
+- Steg 2c i `kom-i-gang-fra-null.md`: én gangs oppsett (Lise) + testspørsmål; kvalitetskontroll-notat i steg 5b
+- Oppstart-oppgave `p-w2-11` (migrering 006) — Claude-konto/prosjekt
+- PDF regenerert; README noterer `md-to-pdf`
+- `.cursorrules`: seksjon «Rapportering til eierne» — fast sluttrapport uten terminalstøy
+
 ### K-DOC-002 — «Kom i gang fra null» og prosjektinstruks inn i repoet
 
 - Ny `docs/pilot/kom-i-gang-fra-null.md` (+ PDF) med bildeplassholdere som HTML-kommentarer
