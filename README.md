@@ -45,7 +45,9 @@
 
 ## Kom i gang
 
-Lokale tilganger (DB/CLI uten nøkler i chat): se [docs/ops/lokale-tilganger.md](docs/ops/lokale-tilganger.md).
+Lokale tilganger (DB/CLI uten nøkler i chat): se [docs/ops/lokale-tilganger.md](docs/ops/lokale-tilganger.md). I Cursor: skriv «Sett opp tilganger».
+
+**1Password (Richard, før økt 1):** I hvelvet «EiraNova» skal seks oppføringer hete nøyaktig: «Supabase database – oppstart», «Supabase database – dev», «Supabase database – prod», «Supabase token (cursor-eiranova)», «Vercel token (cursor-eiranova)», «Resend nøkkel (eiranova-vercel)» — hele verdien i passordfeltet.
 
 ```bash
 # Installer avhengigheter
