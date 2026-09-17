@@ -49,14 +49,25 @@ Første gang Cursor åpnes ber den deg logge inn. Velg **«Sign up»** → bruk 
 1. I Chrome: gå til `github.com` → **Sign up** → bruk @eiranova.no-adressen → velg et brukernavn (f.eks. `jeanett-eiranova`) → fullfør.
 2. Send brukernavnet ditt til Lise. Hun legger deg til i organisasjonen `eiranova-no`. Du får en e-post med «Join» — trykk på den.
 
-### 2c. Claude
-I Chrome: gå til `claude.ai` → logg inn med selskapets Claude-konto (innlogging ligger i 1Password under «Claude EiraNova»). Øverst til venstre: velg prosjektet **«EiraNova»**. Det er her du skriver alle ønsker og spørsmål.
+### 2c. Claude (gjøres én gang for selskapet — Lise)
+1. I Chrome: gå til `claude.ai` → **Sign up** → bruk `post@eiranova.no` (selskapets konto, ikke din egen). Velg abonnementet **Pro** — betales av selskapet. Lagre innloggingen i 1Password som **«Claude EiraNova»**.
+2. Trykk **Projects** (venstre meny) → **Create project** → navn **EiraNova**.
+3. I prosjektet: **Project instructions** → åpne filen [`docs/pilot/claude-prosjektinstruks.md`](https://github.com/eiranova-no/eiranova-platform/blob/main/docs/pilot/claude-prosjektinstruks.md) på GitHub → kopier all tekst under noten → lim inn → lagre.
+4. **Project knowledge** → **Add content** → last opp disse filene fra arkivet (last dem ned fra GitHub med **«Download raw file»**):
+   - `docs/pilot/eierhandbok-og-opplaering.md`
+   - `docs/pilot/kom-i-gang-fra-null.md`
+   - `docs/pilot/endringsonske-mal.md`
+   - `docs/ROADMAP.md`
+   - `docs/PROCESS.md`
+   - `.cursorrules`
+5. **Test:** ny samtale i prosjektet, skriv *«Hva må jeg gjøre for å endre en pris på nettsiden?»*. Riktig svar: Claude ber om zip og viser til endringsønske-malen, i vanlig norsk. Svarer den teknisk eller uten å be om zip: sjekk at instruksen ble limt inn.
+6. Jeanett logger inn med samme konto (innlogging i 1Password) og ser prosjektet.
 
-**Du er ferdig når:** du er logget inn i Cursor, du har trykket «Join» på GitHub-e-posten, og du ser prosjektet «EiraNova» i Claude.
+**Du er ferdig når:** begge kan åpne prosjektet **«EiraNova»** på `claude.ai`, og testspørsmålet ga riktig svar. (Du skal også være logget inn i Cursor og ha trykket «Join» på GitHub-e-posten — steg 2a–2b.)
 
 <!-- 📷 img/steg-2-claude-prosjekt.png: Claude med EiraNova-prosjektet åpent -->
 
-**Hvis det ikke stemmer:** *«Jeg er på steg 2 i Kom i gang-guiden. Jeg har laget GitHub-bruker, men [beskriv]. Hva gjør jeg?»*
+**Hvis det ikke stemmer:** dette er det ene steget du ikke kan spørre Claude om — send skjermbilde til Lise, eller les steg 3 på nytt. For Cursor/GitHub: *«Jeg er på steg 2 i Kom i gang-guiden. Jeg har laget GitHub-bruker, men [beskriv]. Hva gjør jeg?»*
 
 ---
 
@@ -123,6 +134,8 @@ Nå skal du gjøre hele løpet én gang, på en fil som ikke betyr noe for kunde
 **Du er ferdig med 5b når:** Claude har gitt deg en kontrakt som starter med K-.
 
 **Hvis Claude stiller spørsmål i stedet:** svar på dem. Det er normalt.
+
+**Kvalitetskontroll:** Svarer Claude teknisk, eller uten å be om zip / vise til endringsønske-malen: noen har trolig rørt prosjektinstruksen. Gå tilbake til steg 2c og sjekk at instruksen er limt inn riktig (samme testspørsmål som der).
 
 ### 5c. Gi kontrakten til Cursor
 1. Kopier hele kontrakten fra Claude (marker alt i boksen → kopier).

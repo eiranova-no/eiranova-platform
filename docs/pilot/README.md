@@ -5,7 +5,7 @@ Dokumentene her er for Lise og Jeanett — eiere som styrer plattformen uten å 
 | Fil | Hva den er til |
 |-----|----------------|
 | [kom-i-gang-fra-null.md](kom-i-gang-fra-null.md) | Steg-for-steg fra tom maskin til første endring i produksjon |
-| [kom-i-gang-fra-null.pdf](kom-i-gang-fra-null.pdf) | Samme guide som PDF (uten bildeplassholdere) |
+| [kom-i-gang-fra-null.pdf](kom-i-gang-fra-null.pdf) | Samme guide som PDF (uten bildeplassholdere). Lages med `md-to-pdf` fra markdown. |
 | [eierhandbok-og-opplaering.md](eierhandbok-og-opplaering.md) | Eierhåndbok: metode, sikkerhet, kø, opplæringsøkter |
 | [eierhandbok-og-opplaering.pdf](eierhandbok-og-opplaering.pdf) | Samme håndbok som PDF |
 | [endringsonske-mal.md](endringsonske-mal.md) | Mal for ønsker til Claude (ni punkter) |
