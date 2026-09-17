@@ -8,6 +8,7 @@
 | K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | governance | 2026-09-17 |
 | K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | governance | 2026-09-17 |
 | K-GOV-003 | Sett opp tilganger: onboarding i Cursor uten teknisk språk | governance | 2026-09-17 |
+| K-DOC-001 | Endringsønske-mal inn i eierhåndboken | governance | 2026-09-17 |
 | K-ENV-003 | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | infra | 2026-04-28 |
 | K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | refactor | 2026-04-28 |
 | K-ENV-002 | Env-guard & Middleware Hardening | governance | 2026-04-26 |

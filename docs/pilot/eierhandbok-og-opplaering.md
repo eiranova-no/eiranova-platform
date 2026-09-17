@@ -62,7 +62,7 @@ Fem regler som aldri brytes:
 
 Eksempel: endre teksten under «For eldre» på eiranova.no.
 
-1. Last ned fersk zip av dev-branchen (Del 3). Start ny samtale i Claude-prosjektet EiraNova, last opp zip-filen, og skriv ønsket: «Lag en Cursor-kontrakt for å endre teksten under «For eldre» på eiranova.no til: [ny tekst].»
+1. Last ned fersk zip av dev-branchen (Del 3). Start ny samtale i Claude-prosjektet EiraNova, last opp zip-filen, og lim inn utfylt endringsønske-mal: «Lag en Cursor-kontrakt for å endre teksten under «For eldre» på eiranova.no til: [ny tekst].»
 2. Claude svarer med en ferdig kontrakt (K-MARKETING-0xx). Les den. Stemmer den med det dere ville? Hvis ikke: si fra i samme samtale, og Claude justerer.
 3. Åpne Cursor, åpne repoet, start en ny chat. Lim inn kontrakten fra Claude. Cursor jobber, og kan spørre om bekreftelse før den kjører kommandoer — les hva den vil gjøre, og svar ja hvis det er innenfor kontrakten.
 4. Når Cursor er ferdig, kopier hele rapporten dens og lim den inn i Claude-samtalen. Claude bekrefter at kontrakten er oppfylt — eller peker på hva som mangler, som dere gir tilbake til Cursor.
@@ -73,6 +73,8 @@ Eksempel: endre teksten under «For eldre» på eiranova.no.
 Første gang tar dette en time. Tredje gang tar det ti minutter. Og fordi Claude husker samtalen, kan dere spørre den om hva som helst underveis — «hva betyr dette?», «er det farlig?», «hva skjer hvis vi godkjenner?».
 
 ## Del 5 — Slik beskriver dere et ønske til Claude
+
+Bruk malen i docs/pilot/endringsonske-mal.md — kopier den inn i Claude-samtalen og fyll ut de ni punktene. Det er den raskeste veien til en presis kontrakt.
 
 Jo mer konkret ønsket er, jo bedre blir kontrakten. En god beskrivelse har fire deler:
 
