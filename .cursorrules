@@ -261,6 +261,13 @@ pnpm --filter admin-app dev   # localhost:3003
 
 ---
 
+## Tilganger (lokale, aldri i repo)
+- Alle nøkler ligger i ~/.config/eiranova/env. Før eksterne kall i shell-subagent: `source ~/.config/eiranova/env`.
+- Databasekjøringer: bruk $SUPABASE_DB_URL_OPPSTART / _DEV / _PROD. Verifiser alltid at prosjekt-ref i strengen matcher målet (SUPABASE_URL i appen) før psql. Mot _PROD: alltid backup først og eksplisitt bekreftelse i dialogen.
+- Aldri be brukeren lime inn nøkler i chatten hvis filen finnes. Mangler en nøkkel: be om akkurat den, skriv den i filen, fortsett.
+- gh/git: SSH-alias github-eiranova, nøkkel i keychain. vercel: `vercel whoami` skal svare før deploy; verifiser prosjektkontekst.
+- Nøkkelverdier skal aldri forekomme i filer under repoet, i commits, i PR-tekst eller i rapporter.
+
 ## Governance
 
 - Contract-before-code alltid

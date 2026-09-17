@@ -45,6 +45,8 @@
 
 ## Kom i gang
 
+Lokale tilganger (DB/CLI uten nøkler i chat): se [docs/ops/lokale-tilganger.md](docs/ops/lokale-tilganger.md).
+
 ```bash
 # Installer avhengigheter
 pnpm install
