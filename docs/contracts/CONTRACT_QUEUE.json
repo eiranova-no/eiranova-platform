@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-18",
-  "updated_by": "K-DOC-002 merged; K-DOC-003 planned; K-GOV-004 + K-OVERLEVERING-001 blocked",
+  "updated_by": "K-DOC-002a planned (Claude-konto i guide + oppstart p-w2-11); K-DOC-003 planned",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1809,6 +1809,42 @@
       "user_stories": [],
       "dependencies": [
         "K-DOC-001"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-DOC-002a",
+      "title": "Claude-konto og prosjekt inn i guiden",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Steg 2c i Kom i gang-guiden beskriver én-gangs Claude-oppsett for selskapet (Lise); oppstart-app har oppgave p-w2-11; PDF og README oppdatert.",
+      "in_scope": [
+        "docs/pilot/kom-i-gang-fra-null.md steg 2c + kvalitetskontroll i steg 5b",
+        "apps/oppstart/supabase-migration-006-claude.sql (p-w2-11)",
+        "docs/pilot/README.md (md-to-pdf-notat)",
+        "PDF-eksport av guiden"
+      ],
+      "out_of_scope": [
+        "Selve konto-/prosjektopprettelsen i claude.ai (Lise)",
+        "Skjermbilder (K-DOC-003)",
+        "Appkode utenom oppstart-migrering"
+      ],
+      "deliverables": [
+        "docs/pilot/kom-i-gang-fra-null.md",
+        "docs/pilot/kom-i-gang-fra-null.pdf",
+        "docs/pilot/README.md",
+        "apps/oppstart/supabase-migration-006-claude.sql",
+        "apps/oppstart/README.md"
+      ],
+      "acceptance_criteria": [
+        "Steg 2c beskriver Sign up med post@eiranova.no, Project instructions, Project knowledge og testspørsmål",
+        "p-w2-11 finnes i oppstart (owner Lise, sort_order 11)",
+        "PDF regenerert; README nevner md-to-pdf"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DOC-002"
       ],
       "risks": []
     },
