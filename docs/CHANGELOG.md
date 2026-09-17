@@ -7,6 +7,12 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-DOC-001 — Endringsønske-mal inn i eierhåndboken
+
+- Ny `docs/pilot/endringsonske-mal.md` (ni punkter, to eksempler, Tre tips)
+- `docs/pilot/eierhandbok-og-opplaering.md` Del 5 peker til malen; Del 4 steg 1: «lim inn utfylt endringsønske-mal»
+- PDF-eksport: `docs/pilot/eierhandbok-og-opplaering.pdf` (kilde = markdown i repo)
+
 ### K-AUTH-003 — E-postbekreftelse token_hash + norsk mal
 
 - Ny route `apps/kunde-app/app/auth/confirm/route.ts` — `verifyOtp({ token_hash, type })`, enhetsuavhengig

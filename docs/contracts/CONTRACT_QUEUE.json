@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-17",
-  "updated_by": "K-GOV-003 merged",
+  "updated_by": "K-DOC-001 merged",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1732,6 +1732,40 @@
       "user_stories": [],
       "dependencies": [
         "K-GOV-002"
+      ],
+      "risks": []
+    },
+    {
+      "id": "K-DOC-001",
+      "title": "Endringsønske-mal inn i eierhåndboken",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-17",
+      "spec_path": null,
+      "goal": "Repoet er eneste kilde for endringsønske-malen og eierhåndboken; PDF eksporteres fra markdown i docs/pilot/.",
+      "in_scope": [
+        "docs/pilot/endringsonske-mal.md",
+        "docs/pilot/eierhandbok-og-opplaering.md Del 4 og Del 5",
+        "docs/pilot/eierhandbok-og-opplaering.pdf"
+      ],
+      "out_of_scope": [
+        "docx-vedlikehold utenfor repo",
+        "Appkode"
+      ],
+      "deliverables": [
+        "docs/pilot/endringsonske-mal.md",
+        "docs/pilot/eierhandbok-og-opplaering.md",
+        "docs/pilot/eierhandbok-og-opplaering.pdf"
+      ],
+      "acceptance_criteria": [
+        "Mal med ni punkter + to eksempler + Tre tips i markdown",
+        "Del 5 peker til malen; Del 4 steg 1 bruker «lim inn utfylt endringsønske-mal»",
+        "PDF generert fra håndbok-markdown i docs/pilot/"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-OPPSTART-003",
+        "K-GOV-003"
       ],
       "risks": []
     }
