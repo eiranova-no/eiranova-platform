@@ -268,6 +268,22 @@ pnpm --filter admin-app dev   # localhost:3003
 - gh/git: SSH-alias github-eiranova, nøkkel i keychain. vercel: `vercel whoami` skal svare før deploy; verifiser prosjektkontekst.
 - Nøkkelverdier skal aldri forekomme i filer under repoet, i commits, i PR-tekst eller i rapporter.
 
+## Onboarding av tilganger (når ~/.config/eiranova/env mangler eller brukeren skriver «Sett opp tilganger»)
+Snakk enkelt. Ikke nevn filer, chmod, shell eller miljøvariabler. Gjør dette:
+1. Si: «Jeg trenger seks nøkler fra 1Password-hvelvet «EiraNova». Jeg ber om én om gangen – kopier verdien og lim den inn her.»
+2. Be om dem i denne rekkefølgen, med nøyaktig disse navnene (de matcher oppføringene i 1Password):
+   a) «Supabase database – oppstart»  → SUPABASE_DB_URL_OPPSTART
+   b) «Supabase database – dev»       → SUPABASE_DB_URL_DEV
+   c) «Supabase database – prod»      → SUPABASE_DB_URL_PROD
+   d) «Supabase token (cursor-eiranova)» → SUPABASE_ACCESS_TOKEN
+   e) «Vercel token (cursor-eiranova)»   → VERCEL_TOKEN
+   f) «Resend nøkkel (eiranova-vercel)»  → RESEND_API_KEY
+3. For hver verdi: opprett/oppdater ~/.config/eiranova/env (mkdir -p, chmod 600), skriv linjen, og sørg for at ~/.zshrc sourcer filen. Bekreft kort: «Lagret.» Vis aldri verdien tilbake.
+4. Verifiser i shell-subagent: psql mot oppstart (select 1), `gh auth status`, `vercel whoami`, `supabase projects list`. Rapporter kun «OK» eller hva som mangler, i ett kort avsnitt uten teknisk sjargong.
+5. Hvis GitHub-tilgang mangler (ssh -T github-eiranova feiler): forklar i én setning at brukeren må være lagt til i GitHub-organisasjonen eiranova-no og ha en SSH-nøkkel; tilby å lage nøkkelen og vise hva som skal limes inn på github.com/settings/keys.
+6. Avslutt med: «Ferdig. Du trenger ikke gjøre dette igjen på denne maskinen.»
+Hvis brukeren limer inn noe som ser feil ut (f.eks. supabase.com-passord i stedet for databasestreng), si vennlig hva som forventes: databasestrengen starter med postgresql://.
+
 ## Governance
 
 - Contract-before-code alltid
