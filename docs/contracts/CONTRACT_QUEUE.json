@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "last_updated": "2026-06-06",
-  "updated_by": "K-AUTH-003 active (PR #40); K-DNS-001 paused",
+  "last_updated": "2026-09-17",
+  "updated_by": "K-OPPSTART-003 + K-GOV-002 merged",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -161,7 +161,10 @@
         "pnpm build grønt for alle tre apper"
       ],
       "user_stories": [],
-      "dependencies": ["K-ENV-001", "K-AUTH-001"],
+      "dependencies": [
+        "K-ENV-001",
+        "K-AUTH-001"
+      ],
       "risks": [
         "Prototype-filen bruker fortsatt process.env direkte (egen oppgave)",
         "typecheck-script mangler per app (egen oppgave)"
@@ -256,7 +259,10 @@
         "Ingen regresjon på dev-Supabase"
       ],
       "user_stories": [],
-      "dependencies": ["K-DB-001", "K-ENV-002"],
+      "dependencies": [
+        "K-DB-001",
+        "K-ENV-002"
+      ],
       "risks": [
         "Migrasjons-feil hvis prod ikke er helt tomt",
         "Rate limiting under db push",
@@ -512,7 +518,10 @@
         "Feil token → /login?confirm=feilet"
       ],
       "user_stories": [],
-      "dependencies": ["K-AUTH-001", "K-LAUNCH-001 auth-config"],
+      "dependencies": [
+        "K-AUTH-001",
+        "K-LAUNCH-001 auth-config"
+      ],
       "risks": [
         "type=signup vs type=email mismatch mellom mal og verifyOtp — test fanger",
         "config push må kun vise mal-endring i diff (MFA/OTP urørt)"
@@ -607,7 +616,9 @@
         "Ingen EnvBadge synlig på produksjonsdomenene"
       ],
       "user_stories": [],
-      "dependencies": ["K-ENV-001"],
+      "dependencies": [
+        "K-ENV-001"
+      ],
       "risks": [
         "DNS-propagering kan ta opptil 30 min — gjør i rolig tidsvindu",
         "Feiltastet CNAME tar domenet ned — bruk copy-paste fra Vercel, ikke manuell skriving",
@@ -1615,6 +1626,77 @@
       "risks": [
         "KPR-rapporteringsformat — avventer offisielt svar fra Helsedirektoratet"
       ]
+    },
+    {
+      "id": "K-GOV-002",
+      "title": "Permanente tilganger for Cursor (lokale nøkler)",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-17",
+      "spec_path": null,
+      "goal": "Cursor og CLI henter nøkler fra ~/.config/eiranova/env utenfor repoet — ingen nøkler i chat etter engangsoppsett.",
+      "in_scope": [
+        ".cursorrules Tilganger-seksjon",
+        ".gitignore sikring",
+        "docs/ops/lokale-tilganger.md",
+        "README Kom i gang-lenke",
+        "RESEND_API_KEY i fire Vercel-prosjekter (Production + Preview)"
+      ],
+      "out_of_scope": [
+        "Appkode",
+        "Sletting av gamle Resend-nøkler"
+      ],
+      "deliverables": [
+        "docs/ops/lokale-tilganger.md",
+        ".cursorrules",
+        ".gitignore",
+        "README.md"
+      ],
+      "acceptance_criteria": [
+        "~/.config/eiranova/env finnes med mode 600 utenfor repo",
+        "psql/gh/vercel/supabase svarer uten nøkler i chat",
+        "POST eiranova.no/api/contact returnerer 200"
+      ],
+      "user_stories": [],
+      "dependencies": [],
+      "risks": [
+        "Supabase access token utløper årlig (neste 2027-09-17)"
+      ]
+    },
+    {
+      "id": "K-OPPSTART-003",
+      "title": "Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-17",
+      "spec_path": null,
+      "goal": "Ti pilotrekrutteringsoppgaver i oppstart (plan-w6/plan-w7) og strategidokumenter i docs/pilot/ for 3–5 pilotkunder.",
+      "in_scope": [
+        "apps/oppstart/supabase-migration-004-pilotrekruttering.sql",
+        "apps/oppstart/README.md",
+        "docs/pilot/pilotkunder-strategi.md",
+        "docs/pilot/bestillingskanal-eiranova-no.md"
+      ],
+      "out_of_scope": [
+        "index.html",
+        "Andre apper"
+      ],
+      "deliverables": [
+        "apps/oppstart/supabase-migration-004-pilotrekruttering.sql",
+        "docs/pilot/pilotkunder-strategi.md",
+        "docs/pilot/bestillingskanal-eiranova-no.md",
+        "apps/oppstart/README.md"
+      ],
+      "acceptance_criteria": [
+        "p-w6-10…p-w6-17 og p-w7-8, p-w7-9 finnes i oppstart-DB",
+        "Migrasjon idempotent (dobbeltkjøring OK)",
+        "docs/pilot/ lesbar på GitHub"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-GOV-002"
+      ],
+      "risks": []
     }
   ]
 }
