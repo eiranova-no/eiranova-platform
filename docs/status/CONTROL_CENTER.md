@@ -4,7 +4,7 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-09-17
-**Progress:** 24% → MVP Launch
+**Progress:** 26% → MVP Launch
 
 ---
 
@@ -80,9 +80,9 @@
 |----|-------|--------|
 | K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | 2026-09-17 |
 | K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | 2026-09-17 |
+| K-GOV-003 | Sett opp tilganger: onboarding i Cursor uten teknisk språk | 2026-09-17 |
 | K-ENV-003 | Etabler tredelt deployment-modell — main = production, dev = staging, feature/* = preview | 2026-04-28 |
 | K-REFACTOR-001 | Avvikle prototype-som-master — uttrekk til packages/ui + ekte App Router per app | 2026-04-28 |
-| K-ENV-002 | Env-guard & Middleware Hardening | 2026-04-26 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 
