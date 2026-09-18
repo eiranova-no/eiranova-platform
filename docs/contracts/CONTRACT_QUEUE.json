@@ -1733,6 +1733,35 @@
       "risks": []
     },
     {
+      "id": "K-OPPSTART-005",
+      "title": "Norske menynavn i oppstart-appen",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-18",
+      "spec_path": null,
+      "goal": "Bytt utviklerord i synlig UI til norsk: Oppgaver, Lover og krav, Verktøy.",
+      "in_scope": [
+        "apps/oppstart/index.html (kun visningstekst: nav, faner, tittel, fremdriftsetiketter, badge)"
+      ],
+      "out_of_scope": [
+        "kind-verdier, seksjons-ID-er, database",
+        "Andre apper"
+      ],
+      "deliverables": [
+        "apps/oppstart/index.html",
+        "Kø: K-OPPSTART-005 → merged"
+      ],
+      "acceptance_criteria": [
+        "Ingen «compliance» eller «stack» synlig i UI",
+        "Hero-badge uten uppercase"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-OPPSTART-004"
+      ],
+      "risks": []
+    },
+    {
       "id": "K-GOV-003",
       "title": "Sett opp tilganger: onboarding i Cursor uten teknisk språk",
       "type": "governance",
