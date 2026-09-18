@@ -1699,6 +1699,40 @@
       "risks": []
     },
     {
+      "id": "K-OPPSTART-004",
+      "title": "Gavemodell, Richard ut av drift, Opplæring og Overlevering i oppstart-appen",
+      "type": "governance",
+      "status": "merged",
+      "merged_at": "2026-09-18",
+      "spec_path": null,
+      "goal": "Speil gavemodellen i avtale-oppgaver, fjern Richard fra løpende drift, og synliggjør Opplæring (etter M0) samt dempet Overlevering (sist) i oppstart-appen.",
+      "in_scope": [
+        "apps/oppstart/index.html (SECTION_META + stack-tekst)",
+        "apps/oppstart/supabase-migration-008-gavemodell-opplaering-exit.sql",
+        "apps/oppstart/README.md"
+      ],
+      "out_of_scope": [
+        "Andre apper",
+        "Selve K-OVERLEVERING-001-utførelsen"
+      ],
+      "deliverables": [
+        "apps/oppstart/supabase-migration-008-gavemodell-opplaering-exit.sql",
+        "apps/oppstart/index.html",
+        "apps/oppstart/README.md",
+        "Kø: K-OPPSTART-004 → merged"
+      ],
+      "acceptance_criteria": [
+        "Verifikasjon a = 0 rader med Richard utenfor plan-exit",
+        "Verifikasjon b = 13 (plan-opplaering) og 10 (plan-exit)",
+        "plan-exit dempet og utenfor Nå-fremdrift"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-OPPSTART-003"
+      ],
+      "risks": []
+    },
+    {
       "id": "K-GOV-003",
       "title": "Sett opp tilganger: onboarding i Cursor uten teknisk språk",
       "type": "governance",
@@ -2021,7 +2055,8 @@
         ".cursorrules, docs/ROADMAP.md, docs/ops/*, docs/pilot/* — fjern Richard som ressurs",
         "Manuell sjekkliste: GitHub, Vercel, Supabase, Resend, 1Password, domeneshop, Workspace, Claude",
         "Gavebrevets overleveringsprotokoll + BankID",
-        "Bevis: Lise kjører første kontrakt etter overlevering via Kom i gang-guiden"
+        "Bevis: Lise kjører første kontrakt etter overlevering via Kom i gang-guiden",
+        "Speiles av seksjonen plan-exit i oppstart-appen"
       ],
       "out_of_scope": [
         "Appkode",
