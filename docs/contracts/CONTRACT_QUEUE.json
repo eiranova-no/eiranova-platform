@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-18",
-  "updated_by": "K-DOC-002b planned + K-GOV-005: Lise oppretter (2b-2), Richard inviterer Owner, Cursor verifiserer; K-DOC-002a → merged",
+  "updated_by": "K-DOC-002b → merged (#85)",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1852,7 +1852,7 @@
       "id": "K-DOC-002b",
       "title": "Selskapets GitHub-konto inn i guiden",
       "type": "governance",
-      "status": "planned",
+      "status": "merged",
       "spec_path": null,
       "goal": "Steg 2b-2 i Kom i gang-guiden beskriver én-gangs oppsett av gitEiraNova (Lise); oppstart-app har oppgave p-w2-12; PDF oppdatert. Forutsetning for K-GOV-005.",
       "in_scope": [
