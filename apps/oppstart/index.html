@@ -1403,18 +1403,20 @@ const STACK_ITEMS = [
   { tag: 'Lagring', name: 'Google Drive (Workspace)', desc: 'Avtaler, rutiner og kundedokumenter. Ingen helseopplysninger i pilot.', cost: 'Inkl. Workspace', alt: '—' },
   { tag: 'Forsikring', name: 'Yrkesansvar', desc: 'Begge sykepleierne dekket. Innhent tilbud fra If, Gjensidige, Tryg.', cost: '~300–600 kr/mnd', alt: '—' },
   { tag: 'Signering', name: 'Posten Signering (BankID)', desc: 'Alle avtaler signeres elektronisk. Pris per dokument, ingen binding.', cost: 'Per dokument', alt: '—' },
-  { tag: 'Marketing', name: 'eiranova.no', desc: 'Live: posisjonering, kontaktskjema, personvern, priser (plassholder), Bestill-CTA. Vedlikeholdes av Richard.', cost: 'Gratis (Vercel)', alt: 'Live' },
+  { tag: 'Marketing', name: 'eiranova.no', desc: 'Live: posisjonering, kontaktskjema, personvern, priser (plassholder), Bestill-CTA. Endringer gjøres av eierne via endringsønske → Claude → Cursor.', cost: 'Gratis (Vercel)', alt: 'Live' },
 ];
 
 const SECTION_META = {
   'plan-w1': { phase: 'M0 · September', title: 'Selskap, avtaler og bank', meta: 'Stiftelse og signering' },
   'plan-w2': { phase: 'M0 · September', title: 'Kontoer og avklaringer', meta: 'Workspace, NAV, MVA' },
+  'plan-opplaering': { phase: 'Nå', title: 'Opplæring og verktøy', meta: 'Kom i gang-guiden og de fire øktene' },
   'plan-w3': { phase: 'M1 · Oktober', title: 'Verktøy og drift', meta: 'Tripletex, Vipps-søknad, forsikring' },
   'plan-w4': { phase: 'M1 · Oktober', title: 'Priser og kundedokumenter', meta: 'Prisliste, vilkår, pilotavtale' },
   'plan-w5': { phase: 'M1 · Oktober', title: 'Klar for pilot', meta: 'Rutiner og sikkerhet (ikke-medisinsk)' },
   'plan-w6': { phase: 'M2 · November', title: 'Pilotrekruttering', meta: '3–5 kunder' },
   'plan-w7': { phase: 'M2 · November', title: 'Pilot i drift', meta: 'Første oppdrag i plattformen' },
   'plan-w8': { phase: 'M3 · Desember–januar', title: 'Evaluering og betaling', meta: 'Vipps, Tripletex, rytme' },
+  'plan-exit': { phase: 'Etter M1 · Overlevering', title: 'Overlevering av plattformen', meta: 'Gjøres samlet når MVP er levert (K-OVERLEVERING-001)', later: true },
   'c-01': { phase: 'Nå', title: 'Selskap og profesjon', meta: 'Grunnleggende juridisk' },
   'c-02': { phase: 'Senere (helsetjenester)', title: 'Melding til myndigheter', meta: 'Kun ved overgang til helsetjenester', later: true },
   'c-03': { phase: 'Nå (forenklet)', title: 'Internkontroll og kvalitet', meta: 'Rutiner for ikke-medisinsk drift' },
@@ -1426,11 +1428,12 @@ const SECTION_META = {
   'c-09': { phase: 'Nå', title: 'Markedsføring', meta: 'Sannferdig og GDPR-riktig' },
 };
 
-const PLAN_SECTION_IDS = ['plan-w1','plan-w2','plan-w3','plan-w4','plan-w5','plan-w6','plan-w7','plan-w8'];
+const PLAN_SECTION_IDS = ['plan-w1','plan-w2','plan-opplaering','plan-w3','plan-w4','plan-w5','plan-w6','plan-w7','plan-w8'];
+const PLAN_EXIT_ID = 'plan-exit';
 const COMPLIANCE_NOW_IDS = ['c-01','c-03','c-04','c-06','c-07','c-08','c-09'];
 const COMPLIANCE_LATER_IDS = ['c-02','c-05'];
 const COMPLIANCE_SECTION_IDS = [...COMPLIANCE_NOW_IDS, ...COMPLIANCE_LATER_IDS];
-const LATER_SECTION_IDS = new Set(COMPLIANCE_LATER_IDS);
+const LATER_SECTION_IDS = new Set([...COMPLIANCE_LATER_IDS, PLAN_EXIT_ID]);
 
 // ═════════════════════════════════════════════════════════
 // STATE
@@ -1785,7 +1788,13 @@ function renderCompliance() {
 }
 
 function render() {
-  document.getElementById('plan-sections').innerHTML = PLAN_SECTION_IDS.map(id => renderSection(id)).join('');
+  document.getElementById('plan-sections').innerHTML =
+    PLAN_SECTION_IDS.map(id => renderSection(id)).join('') +
+    `<div class="later-track-header">
+      <h3>Overlevering – etter MVP</h3>
+      <p>Gjøres samlet når MVP er levert (K-OVERLEVERING-001). Telles ikke i «Nå»-fremdriften før da.</p>
+    </div>` +
+    renderSection(PLAN_EXIT_ID, { later: true });
   document.getElementById('compliance-sections').innerHTML = renderCompliance();
   document.getElementById('stack-grid').innerHTML = STACK_ITEMS.map(s => `
     <div class="tool-card">
