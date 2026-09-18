@@ -29,6 +29,7 @@
 | ID | Title | Type | Dependencies | Goal |
 |----|-------|------|--------------|------|
 | **K-ROUTE-001** | App Router middleware — auth-guards og rolle-ruting | feature | K-AUTH-001 ✅, K-REFACTOR-001 ✅ | Etabler Next.js middleware-basert auth-guard på tvers av alle tre apper. Beskytt... |
+| **K-GOV-004** | «Sett opp tilganger» på Windows | governance | K-GOV-003 ✅, K-DOC-002 ✅ | Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett har PC; ... |
 
 ---
 
@@ -60,7 +61,7 @@
 | K-JOURNAL-EXT-001 | Ekstern Journal — Redirect til EPJ-system | feature | K-DEKN-001 |
 | K-TILSYN-001 | Internkontroll & Statsforvalter-rapportering | governance | K-JOURNAL-EXT-001 |
 | K-KPR-001 | KPR — Kommunalt Pasient- og Brukerregister | feature | K-TILSYN-001 |
-| K-DOC-003 | Skjermbilder til Kom i gang-guiden | governance | K-DOC-002 ✅ |
+| K-DOC-003 | Skjermbilder til Kom i gang-guiden | governance | K-DOC-002 ✅, K-GOV-004 |
 | K-GOV-005 | Selskapets GitHub-administratorkonto (gitEiraNova) | governance | M1, K-DOC-002b ✅ |
 
 ---
@@ -73,7 +74,6 @@
 | K-BETALING-001 | Betaling — Vipps ePayment | Venter på EiraNova AS org.nr. (Lise). Vipps krever organisasjonsnummer for produksjonsintegrasjon. Kan settes opp i Vipps Merchant Test uten org.nr. |
 | K-TRIPLETEX-001 | Tripletex — Regnskapsintegrasjon Master | Venter på EiraNova AS org.nr. for Tripletex-kontraktregistrering. Tripletex krever organisasjonsnummer. |
 | K-JOURNAL-001 | Intern Journal — NHN-sertifisert Pasientjournal | Starter IKKE uten: (1) godkjent helserettsadvokat, (2) Statsforvalteren registrering bekreftet, (3) NHN-sertifisering fullført, (4) journalansvarlig utpekt. Alle fire er lovpåkrevt. |
-| K-GOV-004 | «Sett opp tilganger» på Windows | krever Windows-maskin for verifikasjon — avklar om Jeanett har PC |
 | K-OVERLEVERING-001 | Overlevering av plattformen fra Richard til Lise / EiraNova AS | blocked_by M1 og K-GOV-005 (gitEiraNova). Utføres rett etter K-GOV-005, før noe annet. |
 
 ---
