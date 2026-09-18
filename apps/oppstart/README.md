@@ -32,8 +32,9 @@ Migreringer:
 | `supabase-migration-004-pilotrekruttering.sql` | pilotrekruttering — ti oppgaver i plan-w6/plan-w7 |
 | `supabase-migration-005-1password-navn.sql` | 1Password-navn for Cursor-onboarding (Richard) |
 | `supabase-migration-006-claude.sql` | Claude-konto og EiraNova-prosjekt (Lise, K-DOC-002a) |
+| `supabase-migration-007-github-selskap.sql` | Selskapets GitHub-konto gitEiraNova (Lise, K-DOC-002b) |
 
-Migrering 003–006 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
+Migrering 003–007 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
 
 Pilot: se [docs/pilot/](../../docs/pilot/).
 

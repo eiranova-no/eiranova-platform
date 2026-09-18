@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-18",
-  "updated_by": "K-DOC-002a planned (Claude-konto i guide + oppstart p-w2-11); K-DOC-003 planned",
+  "updated_by": "K-GOV-004 → ready (før K-DOC-003); Jeanett har Windows",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1816,7 +1816,7 @@
       "id": "K-DOC-002a",
       "title": "Claude-konto og prosjekt inn i guiden",
       "type": "governance",
-      "status": "planned",
+      "status": "merged",
       "spec_path": null,
       "goal": "Steg 2c i Kom i gang-guiden beskriver én-gangs Claude-oppsett for selskapet (Lise); oppstart-app har oppgave p-w2-11; PDF og README oppdatert.",
       "in_scope": [
@@ -1849,52 +1849,49 @@
       "risks": []
     },
     {
-      "id": "K-DOC-003",
-      "title": "Skjermbilder til Kom i gang-guiden",
+      "id": "K-DOC-002b",
+      "title": "Selskapets GitHub-konto inn i guiden",
       "type": "governance",
-      "status": "planned",
+      "status": "merged",
       "spec_path": null,
-      "goal": "Richard tar skjermbilder under gjennomgang på tom Mac-konto; Cursor legger dem i docs/pilot/img/ og aktiverer plassholderne (fjern HTML-kommentartegn). Blocked_by: gjennomgangen.",
+      "goal": "Steg 2b-2 i Kom i gang-guiden beskriver én-gangs oppsett av gitEiraNova (Lise); oppstart-app har oppgave p-w2-12; PDF oppdatert. Forutsetning for K-GOV-005.",
       "in_scope": [
-        "docs/pilot/img/*.png (åtte skjermbilder)",
-        "docs/pilot/kom-i-gang-fra-null.md — aktiver <!-- 📷 ... --> til markdown-bilder",
-        "Oppdatert PDF av guiden"
+        "docs/pilot/kom-i-gang-fra-null.md steg 2b-2",
+        "apps/oppstart/supabase-migration-007-github-selskap.sql (p-w2-12)",
+        "PDF-eksport av guiden",
+        "apps/oppstart/README.md"
       ],
       "out_of_scope": [
-        "Nye steg i guiden (kun bilder + eventuelle Windows-avvik fra K-GOV-004)",
-        "Appkode"
+        "Selve kontoopprettelsen på GitHub (Lise)",
+        "Invitasjon som Owner (K-GOV-005 / Richard)",
+        "Skjermbilder (K-DOC-003)",
+        "Appkode utenom oppstart-migrering"
       ],
       "deliverables": [
-        "docs/pilot/img/steg-1-1password.png",
-        "docs/pilot/img/steg-2-claude-prosjekt.png",
-        "docs/pilot/img/steg-3-cursor-mapper.png",
-        "docs/pilot/img/steg-4-ferdig.png",
-        "docs/pilot/img/steg-5a-github-zip.png",
-        "docs/pilot/img/steg-5c-cursor-rapport.png",
-        "docs/pilot/img/steg-5e-files-changed.png",
-        "docs/pilot/img/steg-6-vercel-preview.png",
-        "docs/pilot/kom-i-gang-fra-null.md med aktive bilder",
-        "docs/pilot/kom-i-gang-fra-null.pdf"
+        "docs/pilot/kom-i-gang-fra-null.md",
+        "docs/pilot/kom-i-gang-fra-null.pdf",
+        "apps/oppstart/supabase-migration-007-github-selskap.sql",
+        "apps/oppstart/README.md"
       ],
       "acceptance_criteria": [
-        "Alle åtte plassholdere erstattet med synlige bilder i md og PDF",
-        "Ingen <!-- 📷 --> igjen i guiden"
+        "Steg 2b-2 beskriver Sign up med post@eiranova.no, brukernavn gitEiraNova, 2FA via 1Password og beskjed om eier-invitasjon",
+        "p-w2-12 finnes i oppstart (owner Lise, sort_order 12)",
+        "PDF regenerert"
       ],
       "user_stories": [],
       "dependencies": [
-        "K-DOC-002"
+        "K-DOC-002",
+        "K-DOC-002a"
       ],
-      "risks": [
-        "Blocked av Richards gjennomgang på tom Mac-konto (skjermbilder mangler til da)"
-      ]
+      "risks": []
     },
     {
       "id": "K-GOV-004",
       "title": "«Sett opp tilganger» på Windows",
       "type": "governance",
-      "status": "blocked",
+      "status": "ready",
       "spec_path": null,
-      "goal": "Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett kan ha PC; guiden lover samme opplevelse.",
+      "goal": "Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett har PC; kodedel først, Windows-verifikasjon i økt 1 hos Jeanett. Guiden lover samme opplevelse.",
       "in_scope": [
         ".cursorrules onboarding-seksjon (plattformdeteksjon)",
         "scripts/setup-local-env.ps1",
@@ -1920,8 +1917,96 @@
         "K-GOV-003",
         "K-DOC-002"
       ],
-      "risks": [],
-      "blocked_reason": "krever Windows-maskin for verifikasjon — avklar om Jeanett har PC"
+      "risks": [
+        "Full acceptance (steg 5 til main) verifiseres først i økt 1 hos Jeanett — kodedel merges før det."
+      ]
+    },
+    {
+      "id": "K-DOC-003",
+      "title": "Skjermbilder til Kom i gang-guiden",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Richard tar skjermbilder under gjennomgang på tom Mac-konto; Cursor legger dem i docs/pilot/img/ og aktiverer plassholderne (fjern HTML-kommentartegn). Blocked_by: gjennomgangen.",
+      "in_scope": [
+        "docs/pilot/img/*.png (ni skjermbilder)",
+        "docs/pilot/kom-i-gang-fra-null.md — aktiver <!-- 📷 ... --> til markdown-bilder",
+        "Oppdatert PDF av guiden"
+      ],
+      "out_of_scope": [
+        "Nye steg i guiden (kun bilder + eventuelle Windows-avvik fra K-GOV-004)",
+        "Appkode"
+      ],
+      "deliverables": [
+        "docs/pilot/img/steg-1-1password.png",
+        "docs/pilot/img/steg-1b-chrome-profil.png",
+        "docs/pilot/img/steg-2-claude-prosjekt.png",
+        "docs/pilot/img/steg-3-cursor-mapper.png",
+        "docs/pilot/img/steg-4-ferdig.png",
+        "docs/pilot/img/steg-5a-github-zip.png",
+        "docs/pilot/img/steg-5c-cursor-rapport.png",
+        "docs/pilot/img/steg-5e-files-changed.png",
+        "docs/pilot/img/steg-6-vercel-preview.png",
+        "docs/pilot/kom-i-gang-fra-null.md med aktive bilder",
+        "docs/pilot/kom-i-gang-fra-null.pdf"
+      ],
+      "acceptance_criteria": [
+        "Alle ni plassholdere erstattet med synlige bilder i md og PDF",
+        "Ingen <!-- 📷 --> igjen i guiden"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DOC-002",
+        "K-GOV-004"
+      ],
+      "risks": [
+        "Blocked av Richards gjennomgang på tom Mac-konto (skjermbilder mangler til da)"
+      ]
+    },
+    {
+      "id": "K-GOV-005",
+      "title": "Selskapets GitHub-administratorkonto (gitEiraNova)",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Lise oppretter kontoen etter guiden steg 2b-2; Richard inviterer som Owner; Cursor verifiserer. Forutsetning for K-OVERLEVERING-001 DEL 4. Utføres rett etter M1, før overleveringen.",
+      "in_scope": [
+        "Bekreft at Lise har opprettet gitEiraNova etter Kom i gang steg 2b-2 (1Password «GitHub gitEiraNova»)",
+        "Richard inviterer gitEiraNova som Owner i organisasjonen eiranova-no",
+        "Cursor verifiserer medlemskap og Owner-rolle via gh api",
+        "Verifiser at Vercel GitHub-appen er installert på org-nivå",
+        "docs/ops/lokale-tilganger.md — avsnitt om selskapets konto vs. personlige brukere",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 → «gitEiraNova, Lise og Jeanett er Owners; Richard forlater organisasjonen»"
+      ],
+      "out_of_scope": [
+        "Selve kontoopprettelsen (Lise via guiden steg 2b-2 / K-DOC-002b)",
+        "Selve overleveringen (K-OVERLEVERING-001)",
+        "Appkode",
+        "Personlige GitHub-kontoer for Lise og Jeanett"
+      ],
+      "deliverables": [
+        "GitHub-bruker gitEiraNova (Owner i eiranova-no)",
+        "1Password-oppføring «GitHub gitEiraNova»",
+        "docs/ops/lokale-tilganger.md oppdatert",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 oppdatert",
+        "Kø: K-GOV-005 → merged"
+      ],
+      "acceptance_criteria": [
+        "gitEiraNova er Owner i eiranova-no (verifisert via gh api)",
+        "2FA aktiv; innlogging + gjenopprettingskoder i 1Password (opprettet av Lise i steg 2b-2)",
+        "Vercel GitHub-appen installert på org-nivå",
+        "docs/ops/lokale-tilganger.md skiller selskapets konto fra personlige brukere",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 nevner gitEiraNova, Lise og Jeanett som Owners"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "M1",
+        "K-DOC-002b"
+      ],
+      "risks": [
+        "post@eiranova.no kan kun knyttes til én GitHub-bruker — Lise og Jeanett bruker egne adresser"
+      ],
+      "blocked_reason": "blocked_by M1 og K-DOC-002b. Plassert rett før K-OVERLEVERING-001 (forutsetning for dens DEL 4)."
     },
     {
       "id": "K-OVERLEVERING-001",
@@ -1929,7 +2014,7 @@
       "type": "governance",
       "status": "blocked",
       "spec_path": null,
-      "goal": "Frys punktet med tag v1.0-overlevering, EIERSKAP.md, fjern Richard som ressurs, konto-overføringer, BankID-signering — første kontrakt etter M1, før noe annet.",
+      "goal": "Frys punktet med tag v1.0-overlevering, EIERSKAP.md, fjern Richard som ressurs, konto-overføringer, BankID-signering — rett etter K-GOV-005 (gitEiraNova), før noe annet.",
       "in_scope": [
         "git tag v1.0-overlevering på main (== dev)",
         "docs/EIERSKAP.md + lenke i README",
@@ -1940,7 +2025,8 @@
       ],
       "out_of_scope": [
         "Appkode",
-        "Endringer før M1 er levert"
+        "Endringer før M1 er levert",
+        "Opprettelse av gitEiraNova (K-GOV-005)"
       ],
       "deliverables": [
         "tag v1.0-overlevering",
@@ -1958,10 +2044,11 @@
       ],
       "user_stories": [],
       "dependencies": [
-        "M1"
+        "M1",
+        "K-GOV-005"
       ],
       "risks": [],
-      "blocked_reason": "blocked_by M1 (vertikal skive levert, jf. docs/ROADMAP.md). Utføres som første kontrakt etter M1."
+      "blocked_reason": "blocked_by M1 og K-GOV-005 (gitEiraNova). Utføres rett etter K-GOV-005, før noe annet."
     }
   ]
 }

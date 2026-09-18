@@ -40,6 +40,27 @@ Du trenger:
 
 ---
 
+## Steg 1b — Ett eget EiraNova-vindu i Chrome
+
+Alt jobb skjer i ett Chrome-vindu som er logget inn som EiraNova, adskilt fra det private. Poenget: **jobb = det grønne vinduet** — resten husker Chrome. Slik:
+
+1. Åpne Chrome. Trykk på profil-ikonet øverst til høyre (en sirkel) → **Legg til** → gi profilen navnet **EiraNova** og velg en farge → **Ferdig**. Et nytt vindu åpnes — det er EiraNova-vinduet.
+2. I det nye vinduet: Logg på Chrome med @eiranova.no-kontoen din (Google Workspace). Svar ja til synkronisering. Nå følger bokmerker og faner deg til en annen maskin også.
+3. Åpne disse sidene og fest dem (høyreklikk fanen → **Fest**): Gmail (post@ eller din @eiranova.no), Google Drive, `github.com/eiranova-no/eiranova-platform`, `claude.ai`, `eiranova.no`, oppstart-appen, Supabase, Vercel. Festede faner ligger alltid til venstre og kan ikke lukkes ved et uhell.
+4. Sørg for at vinduet kommer tilbake etter omstart: Chrome-meny (⋮) → **Innstillinger** → **Ved oppstart** → velg **«Fortsett der du slapp»**. Gjør dette i EiraNova-profilen.
+
+   **Windows:** Chrome kan også åpne EiraNova-profilen automatisk: høyreklikk Chrome på oppgavelinjen → profilen **EiraNova** → **Fest til oppgavelinjen**. Da er ett klikk nok.
+
+5. Privat bruk gjør du i den andre profilen (din vanlige). Bytt mellom dem med profil-ikonet. To vinduer, to verdener — ingenting blandes.
+
+**Du er ferdig når:** du kan lukke Chrome helt, åpne det igjen, velge EiraNova-profilen, og alle de festede fanene er der.
+
+<!-- 📷 img/steg-1b-chrome-profil.png: profilvelgeren med «EiraNova» -->
+
+**Hvis det ikke stemmer:** *«Jeg er på steg 1b i guiden. Jeg laget en Chrome-profil, men [beskriv]. Hva gjør jeg?»*
+
+---
+
 ## Steg 2 — Kontoer
 
 ### 2a. Cursor
@@ -48,6 +69,16 @@ Første gang Cursor åpnes ber den deg logge inn. Velg **«Sign up»** → bruk 
 ### 2b. GitHub (arkivet)
 1. I Chrome: gå til `github.com` → **Sign up** → bruk @eiranova.no-adressen → velg et brukernavn (f.eks. `jeanett-eiranova`) → fullfør.
 2. Send brukernavnet ditt til Lise. Hun legger deg til i organisasjonen `eiranova-no`. Du får en e-post med «Join» — trykk på den.
+
+#### 2b-2. Selskapets GitHub-konto (gjøres én gang for selskapet — Lise)
+1. Logg ut av din egen GitHub-bruker. Gå til `github.com` → **Sign up** → e-post `post@eiranova.no` → brukernavn `gitEiraNova` → fullt navn «EiraNova AS».
+2. GitHub krever tofaktor for denne kontoen: velg autentiseringsapp, skann QR-koden med 1Password (den kan lagre koden), og last ned gjenopprettingskodene.
+3. Lagre alt i 1Password som **«GitHub gitEiraNova»**: brukernavn, passord, 2FA og gjenopprettingskoder.
+4. Send beskjed til den som eier organisasjonen i dag om at kontoen er klar — den legges til som eier av `eiranova-no`.
+
+**Du er ferdig når:** oppføringen «GitHub gitEiraNova» finnes i 1Password, og kontoen har fått invitasjon til organisasjonen (e-post til post@).
+
+**Hvorfor:** selskapet skal eie arkivet gjennom en konto som heter selskapet — ikke gjennom noen enkeltperson. Dere jobber daglig med egne brukere; denne brukes bare til administrasjon.
 
 ### 2c. Claude (gjøres én gang for selskapet — Lise)
 1. I Chrome: gå til `claude.ai` → **Sign up** → bruk `post@eiranova.no` (selskapets konto, ikke din egen). Velg abonnementet **Pro** — betales av selskapet. Lagre innloggingen i 1Password som **«Claude EiraNova»**.
