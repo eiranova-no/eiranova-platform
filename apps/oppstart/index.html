@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EiraNova — Oppstart</title>
-<meta name="description" content="Oppstartsplan og compliance for EiraNova AS">
+<meta name="description" content="Oppstartsplan og lover og krav for EiraNova AS">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌿%3C/text%3E%3C/svg%3E">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -246,8 +246,8 @@
   .hero-badge {
     display: inline-block;
     background: var(--sage-pale); color: var(--sage);
-    font-size: 0.72rem; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
+    font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.01em;
     padding: 0.4rem 1rem; border-radius: 2rem;
     margin-bottom: 1.6rem;
     border: 1px solid rgba(107,143,113,0.25);
@@ -1137,9 +1137,9 @@
   <div class="nav-right">
     <ul class="nav-links">
       <li><a data-tab="oversikt">Oversikt</a></li>
-      <li><a data-tab="plan">Plan</a></li>
-      <li><a data-tab="compliance">Compliance</a></li>
-      <li><a data-tab="stack">Stack</a></li>
+      <li><a data-tab="plan">Oppgaver</a></li>
+      <li><a data-tab="compliance">Lover og krav</a></li>
+      <li><a data-tab="stack">Verktøy</a></li>
     </ul>
     <div class="nav-user" id="nav-user" title="Klikk for å bytte bruker">
       <div class="nav-user-initial" id="nav-user-initial">?</div>
@@ -1154,9 +1154,9 @@
 
 <div class="mobile-menu" id="mobile-menu">
   <a data-tab="oversikt">Oversikt</a>
-  <a data-tab="plan">Plan</a>
-  <a data-tab="compliance">Compliance</a>
-  <a data-tab="stack">Stack</a>
+  <a data-tab="plan">Oppgaver</a>
+  <a data-tab="compliance">Lover og krav</a>
+  <a data-tab="stack">Verktøy</a>
   <a class="sign-out-link" id="sign-out-link">Bytt bruker</a>
 </div>
 
@@ -1165,7 +1165,7 @@
 <header class="hero">
   <div class="hero-inner">
     <span class="hero-badge">Fra AS til pilot · ikke-medisinsk</span>
-    <h1>Oppstartsplan<br>& <em>compliance</em></h1>
+    <h1>Oppstartsplan<br>& <em>lover og krav</em></h1>
     <p class="hero-sub">Praktisk arbeidsplan for Lise og Jeanett mens EiraNova-plattformen utvikles. Delt fremdrift i sanntid — hak av, legg til egne oppgaver, kommenter på hverandres arbeid.</p>
   </div>
 </header>
@@ -1179,8 +1179,8 @@
     <div class="progress-bar-top">
       <div class="progress-label">Samlet fremdrift</div>
       <div class="progress-stats">
-        <div><span class="progress-stat-num" id="stat-plan">0</span><span class="progress-stat-label">Plan</span></div>
-        <div><span class="progress-stat-num" id="stat-comp">0</span><span class="progress-stat-label">Compliance</span></div>
+        <div><span class="progress-stat-num" id="stat-plan">0</span><span class="progress-stat-label">Oppgaver</span></div>
+        <div><span class="progress-stat-num" id="stat-comp">0</span><span class="progress-stat-label">Lover og krav</span></div>
         <div><span class="progress-stat-num" id="stat-total">0%</span><span class="progress-stat-label">Totalt</span></div>
       </div>
     </div>
@@ -1193,9 +1193,9 @@
 <div class="tabs-wrap">
   <div class="tabs" role="tablist">
     <button class="tab active" data-tab="oversikt">Oversikt</button>
-    <button class="tab" data-tab="plan">Plan <span class="tab-count" id="count-plan">0</span></button>
-    <button class="tab" data-tab="compliance">Compliance <span class="tab-count" id="count-comp">0</span></button>
-    <button class="tab" data-tab="stack">Stack</button>
+    <button class="tab" data-tab="plan">Oppgaver <span class="tab-count" id="count-plan">0</span></button>
+    <button class="tab" data-tab="compliance">Lover og krav <span class="tab-count" id="count-comp">0</span></button>
+    <button class="tab" data-tab="stack">Verktøy</button>
   </div>
 </div>
 
@@ -1243,14 +1243,14 @@
   </div>
 
   <div class="section-header">
-    <h3>Compliance for ikke-medisinsk pilot</h3>
+    <h3>Lover og krav for ikke-medisinsk pilot</h3>
     <div class="section-meta"><strong>«Nå»-sporet først</strong></div>
   </div>
   <div class="critical">
     <div class="critical-icon">!</div>
     <div class="critical-content">
       <h4>Pilot ≠ helsetjenester</h4>
-      <p>Piloten er støtte i hverdagen — ikke medisinsk behandling. Journal, Statsforvalter-melding, KPR og HPL § 39 hører til et senere helsetjeneste-spor og skal ikke blokkere piloten. GDPR for kundeopplysninger (ikke helsedata) gjelder fortsatt. Helsetjeneste-kravene ligger nederst i compliance-fanen, dempet, og telles ikke i «Nå»-fremdriften.</p>
+      <p>Piloten er støtte i hverdagen — ikke medisinsk behandling. Journal, Statsforvalter-melding, KPR og HPL § 39 hører til et senere helsetjeneste-spor og skal ikke blokkere piloten. GDPR for kundeopplysninger (ikke helsedata) gjelder fortsatt. Helsetjeneste-kravene ligger nederst i fanen Lover og krav, dempet, og telles ikke i «Nå»-fremdriften.</p>
     </div>
   </div>
 </section>
@@ -1266,7 +1266,7 @@
 
 <section class="panel" data-panel="compliance">
   <div class="panel-intro">
-    <span class="panel-intro-tag">Compliance-sjekkliste</span>
+    <span class="panel-intro-tag">Sjekkliste for lover og krav</span>
     <h2>«Nå» for ikke-medisinsk pilot</h2>
     <p>Punktene under «Nå» må være på plass før pilotkunder. Helsetjeneste-sporet (Statsforvalter, journal) aktiveres først ved beslutning om medisinske tjenester — det vises nederst og telles ikke i fremdriften.</p>
   </div>
@@ -1282,7 +1282,7 @@
 
 <section class="panel" data-panel="stack">
   <div class="panel-intro">
-    <span class="panel-intro-tag">Operativ stack</span>
+    <span class="panel-intro-tag">Operative verktøy</span>
     <h2>Verktøy for manuell drift</h2>
     <p>Total månedlig driftskostnad ligger rundt 1 500–2 500 kr for første 3 måneder. Tripletex er master for regnskap iht. plattform-arkitekturen — unngå å bytte system senere.</p>
   </div>
