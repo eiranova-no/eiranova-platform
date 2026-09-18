@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-18",
-  "updated_by": "K-DOC-002b → merged (#85)",
+  "updated_by": "K-GOV-004 → ready (før K-DOC-003); Jeanett har Windows",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1886,52 +1886,12 @@
       "risks": []
     },
     {
-      "id": "K-DOC-003",
-      "title": "Skjermbilder til Kom i gang-guiden",
-      "type": "governance",
-      "status": "planned",
-      "spec_path": null,
-      "goal": "Richard tar skjermbilder under gjennomgang på tom Mac-konto; Cursor legger dem i docs/pilot/img/ og aktiverer plassholderne (fjern HTML-kommentartegn). Blocked_by: gjennomgangen.",
-      "in_scope": [
-        "docs/pilot/img/*.png (åtte skjermbilder)",
-        "docs/pilot/kom-i-gang-fra-null.md — aktiver <!-- 📷 ... --> til markdown-bilder",
-        "Oppdatert PDF av guiden"
-      ],
-      "out_of_scope": [
-        "Nye steg i guiden (kun bilder + eventuelle Windows-avvik fra K-GOV-004)",
-        "Appkode"
-      ],
-      "deliverables": [
-        "docs/pilot/img/steg-1-1password.png",
-        "docs/pilot/img/steg-2-claude-prosjekt.png",
-        "docs/pilot/img/steg-3-cursor-mapper.png",
-        "docs/pilot/img/steg-4-ferdig.png",
-        "docs/pilot/img/steg-5a-github-zip.png",
-        "docs/pilot/img/steg-5c-cursor-rapport.png",
-        "docs/pilot/img/steg-5e-files-changed.png",
-        "docs/pilot/img/steg-6-vercel-preview.png",
-        "docs/pilot/kom-i-gang-fra-null.md med aktive bilder",
-        "docs/pilot/kom-i-gang-fra-null.pdf"
-      ],
-      "acceptance_criteria": [
-        "Alle åtte plassholdere erstattet med synlige bilder i md og PDF",
-        "Ingen <!-- 📷 --> igjen i guiden"
-      ],
-      "user_stories": [],
-      "dependencies": [
-        "K-DOC-002"
-      ],
-      "risks": [
-        "Blocked av Richards gjennomgang på tom Mac-konto (skjermbilder mangler til da)"
-      ]
-    },
-    {
       "id": "K-GOV-004",
       "title": "«Sett opp tilganger» på Windows",
       "type": "governance",
-      "status": "blocked",
+      "status": "ready",
       "spec_path": null,
-      "goal": "Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett kan ha PC; guiden lover samme opplevelse.",
+      "goal": "Onboardingen fra K-GOV-003 skal fungere identisk på Windows-PC. Jeanett har PC; kodedel først, Windows-verifikasjon i økt 1 hos Jeanett. Guiden lover samme opplevelse.",
       "in_scope": [
         ".cursorrules onboarding-seksjon (plattformdeteksjon)",
         "scripts/setup-local-env.ps1",
@@ -1957,8 +1917,51 @@
         "K-GOV-003",
         "K-DOC-002"
       ],
-      "risks": [],
-      "blocked_reason": "krever Windows-maskin for verifikasjon — avklar om Jeanett har PC"
+      "risks": [
+        "Full acceptance (steg 5 til main) verifiseres først i økt 1 hos Jeanett — kodedel merges før det."
+      ]
+    },
+    {
+      "id": "K-DOC-003",
+      "title": "Skjermbilder til Kom i gang-guiden",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Richard tar skjermbilder under gjennomgang på tom Mac-konto; Cursor legger dem i docs/pilot/img/ og aktiverer plassholderne (fjern HTML-kommentartegn). Blocked_by: gjennomgangen.",
+      "in_scope": [
+        "docs/pilot/img/*.png (ni skjermbilder)",
+        "docs/pilot/kom-i-gang-fra-null.md — aktiver <!-- 📷 ... --> til markdown-bilder",
+        "Oppdatert PDF av guiden"
+      ],
+      "out_of_scope": [
+        "Nye steg i guiden (kun bilder + eventuelle Windows-avvik fra K-GOV-004)",
+        "Appkode"
+      ],
+      "deliverables": [
+        "docs/pilot/img/steg-1-1password.png",
+        "docs/pilot/img/steg-1b-chrome-profil.png",
+        "docs/pilot/img/steg-2-claude-prosjekt.png",
+        "docs/pilot/img/steg-3-cursor-mapper.png",
+        "docs/pilot/img/steg-4-ferdig.png",
+        "docs/pilot/img/steg-5a-github-zip.png",
+        "docs/pilot/img/steg-5c-cursor-rapport.png",
+        "docs/pilot/img/steg-5e-files-changed.png",
+        "docs/pilot/img/steg-6-vercel-preview.png",
+        "docs/pilot/kom-i-gang-fra-null.md med aktive bilder",
+        "docs/pilot/kom-i-gang-fra-null.pdf"
+      ],
+      "acceptance_criteria": [
+        "Alle ni plassholdere erstattet med synlige bilder i md og PDF",
+        "Ingen <!-- 📷 --> igjen i guiden"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "K-DOC-002",
+        "K-GOV-004"
+      ],
+      "risks": [
+        "Blocked av Richards gjennomgang på tom Mac-konto (skjermbilder mangler til da)"
+      ]
     },
     {
       "id": "K-GOV-005",
