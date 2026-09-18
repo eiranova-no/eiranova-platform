@@ -4,7 +4,7 @@
 > Run `pnpm generate-cc` to regenerate.
 
 **Last generated:** 2026-09-18
-**Progress:** 31% → MVP Launch
+**Progress:** 33% → MVP Launch
 
 ---
 
@@ -83,10 +83,10 @@
 | ID | Title | Merged |
 |----|-------|--------|
 | K-OPPSTART-004 | Gavemodell, Richard ut av drift, Opplæring og Overlevering i oppstart-appen | 2026-09-18 |
+| K-OPPSTART-005 | Norske menynavn i oppstart-appen | 2026-09-18 |
 | K-DOC-002 | «Kom i gang fra null» og prosjektinstruks inn i repoet | 2026-09-18 |
 | K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | 2026-09-17 |
 | K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | 2026-09-17 |
-| K-GOV-003 | Sett opp tilganger: onboarding i Cursor uten teknisk språk | 2026-09-17 |
 
 → [Komplett merge-historikk](./MERGED_HISTORY.md)
 
