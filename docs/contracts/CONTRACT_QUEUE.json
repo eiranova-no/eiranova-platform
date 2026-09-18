@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "last_updated": "2026-09-18",
-  "updated_by": "K-DOC-002a planned (Claude-konto i guide + oppstart p-w2-11); K-DOC-003 planned",
+  "updated_by": "K-GOV-005 planned (gitEiraNova, blocked_by M1, før K-OVERLEVERING-001)",
   "project": "EiraNova",
   "single_contract_rule": "At most ONE contract may have status 'active' at any time.",
   "schema_notes": "Optional per-contract fields: blocked_reason when status is blocked; paused_reason when status is paused — surfaced in CONTROL_CENTER.md via pnpm generate-cc.",
@@ -1924,12 +1924,56 @@
       "blocked_reason": "krever Windows-maskin for verifikasjon — avklar om Jeanett har PC"
     },
     {
+      "id": "K-GOV-005",
+      "title": "Selskapets GitHub-administratorkonto (gitEiraNova)",
+      "type": "governance",
+      "status": "planned",
+      "spec_path": null,
+      "goal": "Opprett GitHub-bruker gitEiraNova (post@eiranova.no) som Owner i eiranova-no — forutsetning for K-OVERLEVERING-001 DEL 4. Utføres rett etter M1, før overleveringen.",
+      "in_scope": [
+        "Opprett GitHub-bruker gitEiraNova på post@eiranova.no med 2FA",
+        "Innlogging og gjenopprettingskoder i 1Password som «GitHub gitEiraNova»",
+        "Inviter gitEiraNova som Owner i organisasjonen eiranova-no",
+        "Verifiser at Vercel GitHub-appen er installert på org-nivå",
+        "Cursor verifiserer medlemskap og admin-rolle via gh api",
+        "docs/ops/lokale-tilganger.md — avsnitt om selskapets konto vs. personlige brukere",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 → «gitEiraNova, Lise og Jeanett er Owners; Richard forlater organisasjonen»"
+      ],
+      "out_of_scope": [
+        "Selve overleveringen (K-OVERLEVERING-001)",
+        "Appkode",
+        "Personlige GitHub-kontoer for Lise og Jeanett"
+      ],
+      "deliverables": [
+        "GitHub-bruker gitEiraNova (Owner i eiranova-no)",
+        "1Password-oppføring «GitHub gitEiraNova»",
+        "docs/ops/lokale-tilganger.md oppdatert",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 oppdatert",
+        "Kø: K-GOV-005 → merged"
+      ],
+      "acceptance_criteria": [
+        "gitEiraNova er Owner i eiranova-no (verifisert via gh api)",
+        "2FA aktiv; innlogging + gjenopprettingskoder i 1Password",
+        "Vercel GitHub-appen installert på org-nivå",
+        "docs/ops/lokale-tilganger.md skiller selskapets konto fra personlige brukere",
+        "K-OVERLEVERING-001 DEL 4 punkt 1 nevner gitEiraNova, Lise og Jeanett som Owners"
+      ],
+      "user_stories": [],
+      "dependencies": [
+        "M1"
+      ],
+      "risks": [
+        "post@eiranova.no kan kun knyttes til én GitHub-bruker — Lise og Jeanett bruker egne adresser"
+      ],
+      "blocked_reason": "blocked_by M1. Plassert rett før K-OVERLEVERING-001 (forutsetning for dens DEL 4)."
+    },
+    {
       "id": "K-OVERLEVERING-001",
       "title": "Overlevering av plattformen fra Richard til Lise / EiraNova AS",
       "type": "governance",
       "status": "blocked",
       "spec_path": null,
-      "goal": "Frys punktet med tag v1.0-overlevering, EIERSKAP.md, fjern Richard som ressurs, konto-overføringer, BankID-signering — første kontrakt etter M1, før noe annet.",
+      "goal": "Frys punktet med tag v1.0-overlevering, EIERSKAP.md, fjern Richard som ressurs, konto-overføringer, BankID-signering — rett etter K-GOV-005 (gitEiraNova), før noe annet.",
       "in_scope": [
         "git tag v1.0-overlevering på main (== dev)",
         "docs/EIERSKAP.md + lenke i README",
@@ -1940,7 +1984,8 @@
       ],
       "out_of_scope": [
         "Appkode",
-        "Endringer før M1 er levert"
+        "Endringer før M1 er levert",
+        "Opprettelse av gitEiraNova (K-GOV-005)"
       ],
       "deliverables": [
         "tag v1.0-overlevering",
@@ -1958,10 +2003,11 @@
       ],
       "user_stories": [],
       "dependencies": [
-        "M1"
+        "M1",
+        "K-GOV-005"
       ],
       "risks": [],
-      "blocked_reason": "blocked_by M1 (vertikal skive levert, jf. docs/ROADMAP.md). Utføres som første kontrakt etter M1."
+      "blocked_reason": "blocked_by M1 og K-GOV-005 (gitEiraNova). Utføres rett etter K-GOV-005, før noe annet."
     }
   ]
 }

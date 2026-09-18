@@ -62,6 +62,7 @@
 | K-KPR-001 | KPR — Kommunalt Pasient- og Brukerregister | feature | K-TILSYN-001 |
 | K-DOC-002a | Claude-konto og prosjekt inn i guiden | governance | K-DOC-002 ✅ |
 | K-DOC-003 | Skjermbilder til Kom i gang-guiden | governance | K-DOC-002 ✅ |
+| K-GOV-005 | Selskapets GitHub-administratorkonto (gitEiraNova) | governance | M1 |
 
 ---
 
@@ -74,7 +75,7 @@
 | K-TRIPLETEX-001 | Tripletex — Regnskapsintegrasjon Master | Venter på EiraNova AS org.nr. for Tripletex-kontraktregistrering. Tripletex krever organisasjonsnummer. |
 | K-JOURNAL-001 | Intern Journal — NHN-sertifisert Pasientjournal | Starter IKKE uten: (1) godkjent helserettsadvokat, (2) Statsforvalteren registrering bekreftet, (3) NHN-sertifisering fullført, (4) journalansvarlig utpekt. Alle fire er lovpåkrevt. |
 | K-GOV-004 | «Sett opp tilganger» på Windows | krever Windows-maskin for verifikasjon — avklar om Jeanett har PC |
-| K-OVERLEVERING-001 | Overlevering av plattformen fra Richard til Lise / EiraNova AS | blocked_by M1 (vertikal skive levert, jf. docs/ROADMAP.md). Utføres som første kontrakt etter M1. |
+| K-OVERLEVERING-001 | Overlevering av plattformen fra Richard til Lise / EiraNova AS | blocked_by M1 og K-GOV-005 (gitEiraNova). Utføres rett etter K-GOV-005, før noe annet. |
 
 ---
 
