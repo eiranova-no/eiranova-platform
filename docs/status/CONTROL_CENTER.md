@@ -3,8 +3,8 @@
 > Generated from: docs/contracts/CONTRACT_QUEUE.json
 > Run `pnpm generate-cc` to regenerate.
 
-**Last generated:** 2026-09-17
-**Progress:** 27% → MVP Launch
+**Last generated:** 2026-09-18
+**Progress:** 28% → MVP Launch
 
 ---
 
@@ -60,9 +60,9 @@
 | K-JOURNAL-EXT-001 | Ekstern Journal — Redirect til EPJ-system | feature | K-DEKN-001 |
 | K-TILSYN-001 | Internkontroll & Statsforvalter-rapportering | governance | K-JOURNAL-EXT-001 |
 | K-KPR-001 | KPR — Kommunalt Pasient- og Brukerregister | feature | K-TILSYN-001 |
-| K-DOC-002a | Claude-konto og prosjekt inn i guiden | governance | K-DOC-002 ✅ |
+| K-DOC-002b | Selskapets GitHub-konto inn i guiden | governance | K-DOC-002 ✅, K-DOC-002a ✅ |
 | K-DOC-003 | Skjermbilder til Kom i gang-guiden | governance | K-DOC-002 ✅ |
-| K-GOV-005 | Selskapets GitHub-administratorkonto (gitEiraNova) | governance | M1 |
+| K-GOV-005 | Selskapets GitHub-administratorkonto (gitEiraNova) | governance | M1, K-DOC-002b |
 
 ---
 
