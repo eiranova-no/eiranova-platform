@@ -6,6 +6,7 @@
 | ID | Title | Type | Merged |
 |----|-------|------|--------|
 | K-OPPSTART-004 | Gavemodell, Richard ut av drift, Opplæring og Overlevering i oppstart-appen | governance | 2026-09-18 |
+| K-OPPSTART-005 | Norske menynavn i oppstart-appen | governance | 2026-09-18 |
 | K-DOC-002 | «Kom i gang fra null» og prosjektinstruks inn i repoet | governance | 2026-09-18 |
 | K-GOV-002 | Permanente tilganger for Cursor (lokale nøkler) | governance | 2026-09-17 |
 | K-OPPSTART-003 | Pilotrekruttering: oppgaver i oppstart-appen + strategidokument i repo | governance | 2026-09-17 |
