@@ -7,6 +7,12 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### K-DOC-002b — Selskapets GitHub-konto inn i guiden
+
+- Steg 2b-2 i `kom-i-gang-fra-null.md`: én gangs oppsett (Lise) for `gitEiraNova` / `post@eiranova.no`
+- Oppstart-oppgave `p-w2-12` (migrering 007) — selskapets GitHub-konto
+- PDF regenerert
+
 ### K-DOC-002a — Claude-konto og prosjekt inn i guiden
 
 - Steg 2c i `kom-i-gang-fra-null.md`: én gangs oppsett (Lise) + testspørsmål; kvalitetskontroll-notat i steg 5b
