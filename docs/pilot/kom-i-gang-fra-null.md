@@ -49,6 +49,16 @@ Første gang Cursor åpnes ber den deg logge inn. Velg **«Sign up»** → bruk 
 1. I Chrome: gå til `github.com` → **Sign up** → bruk @eiranova.no-adressen → velg et brukernavn (f.eks. `jeanett-eiranova`) → fullfør.
 2. Send brukernavnet ditt til Lise. Hun legger deg til i organisasjonen `eiranova-no`. Du får en e-post med «Join» — trykk på den.
 
+#### 2b-2. Selskapets GitHub-konto (gjøres én gang for selskapet — Lise)
+1. Logg ut av din egen GitHub-bruker. Gå til `github.com` → **Sign up** → e-post `post@eiranova.no` → brukernavn `gitEiraNova` → fullt navn «EiraNova AS».
+2. GitHub krever tofaktor for denne kontoen: velg autentiseringsapp, skann QR-koden med 1Password (den kan lagre koden), og last ned gjenopprettingskodene.
+3. Lagre alt i 1Password som **«GitHub gitEiraNova»**: brukernavn, passord, 2FA og gjenopprettingskoder.
+4. Send beskjed til den som eier organisasjonen i dag om at kontoen er klar — den legges til som eier av `eiranova-no`.
+
+**Du er ferdig når:** oppføringen «GitHub gitEiraNova» finnes i 1Password, og kontoen har fått invitasjon til organisasjonen (e-post til post@).
+
+**Hvorfor:** selskapet skal eie arkivet gjennom en konto som heter selskapet — ikke gjennom noen enkeltperson. Dere jobber daglig med egne brukere; denne brukes bare til administrasjon.
+
 ### 2c. Claude (gjøres én gang for selskapet — Lise)
 1. I Chrome: gå til `claude.ai` → **Sign up** → bruk `post@eiranova.no` (selskapets konto, ikke din egen). Velg abonnementet **Pro** — betales av selskapet. Lagre innloggingen i 1Password som **«Claude EiraNova»**.
 2. Trykk **Projects** (venstre meny) → **Create project** → navn **EiraNova**.
