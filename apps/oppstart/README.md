@@ -5,9 +5,11 @@ Intern app for oppstartsplan og compliance-sjekkliste — brukt av Lise og Jeane
 ## Formål
 
 - Felles oppstartsplan fra AS-registrering til pilotstart (M2, november 2026)
+- Seksjoner: M0–M3 (plan-w1–w8), **Opplæring og verktøy** (plan-opplaering, rett etter M0), og dempet **Overlevering av plattformen** (plan-exit, sist — utenfor «Nå»-fremdriften til M1 er levert)
 - Compliance delt i «Nå» (ikke-medisinsk pilot) og «Helsetjeneste-sporet» (aktiveres ved beslutning om medisinske tjenester)
 - Delt fremdrift i sanntid via Supabase
 - Egne oppgaver (add/edit/delete) og kommentarer per oppgave
+- Richard Møller har ingen løpende oppgaver i appen; hans oppgaver ligger kun under Overlevering.
 
 ## Arkitektur
 
@@ -33,8 +35,9 @@ Migreringer:
 | `supabase-migration-005-1password-navn.sql` | 1Password-navn for Cursor-onboarding (Richard) |
 | `supabase-migration-006-claude.sql` | Claude-konto og EiraNova-prosjekt (Lise, K-DOC-002a) |
 | `supabase-migration-007-github-selskap.sql` | Selskapets GitHub-konto gitEiraNova (Lise, K-DOC-002b) |
+| `supabase-migration-008-gavemodell-opplaering-exit.sql` | Gavemodell, Richard ut av drift, Opplæring + Overlevering (K-OPPSTART-004) |
 
-Migrering 003–007 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
+Migrering 003–008 er kjørt mot oppstart-prosjektet og ligger i repo som dokumentasjon av det som er kjørt. Idempotent — trygg å re-kjøre.
 
 Pilot: se [docs/pilot/](../../docs/pilot/).
 
