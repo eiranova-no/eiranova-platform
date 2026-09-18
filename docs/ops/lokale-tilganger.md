@@ -9,4 +9,4 @@
 
 **Hvis Cursor sier at noe mangler:** les hva den ber om. Nesten alltid er det at du ikke er lagt til i GitHub-organisasjonen ennå, eller at en oppføring i 1Password har feil navn.
 
-*(For teknikere: verdiene lagres i ~/.config/eiranova/env, chmod 600. scripts/setup-local-env.sh gjør det samme uten Cursor.)*
+*(For teknikere: verdiene lagres i ~/.config/eiranova/env (Mac og Windows). Mac: `scripts/setup-local-env.sh`. Windows: `scripts/setup-local-env.ps1`. Ellers: «Sett opp tilganger» i Cursor — samme opplevelse på begge.)*
